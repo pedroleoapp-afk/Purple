@@ -928,6 +928,8 @@ function checkGate(){
     if (!a){ if (gateMode !== "pending") openGate("pending"); return; }
     if (a.status !== "aprovado"){ if (gateMode !== "denied") openGate("denied"); return; }
   }
+  const me = S.members.get(S.meId) || {}, ap = S.approvals.get(S.meId) || {};
+  if (ap.pwTempAt && ap.pwTempAt > (me.pwChangedAt || 0)){ if (gateMode !== "newpw") openGate("newpw"); return; }
   closeGate();
 }
 function closeGate(){ gateMode = null; $("gate").hidden = true; checkLock(); }
@@ -941,47 +943,107 @@ function openGate(mode){
   const area = $("brand").textContent;
 
   if (mode === "auth"){
-    let tab = S.authTab || "login";
+    let known = false; try { known = localStorage.getItem("purple_has_account") === "1"; } catch(x){}
+    const remember = () => { try { localStorage.setItem("purple_has_account", "1"); } catch(x){} };
+    let step = known ? "login" : "create";
     const email = h("input",{class:"field", id:"gEmail", type:"email", autocomplete:"username", placeholder:"nome@empresa.com.br"});
-    const pw = h("input",{class:"field", id:"gPw", type:"password", autocomplete: tab === "login" ? "current-password" : "new-password", placeholder: tab === "login" ? "Sua senha" : "Mínimo 6 caracteres"});
-    const pw2 = tab === "signup" ? h("input",{class:"field", id:"gPw2", type:"password", autocomplete:"new-password", placeholder:"Repita a senha"}) : null;
+    const pw = h("input",{class:"field", id:"gPw", type:"password", placeholder:"Mínimo 6 caracteres"});
+    const pw2 = h("input",{class:"field", id:"gPw2", type:"password", autocomplete:"new-password", placeholder:"Repita a senha"});
+    const pw2Label = h("label",{class:"f", for:"gPw2", text:"Confirmar senha"});
+    const title = h("h2",{id:"gTitle"});
+    const intro = h("p");
+    const pwLabel = h("label",{class:"f", for:"gPw"});
     const err = h("div",{class:"err", role:"alert"});
-    const go = h("button",{class:"btn full", text: tab === "login" ? "Entrar" : "Criar conta"});
-    const show = h("label",{style:"display:flex;gap:6px;align-items:center;font-size:14px;margin-top:8px"}, h("input",{type:"checkbox", onchange:e => { const t = e.target.checked ? "text" : "password"; pw.type = t; if (pw2) pw2.type = t; }}), "Mostrar senha");
+    const go = h("button",{class:"btn full"});
+    const swap = h("button",{class:"linkbtn", style:"margin-top:12px;display:block"});
+    const forgot = h("button",{class:"linkbtn", style:"margin-top:8px;display:block", text:"Esqueci minha senha", onclick:() => {
+      err.textContent = "Fale com a liderança (Gerente, Coordenador ou Supervisor). Ela define uma senha temporária no painel Acessos e, ao entrar com ela, você cria uma nova senha.";
+    }});
+    const show = h("label",{style:"display:flex;gap:6px;align-items:center;font-size:14px;margin-top:8px"}, h("input",{type:"checkbox", onchange:e => { const t = e.target.checked ? "text" : "password"; pw.type = t; pw2.type = t; }}), "Mostrar senha");
+    const paint = () => {
+      const creating = step === "create";
+      title.textContent = creating ? "Primeiro acesso: crie sua senha" : "Entrar no " + area;
+      intro.textContent = creating
+        ? "Informe seu e-mail corporativo e crie a senha que você vai usar para entrar no " + area + ". Depois você preenche o cadastro e aguarda a aprovação da liderança."
+        : "Informe seu e-mail corporativo e sua senha.";
+      pwLabel.textContent = creating ? "Crie uma senha" : "Senha";
+      pw.autocomplete = creating ? "new-password" : "current-password";
+      pw2.hidden = pw2Label.hidden = !creating;
+      go.textContent = creating ? "Criar senha e entrar" : "Entrar";
+      swap.textContent = creating ? "Já criei minha senha — entrar" : "É meu primeiro acesso — criar senha";
+      forgot.hidden = creating;
+    };
+    swap.onclick = () => { step = step === "create" ? "login" : "create"; err.textContent = ""; pw2.value = ""; paint(); (step === "create" && pw.value ? pw2 : pw).focus(); };
     go.onclick = async () => {
       const e = norm(email.value); err.textContent = "";
       if (!emailOk(e)){ err.textContent = "Informe seu e-mail corporativo."; email.focus(); return; }
+      if (!pw.value){ err.textContent = "Informe a senha."; pw.focus(); return; }
       go.disabled = true;
       try {
-        if (tab === "login"){
+        if (step === "login"){
           const {error} = await sb.auth.signInWithPassword({email:e, password:pw.value});
-          if (error) throw error;
+          if (error){
+            if (/invalid login credentials/i.test(error.message || "")){
+              step = "create"; paint();
+              err.textContent = "Não encontramos uma senha para este e-mail, ou a senha está incorreta. Se este é o seu primeiro acesso, repita a senha no campo abaixo para criá-la.";
+              pw2.focus(); return;
+            }
+            throw error;
+          }
+          remember();
         } else {
           if (!domOk(e)){ err.textContent = "Use seu e-mail corporativo (" + S.domains.map(d => "@" + d).join(" ou ") + ")."; return; }
-          const bad = pwProblem(pw.value, pw2.value); if (bad){ err.textContent = bad; return; }
+          const bad = pwProblem(pw.value, pw2.value); if (bad){ err.textContent = bad; (pw2.value ? pw2 : pw).focus(); return; }
           const {data, error} = await sb.auth.signUp({email:e, password:pw.value});
+          if (error && /already registered|already exists/i.test(error.message || "")){
+            remember(); step = "login"; pw2.value = ""; paint();
+            err.textContent = "Este e-mail já tem senha criada e a senha digitada está incorreta. Tente de novo ou, se esqueceu, fale com a liderança.";
+            pw.select(); return;
+          }
           if (error) throw error;
-          if (!data.session){ S.pendingEmail = e; openGate("verify"); return; }
+          remember();
+          if (!data.session){
+            const r = await sb.auth.signInWithPassword({email:e, password:pw.value});
+            if (r.error){ S.pendingEmail = e; openGate("verify"); return; }
+          }
         }
       } catch(ex){ err.textContent = authMsg(ex); }
       finally { go.disabled = false; }
     };
-    const forgot = h("button",{class:"linkbtn", style:"margin-top:12px", text:"Esqueci minha senha", onclick:() => {
-      err.textContent = "Fale com a liderança (Gerente, Coordenador ou Supervisor). Ela define uma senha temporária para você no painel Acessos, e depois você troca em Editar meu perfil.";
-    }});
-    [email, pw, pw2].forEach(i => i && i.addEventListener("keydown", ev => { if (ev.key === "Enter") go.click(); }));
-    const tabs = h("div",{class:"modes", role:"tablist", style:"margin-bottom:6px"},
-      h("button",{role:"tab", "aria-selected":String(tab === "login"), onclick:() => { S.authTab = "login"; openGate("auth"); }, text:"Entrar"}),
-      h("button",{role:"tab", "aria-selected":String(tab === "signup"), onclick:() => { S.authTab = "signup"; openGate("auth"); }, text:"Criar conta"}));
-    card.replaceChildren(logo,
-      h("h2",{id:"gTitle", text:area}),
-      h("p",{text: tab === "login" ? "Entre com seu e-mail corporativo e sua senha." : "Primeiro acesso? Crie sua conta com o e-mail corporativo e uma senha. Depois preencha o cadastro e aguarde a aprovação da liderança."}),
-      tabs,
+    [email, pw, pw2].forEach(i => i.addEventListener("keydown", ev => { if (ev.key === "Enter") go.click(); }));
+    paint();
+    card.replaceChildren(logo, title, intro,
       h("label",{class:"f", for:"gEmail", text:"E-mail corporativo"}), email,
-      h("label",{class:"f", for:"gPw", text: tab === "login" ? "Senha" : "Crie uma senha"}), pw,
-      ...(pw2 ? [h("label",{class:"f", for:"gPw2", text:"Confirmar senha"}), pw2] : []), show,
-      err, go, tab === "login" ? forgot : null);
+      pwLabel, pw, pw2Label, pw2, show,
+      err, go, swap, forgot);
     $("gate").hidden = false; setTimeout(() => email.focus(), 50); return;
+  }
+
+  if (mode === "newpw"){
+    const pw = h("input",{class:"field", id:"gNp", type:"password", autocomplete:"new-password", placeholder:"Mínimo 6 caracteres"});
+    const pw2 = h("input",{class:"field", id:"gNp2", type:"password", autocomplete:"new-password", placeholder:"Repita a senha"});
+    const err = h("div",{class:"err", role:"alert"});
+    const go = h("button",{class:"btn full", text:"Salvar nova senha"});
+    go.onclick = async () => {
+      const bad = pwProblem(pw.value, pw2.value); if (bad){ err.textContent = bad; return; }
+      go.disabled = true;
+      try {
+        const {error} = await sb.auth.updateUser({password:pw.value}); if (error) throw error;
+        const now = Date.now();
+        await S.db.collection("members").doc(S.meId).update({pwChangedAt:now});
+        S.members.set(S.meId, {...(S.members.get(S.meId) || {}), pwChangedAt:now});
+        gateMode = null; toast("Senha criada."); checkGate(); renderAll();
+      } catch(ex){ err.textContent = authMsg(ex); }
+      finally { go.disabled = false; }
+    };
+    [pw, pw2].forEach(i => i.addEventListener("keydown", ev => { if (ev.key === "Enter") go.click(); }));
+    card.replaceChildren(logo,
+      h("h2",{id:"gTitle", text:"Crie sua nova senha"}),
+      h("p",{text:"Você entrou com uma senha temporária definida pela liderança. Para continuar, crie a sua própria senha."}),
+      h("label",{class:"f", for:"gNp", text:"Nova senha"}), pw,
+      h("label",{class:"f", for:"gNp2", text:"Confirmar senha"}), pw2,
+      err, go);
+    $("gate").hidden = false; setTimeout(() => pw.focus(), 50); return;
   }
 
   if (mode === "verify"){
@@ -1124,6 +1186,7 @@ function pwChangeBox(){
       const {error} = await sb.auth.updateUser({password:n1.value});
       if (error) throw error;
       cur.value = n1.value = n2.value = ""; toast("Senha alterada.");
+      try { const now = Date.now(); await S.db.collection("members").doc(S.meId).update({pwChangedAt:now}); } catch(x){}
     } catch(e){ err.textContent = authMsg(e); }
     finally { btn.disabled = false; }
   };
@@ -1407,7 +1470,8 @@ function renderAdmin(){
           if (pw == null) return;
           if (pw.length < 6){ toast("A senha precisa ter pelo menos 6 caracteres."); return; }
           const {error} = await sb.rpc("purple_set_password", {target:m.userId, new_password:pw});
-          toast(error ? authMsg(error) : "Senha temporária definida para " + target + ".");
+          if (!error){ try { await approvalsRef(m.userId).update({pwTempAt:Date.now(), by:S.meId}); } catch(x){} }
+          toast(error ? authMsg(error) : "Senha temporária definida para " + target + ". No próximo acesso, a pessoa vai criar a própria senha.");
         }})));
   });
   const search = h("input",{class:"field", type:"search", style:"margin:4px 0 12px", placeholder:"Buscar por e-mail, nome, cargo ou setor", "aria-label":"Buscar membros"});
