@@ -292,6 +292,99 @@ select.field{appearance:auto}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--brand);color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;z-index:80;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
+
+/* ---------- gamificação ---------- */
+.coin-chip{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:999px;padding:7px 12px;font-weight:700;display:flex;gap:6px;align-items:center;white-space:nowrap}
+.coin-chip:hover{background:rgba(255,255,255,.2)}
+.rank-card{padding:14px 16px}
+.rank-card h2,.g-card h2{margin:0 0 8px;font-size:17px;display:flex;align-items:center;gap:8px}
+.rank-card h2 .grow,.g-card h2 .grow{flex:1}
+.rank-card h2 .linkbtn{white-space:nowrap}
+@media (max-width:600px){.rank-card h2 .muted{display:none}}
+.rk-row{display:flex;align-items:center;gap:10px;padding:6px 4px;border-radius:10px;width:100%;background:none;border:0;text-align:left}
+.rk-row:hover{background:var(--hover)}
+.rk-row.me{background:var(--mustard-soft)}
+.rk-pos{width:28px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums;flex:none}
+.rk-name{flex:1;min-width:0}
+.rk-name b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rk-name small{color:var(--muted);font-size:12.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rk-pts{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.g-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.g-hero{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.g-hero .big{font-family:var(--display);font-size:40px;font-weight:800;line-height:1}
+.g-hero .lbl{color:var(--muted);font-size:13px;font-weight:600}
+.g-hero .box{background:var(--sunk);border-radius:12px;padding:10px 14px;min-width:110px}
+.g-season{color:var(--muted);font-size:14px;margin-top:4px}
+.medals{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.medal{background:var(--mustard-soft);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700}
+.g-tabs{display:flex;flex-direction:column;gap:6px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.g-tabs .grp{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.g-tabs .grp + .grp{border-top:1px solid var(--line);padding-top:6px}
+.g-tabs .glbl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:0 6px 0 4px}
+.g-tabs button{flex:none;background:none;border:0;border-radius:10px;padding:8px 12px;font-weight:700;color:var(--muted)}
+.g-tabs button:hover{background:var(--hover)}
+.g-tabs button:focus-visible{outline-offset:-2px}
+.g-tabs button[aria-selected="true"]{background:var(--pine);color:var(--pine-ink)}
+.g-list{display:flex;flex-direction:column;gap:10px}
+.task{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.task .info{flex:1;min-width:200px}
+.task .info b{font-size:16.5px}
+.task .info p{margin:4px 0 0;color:var(--muted);font-size:14.5px;white-space:pre-wrap}
+.pts{background:var(--mustard-soft);border-radius:999px;padding:3px 10px;font-weight:800;white-space:nowrap}
+.tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--sunk);color:var(--muted);margin-top:6px;margin-right:4px}
+.tag.ok{background:var(--pine-soft);color:var(--pine)}
+.tag.warn{background:var(--mustard-soft);color:var(--ink)}
+.tag.bad{background:color-mix(in srgb, var(--danger) 15%, var(--surface));color:var(--danger)}
+.task .acts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.item .img{aspect-ratio:4/3;background:var(--sunk);display:grid;place-items:center;font-size:44px;position:relative}
+.item .img img{width:100%;height:100%;object-fit:cover}
+.item .img .out{position:absolute;inset:0;background:rgba(20,15,30,.6);color:#fff;display:grid;place-items:center;font-weight:800;font-size:16px;letter-spacing:.04em}
+.item .body{padding:10px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.item .body b{font-size:15.5px}
+.item .body small{color:var(--muted);font-size:13px}
+.item .price{font-weight:800}
+.item .body .btn{margin-top:auto}
+.cart-row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.cart-row .nm{flex:1;min-width:0}
+.qty{display:flex;align-items:center;gap:4px}
+.qty button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-weight:800}
+.g-table{width:100%;border-collapse:collapse;font-size:14px}
+.g-table th,.g-table td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.g-table th{color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.03em}
+.g-table td.n{text-align:right;font-variant-numeric:tabular-nums}
+.scroll-x{overflow-x:auto}
+.ext-row{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.ext-row .t{flex:1;min-width:0}
+.ext-row .t small{display:block;color:var(--muted);font-size:12.5px}
+.ext-row .v{font-weight:800;font-variant-numeric:tabular-nums}
+.ext-row .v.plus{color:var(--pine)}
+.ext-row .v.minus{color:var(--danger)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0;width:100%}
+.cal .h{text-align:center;font-size:11.5px;font-weight:700;color:var(--muted);padding:2px 0;min-width:0}
+.cal .d{height:40px;min-width:0;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;background:var(--sunk);font-size:14px;position:relative;box-sizing:border-box}
+.cal-card{max-width:420px}
+@media (max-width:420px){.cal .d{height:34px;font-size:13px}.cal{gap:3px}}
+.cal .d.we{opacity:.45}
+.cal .d.on{background:var(--pine);color:var(--pine-ink)}
+.cal .d.today{box-shadow:inset 0 0 0 2px var(--mustard)}
+.cal-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:-4px;margin-bottom:8px}
+.cal-legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px;background:var(--sunk)}
+.cal-legend i.on{background:var(--pine)}
+.cal-legend i.today{box-shadow:inset 0 0 0 2px var(--mustard)}
+.cal .d.blank{background:none;padding:0}
+.cal-info{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.wk-bar{display:flex;gap:4px;margin:6px 0 2px}
+.wk-bar span{flex:1;height:8px;border-radius:999px;background:var(--line)}
+.wk-bar span.on{background:var(--pine)}
+.form-grid{display:flex;flex-direction:column;gap:4px}
+.form-grid label.f{display:block;font-weight:700;font-size:14px;margin:10px 0 4px}
+.form-grid .chk{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:15px}
+.img-prev{width:120px;aspect-ratio:4/3;border-radius:10px;background:var(--sunk);overflow:hidden;display:grid;place-items:center;font-size:32px}
+.img-prev img{width:100%;height:100%;object-fit:cover}
+@media (max-width:820px){.coin-chip{padding:6px 10px}.g-hero .big{font-size:32px}}
+
 /* overlays */
 .gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:grid;place-items:center;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px));overflow:auto}
 .gate.dim{background:rgba(20,15,30,.55);z-index:40}
@@ -384,6 +477,7 @@ select.field{appearance:auto}
   <h1 class="brand" id="brand">Purple</h1>
   <span class="grow"></span>
   <label class="search"><span class="sr">Buscar publicações</span><input id="search" type="search" placeholder="Buscar publicações"></label>
+  <button class="coin-chip" id="coinChip" hidden title="Seus CRAcoins">🪙 <span id="coinVal">0</span></button>
   <button class="top-admin" id="topAdmin" hidden>🔑 <span class="lbl">Acessos</span> <span class="pill" id="adminBadge" hidden></span></button>
   <div class="menu-wrap"><button class="me-chip" id="meChip" aria-haspopup="menu"><span id="meAvatar"></span><span class="nm" id="meName"></span></button></div>
 </header>
@@ -397,6 +491,10 @@ select.field{appearance:auto}
     <button class="nav-item" data-f="video"><span class="nav-ico">🎬</span>Vídeos</button>
     <button class="nav-item" data-f="link"><span class="nav-ico">🔗</span>Links</button>
     <div class="nav-sep"></div>
+    <button class="nav-item" id="navGame"><span class="nav-ico">🏆</span>CRAcoins</button>
+    <button class="nav-item" id="navShop"><span class="nav-ico">🛍️</span>Loja</button>
+    <button class="nav-item" id="navCal"><span class="nav-ico">🗓️</span>Presença</button>
+    <div class="nav-sep"></div>
     <button class="nav-item" id="navProfile"><span class="nav-ico">👤</span>Meu perfil</button>
     <button class="nav-item" data-f="mine"><span class="nav-ico">🗂️</span>Minhas publicações</button>
     <button class="nav-item" id="navAdmin" hidden><span class="nav-ico">🔑</span>Gerenciar acessos</button>
@@ -404,6 +502,7 @@ select.field{appearance:auto}
 
   <main class="col">
    <div class="col" id="feedView">
+    <div class="card rank-card" id="rankCard" hidden></div>
     <div class="card stories" id="stories" aria-label="Fotos da equipe"></div>
     <div id="notice"></div>
 
@@ -460,6 +559,7 @@ select.field{appearance:auto}
     </div>
    </div>
    <div class="col" id="profileView" hidden></div>
+   <div class="col" id="gameView" hidden></div>
   </main>
 
   <aside class="side right" aria-label="Sobre o mural">
@@ -499,7 +599,7 @@ select.field{appearance:auto}
   <button data-f="all" aria-current="true"><span class="i">🏠</span>Início</button>
   <button data-f="com"><span class="i">📣</span>Comunicados</button>
   <button id="tabNew"><span class="i">➕</span>Publicar</button>
-  <button data-f="poll"><span class="i">📊</span>Enquetes</button>
+  <button id="tabGame"><span class="i">🏆</span>CRAcoins</button>
   <button id="tabMe"><span class="i">👤</span>Perfil</button>
 </nav>
 
@@ -585,7 +685,7 @@ const S = {
   db:null, user:null, assets:null, meId:null, isAdmin:false, isOwner:false, canWrite:true, loggedIn:false,
   posts:[], comments:new Map(), reactions:new Map(), votes:new Map(), acks:new Map(), media:new Map(), avatars:new Map(),
   members:new Map(), approvals:new Map(), invites:new Map(), profiles:{}, pending:new Set(), cards:new Map(), expanded:new Set(),
-  ready:{config:false, members:false, approvals:false, posts:false, acks:false},
+  ready:{config:false, members:false, approvals:false, posts:false, acks:false, presence:false},
   domains:[], file:null, fileKind:null, filter:"all", author:null, q:"", mode:"post", lockId:null,
   view:"feed", profileId:null, pfSort:"desc", pfLayout:"grid", setor:null, detailId:null, detailCard:null, pcards:new Map()
 };
@@ -785,6 +885,11 @@ async function boot(){
   sb = window.supabase.createClient(cfg.supabaseUrl.trim(), cfg.supabaseKey.trim());
   S.db = makeDb(sb); S.assets = null;
   S.user = { async profiles(){ return {}; } };
+  S.db.doc("config/game").onSnapshot(s => {
+    const d = s.exists ? s.data() : {};
+    S.game = {...JSON.parse(JSON.stringify(GDEF)), ...d, season:{...GDEF.season, ...(d.season || {})}};
+    renderAll();
+  }, () => {});
   S.db.doc("config/area").onSnapshot(s => {
     const d = s.exists ? s.data() : {};
     const name = d.name || "Purple";
@@ -845,6 +950,13 @@ function maybeStartAll(){
   coll("reactions", null, grouped("reactions"));
   coll("votes", null, grouped("votes"));
   coll("acks", null, grouped("acks"), "acks");
+  const flat = target => s => { S[target] = s.docs.map(d => ({id:d.id, ...d.data()})); };
+  coll("tasks", null, flat("tasks"));
+  coll("claims", null, flat("claims"));
+  coll("presence", null, flat("presence"), "presence");
+  coll("bonus", null, flat("bonus"));
+  coll("shop", null, flat("shop"));
+  coll("orders", null, flat("orders"));
 }
 const AUTH_MSG = [
   [/invalid login credentials/i, "E-mail ou senha incorretos."],
@@ -1271,12 +1383,12 @@ function askConfirm(msg, okLabel){
 
 /* ---------- modal: profile & readers ---------- */
 function openModal(children, label){
-  $("modalCard").classList.remove("detail"); S.detailId = null; S.detailCard = null;
+  $("modalCard").classList.remove("detail", "cal-card"); S.detailId = null; S.detailCard = null;
   $("modalCard").replaceChildren(h("button",{class:"x", "aria-label":"Fechar", onclick:closeModal, text:"✕"}), ...children);
   $("modalCard").setAttribute("aria-label", label || "");
   $("modal").hidden = false; $("modalCard").querySelector(".x").focus();
 }
-function closeModal(){ $("modal").hidden = true; $("modalCard").classList.remove("detail"); S.detailId = null; S.detailCard = null; }
+function closeModal(){ $("modal").hidden = true; $("modalCard").classList.remove("detail", "cal-card"); S.detailId = null; S.detailCard = null; }
 $("modal").addEventListener("click", e => { if (e.target === $("modal")) closeModal(); });
 function openProfile(id){
   if (!id) return;
@@ -1354,6 +1466,7 @@ function renderProfile(){
         p.email ? h("a",{class:"pf-mail", href:"mailto:" + p.email, text:p.email}) : null,
         isMe && S.canWrite ? h("div",{class:"pf-actions"}, h("button",{class:"btn ghost", onclick:() => openGate("edit"), text:"Editar perfil"})) : null),
       h("div",{class:"pf-bar", role:"tablist"}, tab("grid","▦ Grade"), tab("list","☰ Lista"), sort));
+    const md = medalsEl(id); if (md) head.querySelector(".pf-info").append(md);
   }
   const body = h("div");
   if (!posts.length){
@@ -1872,6 +1985,60 @@ function linkEl(url){
   let host = url; try { host = new URL(url).hostname.replace(/^www\./,""); } catch(e){}
   return h("a",{class:"p-link", href:url, target:"_blank", rel:"noopener noreferrer", onclick:e => openLink(e, url)}, h("small",{text:"🔗 " + host + " · toque para abrir"}), h("strong",{text:url.replace(/^https?:\/\//,"")}));
 }
+/* ----- exportação para Excel (.xlsx), com alternativa em CSV ----- */
+let xlsxLoading = null;
+function loadXLSX(){
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (!xlsxLoading) xlsxLoading = new Promise((res, rej) => {
+    const sc = document.createElement("script");
+    sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    sc.onload = () => window.XLSX ? res(window.XLSX) : rej(new Error("xlsx"));
+    sc.onerror = () => rej(new Error("xlsx"));
+    setTimeout(() => rej(new Error("timeout")), 10000);
+    document.head.append(sc);
+  }).catch(e => { xlsxLoading = null; throw e; });
+  return xlsxLoading;
+}
+const slugify = t => (t || "planilha").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w]+/g, "-").replace(/^-|-$/g, "").toLowerCase().slice(0, 50) || "planilha";
+function saveBlob(blob, name){
+  const a = h("a",{href:URL.createObjectURL(blob), download:name});
+  document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+async function downloadSheets(filename, sheets){
+  try {
+    const X = await loadXLSX();
+    const wb = X.utils.book_new();
+    sheets.forEach(sh => {
+      const ws = X.utils.aoa_to_sheet(sh.rows);
+      ws["!cols"] = (sh.rows[0] || []).map((_, i) => ({wch:Math.min(45, Math.max(10, ...sh.rows.map(r => String(r[i] == null ? "" : r[i]).length + 2)))}));
+      X.utils.book_append_sheet(wb, ws, sh.name.slice(0, 31));
+    });
+    const out = X.write(wb, {bookType:"xlsx", type:"array"});
+    saveBlob(new Blob([out], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), filename + ".xlsx");
+  } catch(e){
+    const esc = v => { const t = String(v == null ? "" : v); return /[;"\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+    const lines = sheets[0].rows.map(r => r.map(esc).join(";"));
+    saveBlob(new Blob(["\ufeff" + lines.join("\r\n")], {type:"text/csv;charset=utf-8"}), filename + ".csv");
+    toast("Planilha baixada em formato CSV, que abre no Excel.");
+  }
+}
+function exportPoll(p){
+  const votes = S.votes.get(p.id) || [];
+  const optText = id => ((p.poll.options || []).find(o => o.id === id) || {}).text || "";
+  const dt = ms => ms ? new Intl.DateTimeFormat("pt-BR", {day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit", timeZone:"America/Sao_Paulo"}).format(ms) : "";
+  const person = id => { const x = prof(id); return [x.name, x.email, x.cargo, x.setor, x.marca]; };
+  const answers = [["Nome","E-mail","Cargo","Setor","Marca","Resposta","Data da resposta"],
+    ...votes.slice().sort((a, b) => prof(a.user).name.localeCompare(prof(b.user).name, "pt-BR")).map(v => [...person(v.user), optText(v.option), dt(v.at)])];
+  const total = votes.length;
+  const summary = [["Pergunta", p.text || ""], ["Criada por", prof(p.author).name], ["Criada em", dt(p.createdAt)],
+    ["Encerramento", p.poll.closesAt ? dt(p.poll.closesAt) : "Sem prazo"], ["Total de respostas", total], [],
+    ["Opção","Votos","%"], ...(p.poll.options || []).map(o => { const n = votes.filter(v => v.option === o.id).length; return [o.text, n, total ? Math.round(n * 1000 / total) / 10 + "%" : "0%"]; })];
+  const voted = new Set(votes.map(v => v.user));
+  const missing = [["Nome","E-mail","Cargo","Setor","Marca"], ...approvedIds().filter(id => !voted.has(id) && id !== p.author).sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR")).map(person)];
+  toast("Gerando planilha…");
+  downloadSheets("enquete-" + slugify(p.text) + "-" + spToday(), [{name:"Respostas", rows:answers}, {name:"Resumo", rows:summary}, {name:"Sem resposta", rows:missing}]);
+}
+
 function pollEl(p){
   const votes = S.votes.get(p.id) || [];
   const mine = votes.find(v => v.user === S.meId);
@@ -1894,7 +2061,8 @@ function pollEl(p){
   else if (p.poll.closesAt) foot.push("encerra " + until(p.poll.closesAt));
   if (!mine && !closed && !showRes) foot.push("vote para ver o resultado");
   if (mine && !closed) foot.push("clique na sua opção para desfazer");
-  return h("div",{class:"poll"}, ...opts, h("div",{class:"poll-foot", text:foot.join(" · ")}));
+  return h("div",{class:"poll"}, ...opts, h("div",{class:"poll-foot", text:foot.join(" · ")}),
+    canManage() ? h("button",{class:"btn ghost sm", style:"align-self:flex-start;margin-top:2px", onclick:() => exportPoll(p), text:"📥 Baixar respostas (Excel)"}) : null);
 }
 function ackEl(p){
   if (!(typeOf(p) === "comunicado" && p.requireAck)) return null;
@@ -1971,6 +2139,7 @@ function renderCard(p, c){
   if (!isCom && p.pinned) c.band.style.borderRadius = "13px 13px 0 0";
   const items = [];
   if (canManage()) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); togglePin(p); }, text: p.pinned ? "Desafixar do topo" : "Fixar no topo"}));
+  if (typeOf(p) === "poll" && p.poll && canManage()) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); exportPoll(p); }, text:"Baixar respostas (Excel)"}));
   if (isCom && p.requireAck && (canManage() || p.author === S.meId)) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); openReaders(p); }, text:"Ver quem leu"}));
   if (S.meId && (p.author === S.meId || canModerate())) items.push(h("button",{class:"danger", role:"menuitem", onclick:() => { closeMenus(); deletePost(p); }, text:"Excluir publicação"}));
   const dots = items.length ? h("div",{class:"menu-wrap"}, h("button",{class:"dots", "aria-label":"Opções da publicação", text:"⋯",
@@ -2092,6 +2261,627 @@ function renderMe(){
   $("composer").hidden = !S.canWrite;
 }
 
+/* ---------- gamificação: CRAcoins, tarefas, loja, ranking, presença ---------- */
+const GDEF = {presenceDay:5, presenceWeek:50, presenceMonth:150, season:{name:"", start:"", end:""}};
+S.game = JSON.parse(JSON.stringify(GDEF));
+S.tasks = []; S.claims = []; S.presence = []; S.bonus = []; S.shop = []; S.orders = [];
+S.cart = {}; S.gtab = "tarefas"; S.calShown = false; S.statsCache = new Map();
+const numOr = (v, d) => (v === "" || v == null || !Number.isFinite(+v)) ? d : +v;
+const spToday = () => new Intl.DateTimeFormat("en-CA", {timeZone:"America/Sao_Paulo"}).format(new Date());
+const dParts = ds => ds.split("-").map(Number);
+const dowOf = ds => { const [y,m,d] = dParts(ds); return new Date(Date.UTC(y, m-1, d)).getUTCDay(); };
+const isWeekday = ds => { const w = dowOf(ds); return w >= 1 && w <= 5; };
+const mondayOf = ds => { const [y,m,d] = dParts(ds); const t = new Date(Date.UTC(y, m-1, d)); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0,10); };
+const addDays = (ds, n) => { const [y,m,d] = dParts(ds); const t = new Date(Date.UTC(y, m-1, d + n)); return t.toISOString().slice(0,10); };
+function weekdaysInMonth(mk){ const [y,m] = mk.split("-").map(Number); const last = new Date(Date.UTC(y, m, 0)).getUTCDate(); let n = 0; for (let d = 1; d <= last; d++){ const w = new Date(Date.UTC(y, m-1, d)).getUTCDay(); if (w >= 1 && w <= 5) n++; } return n; }
+const msOfDate = ds => new Date(ds + "T00:00:00-03:00").getTime();
+const fmtD = ds => { const [y,m,d] = dParts(ds); return String(d).padStart(2,"0") + "/" + String(m).padStart(2,"0") + "/" + y; };
+const fmtMs = ms => new Intl.DateTimeFormat("pt-BR", {day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit", timeZone:"America/Sao_Paulo"}).format(ms);
+const coins = n => "🪙 " + (n || 0).toLocaleString("pt-BR");
+const MONTHS = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const daysBetween = (a, b) => Math.round((msOfDate(b) - msOfDate(a)) / 86400000);
+const lastOfMonth = ds => { const [y, m] = dParts(ds); return new Date(Date.UTC(y, m, 0)).toISOString().slice(0,10); };
+const monthName = ds => { const [y, m] = dParts(ds); return MONTHS[m - 1] + " " + y; };
+/* Janela da temporada atual. Regra idêntica à função p_window do banco. */
+function curWindow(){
+  const se = S.game.season || {}, t = spToday(), renew = se.renew || "manual";
+  if (!se.start && !se.end) return {s:"2000-01-01", e:"2999-12-31", key:"all", name:"Sem temporada definida", active:true, open:true};
+  const s0 = se.start || "2000-01-01", e0 = se.end || "2999-12-31";
+  if (t <= e0) return {s:s0, e:e0, key:s0, name:se.name || "Temporada", active:t >= s0, notStarted:t < s0};
+  if (renew === "monthly"){ const ms = t.slice(0,8) + "01"; return {s:ms, e:lastOfMonth(ms), key:ms, name:"Temporada " + monthName(ms), active:true, auto:true}; }
+  if (renew === "repeat"){ const len = daysBetween(s0, e0) + 1, k = Math.floor(daysBetween(s0, t) / len), ns = addDays(s0, k * len);
+    return {s:ns, e:addDays(ns, len - 1), key:ns, name:(se.name || "Temporada") + " · ciclo " + (k + 1), active:true, auto:true}; }
+  return {s:"9999-12-30", e:"9999-12-31", key:"ended", name:se.name || "Temporada", active:false, ended:true, endedOn:e0};
+}
+const W = () => S._win || (S._win = curWindow());
+const inWinMs = (ms, w) => ms >= msOfDate(w.s) && ms < msOfDate(w.e) + 86400000;
+const inWinDate = (ds, w) => ds >= w.s && ds <= w.e;
+/* Períodos disponíveis para o relatório: atual, ciclos anteriores e temporadas guardadas no histórico */
+function reportPeriods(){
+  const se = S.game.season || {}, out = [], seen = new Set(), cw = W();
+  const add = (name, s, e) => { if (!s || !e || seen.has(s + e)) return; seen.add(s + e); out.push({name, s, e, key:s + "|" + e}); };
+  if (!cw.ended) add(cw.name + " (atual)", cw.s, cw.e);
+  if (se.start && se.end){
+    if (cw.auto){
+      if ((se.renew || "") === "monthly"){ let ms = addDays(cw.s, -1).slice(0,8) + "01"; for (let i = 0; i < 12 && ms >= se.start.slice(0,8) + "01"; i++){ add("Temporada " + monthName(ms), ms, lastOfMonth(ms)); ms = addDays(ms, -1).slice(0,8) + "01"; } }
+      else { const len = daysBetween(se.start, se.end) + 1; let ns = addDays(cw.s, -len), k = Math.floor(daysBetween(se.start, ns) / len); for (let i = 0; i < 12 && ns >= se.start; i++, k--){ add((se.name || "Temporada") + " · ciclo " + (k + 1), ns, addDays(ns, len - 1)); ns = addDays(ns, -len); } }
+    }
+    add((se.name || "Temporada") + (cw.ended ? " (encerrada)" : ""), se.start, se.end);
+  }
+  (S.game.history || []).slice().reverse().forEach(x => add(x.name || "Temporada anterior", x.start, x.end));
+  add("Todo o período", "2000-01-01", "2999-12-31");
+  return out;
+}
+const taskOf = id => S.tasks.find(t => t.id === id);
+const itemOf = id => S.shop.find(t => t.id === id);
+
+function statsOf(uid, win){
+  const w = win || W(), ck = uid + "|" + w.s + "|" + w.e;
+  if (S.statsCache.has(ck)) return S.statsCache.get(ck);
+  const g = S.game, entries = [];
+  let earned = 0, spent = 0, tasksDone = 0;
+  for (const c of S.claims) if (c.user === uid && c.status === "aprovado" && inWinMs(c.at, w)){
+    earned += (c.points | 0); tasksDone++;
+    const t = taskOf(c.taskId); entries.push({at:c.at, amount:c.points | 0, text:"Tarefa: " + (t ? t.title : "tarefa removida")});
+  }
+  for (const b of S.bonus) if (b.user === uid && inWinMs(b.at, w)){
+    earned += (b.amount | 0); entries.push({at:b.at, amount:b.amount | 0, text:"Bônus da gestão" + (b.reason ? ": " + b.reason : "")});
+  }
+  const days = [...new Set(S.presence.filter(p => p.user === uid && isWeekday(p.date) && inWinDate(p.date, w)).map(p => p.date))].sort();
+  const pd = numOr(g.presenceDay, 5), pw = numOr(g.presenceWeek, 50), pm = numOr(g.presenceMonth, 150);
+  days.forEach(ds => { earned += pd; entries.push({at:msOfDate(ds) + 43200000, amount:pd, text:"Presença em " + fmtD(ds)}); });
+  const wk = {}; days.forEach(ds => { const k = mondayOf(ds); wk[k] = (wk[k] || 0) + 1; });
+  let weeks = 0;
+  for (const [k, n] of Object.entries(wk)) if (n === 5){ weeks++; earned += pw; entries.push({at:msOfDate(addDays(k, 4)) + 64800000, amount:pw, text:"Semana completa de presença (" + fmtD(k) + " a " + fmtD(addDays(k, 4)) + ")"}); }
+  const mo = {}; days.forEach(ds => { const k = ds.slice(0,7); mo[k] = (mo[k] || 0) + 1; });
+  let months = 0;
+  for (const [k, n] of Object.entries(mo)) if (n === weekdaysInMonth(k)){ months++; earned += pm; entries.push({at:msOfDate(k + "-28") + 86400000, amount:pm, text:"Mês completo de presença (" + k.split("-").reverse().join("/") + ")"}); }
+  let orders = 0;
+  for (const o of S.orders) if (o.user === uid && o.status !== "cancelado" && inWinMs(o.at, w)){
+    spent += (o.total | 0); orders++;
+    entries.push({at:o.at, amount:-(o.total | 0), text:"Resgate na loja: " + (o.items || []).map(i => i.qty + "× " + i.name).join(", ")});
+  }
+  entries.sort((a, b) => b.at - a.at);
+  const st = {earned, spent, balance:earned - spent, tasksDone, presenceDays:days.length, weeks, months, orders, entries, days};
+  S.statsCache.set(ck, st); return st;
+}
+function ranking(win){
+  return approvedIds().map(id => ({id, ...statsOf(id, win)})).sort((a, b) => b.earned - a.earned || prof(a.id).name.localeCompare(prof(b.id).name, "pt-BR"));
+}
+function medalsOf(uid){
+  const st = statsOf(uid), rk = ranking(), pos = rk.findIndex(r => r.id === uid) + 1, out = [];
+  if (pos >= 1 && pos <= 3 && st.earned > 0) out.push(["🏆", "Top 3 da temporada"]);
+  if (st.months >= 1) out.push(["🏅", "Mês perfeito"]);
+  if (st.weeks >= 1) out.push(["🗓️", "Semana perfeita"]);
+  if (st.presenceDays >= 20) out.push(["⭐", "20 presenças"]);
+  if (st.tasksDone >= 10) out.push(["🚀", "10 tarefas"]); else if (st.tasksDone >= 5) out.push(["✅", "5 tarefas"]);
+  if (st.orders >= 1) out.push(["🛍️", "Primeiro resgate"]);
+  return out;
+}
+function medalsEl(uid){
+  const ms = medalsOf(uid);
+  return ms.length ? h("div",{class:"medals"}, ms.map(([e, t]) => h("span",{class:"medal", title:t, text:e + " " + t}))) : null;
+}
+
+/* ----- formulário genérico em janela ----- */
+function openForm({title, intro, fields, submit, onSubmit}){
+  const wrap = h("div",{class:"gate dim", style:"z-index:70"});
+  const err = h("div",{class:"err", role:"alert"});
+  const inputs = {};
+  const body = fields.map(f => {
+    const id = "ff_" + f.key;
+    if (f.type === "checkbox"){
+      const el = h("input",{type:"checkbox", id}); el.checked = !!f.value; inputs[f.key] = el;
+      return h("label",{class:"chk", for:id}, el, f.label);
+    }
+    let el;
+    if (f.type === "textarea") el = h("textarea",{class:"field", id, rows:"3", maxlength:f.max || "500", value:f.value || ""});
+    else if (f.type === "select"){ el = h("select",{class:"field", id}, f.options.map(([v, l]) => h("option",{value:v, text:l}))); el.value = f.value != null ? String(f.value) : ""; }
+    else if (f.type === "image"){
+      let data = f.value || "";
+      const prev = h("div",{class:"img-prev"}); const paint = () => prev.replaceChildren(data ? h("img",{src:data, alt:""}) : "🎁");
+      paint();
+      const fi = h("input",{type:"file", accept:"image/*", hidden:true});
+      fi.onchange = async () => {
+        const file = fi.files[0]; if (!file) return;
+        try { data = await compress(file, 700, 110000); paint(); err.textContent = ""; }
+        catch(e){ err.textContent = "Não foi possível usar essa imagem. Tente outra (JPG ou PNG)."; }
+      };
+      inputs[f.key] = {get value(){ return data; }};
+      return h("div",{}, h("label",{class:"f", text:f.label}), h("div",{style:"display:flex;gap:12px;align-items:center"}, prev,
+        h("div",{style:"display:flex;flex-direction:column;gap:6px"},
+          h("button",{class:"btn ghost sm", type:"button", onclick:() => fi.click(), text:"Escolher imagem"}),
+          h("button",{class:"btn ghost sm", type:"button", onclick:() => { data = ""; paint(); }, text:"Remover"}))), fi);
+    }
+    else el = h("input",{class:"field", id, type:f.type || "text", value:f.value != null ? String(f.value) : "", min:f.min, step:f.step, maxlength:f.max});
+    inputs[f.key] = el;
+    return h("div",{}, h("label",{class:"f", for:id, text:f.label}), el, f.hint ? h("div",{class:"note", text:f.hint}) : null);
+  });
+  const close = () => { wrap.remove(); document.removeEventListener("keydown", onKey, true); };
+  const onKey = e => { if (e.key === "Escape"){ e.stopPropagation(); close(); } };
+  const ok = h("button",{class:"btn", text:submit || "Salvar"});
+  ok.onclick = async () => {
+    const vals = {}; for (const [k, el] of Object.entries(inputs)) vals[k] = el.type === "checkbox" ? el.checked : el.value;
+    err.textContent = ""; ok.disabled = true;
+    try { const msg = await onSubmit(vals); if (msg){ err.textContent = msg; return; } close(); }
+    catch(e){ err.textContent = "Não foi possível salvar (" + authMsg(e).replace(/\.$/, "") + ")."; }
+    finally { ok.disabled = false; }
+  };
+  wrap.append(h("div",{class:"gate-card", role:"dialog", "aria-modal":"true", "aria-label":title, style:"max-width:480px"},
+    h("h2",{text:title, style:"font-size:24px"}), intro ? h("p",{text:intro}) : null,
+    h("div",{class:"form-grid"}, body), err,
+    h("div",{style:"display:flex;gap:8px;justify-content:flex-end;margin-top:16px"}, h("button",{class:"btn ghost", onclick:close, text:"Cancelar"}), ok)));
+  wrap.addEventListener("click", e => { if (e.target === wrap) close(); });
+  document.addEventListener("keydown", onKey, true);
+  document.body.append(wrap);
+  const first = wrap.querySelector("input:not([type=file]),textarea,select"); if (first) first.focus();
+}
+const gid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* ----- presença ----- */
+const markedToday = () => S.presence.some(p => p.user === S.meId && p.date === spToday());
+async function markPresence(){
+  const today = spToday();
+  if (!isWeekday(today)){ toast("A presença vale de segunda a sexta."); return; }
+  if (!W().active){ toast("A temporada não está ativa. A presença volta a valer na próxima temporada."); return; }
+  try {
+    await S.db.doc("presence/" + S.meId + "__" + today).set({user:S.meId, date:today, at:Date.now()});
+    S.presence = S.presence.filter(p => !(p.user === S.meId && p.date === today)).concat([{user:S.meId, date:today, at:Date.now()}]);
+    S.statsCache.clear();
+    toast("Presença marcada! +" + numOr(S.game.presenceDay, 5) + " CRAcoins");
+    openCalendar(); renderAll();
+  } catch(e){ toast("Não foi possível marcar a presença (" + authMsg(e).replace(/\.$/, "") + ")."); }
+}
+function openCalendar(){
+  const today = spToday(), mk = today.slice(0,7);
+  const [y, m] = mk.split("-").map(Number);
+  const mine = new Set(S.presence.filter(p => p.user === S.meId).map(p => p.date));
+  const first = new Date(Date.UTC(y, m-1, 1)).getUTCDay(), last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const cells = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map(d => h("div",{class:"h", text:d}));
+  for (let i = 0; i < first; i++) cells.push(h("div",{class:"d blank"}));
+  for (let d = 1; d <= last; d++){
+    const ds = mk + "-" + String(d).padStart(2,"0");
+    cells.push(h("div",{class:"d" + (isWeekday(ds) ? "" : " we") + (mine.has(ds) ? " on" : "") + (ds === today ? " today" : ""), title: mine.has(ds) ? "Presença marcada" : "", text: mine.has(ds) ? "✓" : String(d)}));
+  }
+  const mon = mondayOf(today), wkDays = [0,1,2,3,4].map(i => addDays(mon, i));
+  const done = wkDays.filter(ds => mine.has(ds)).length;
+  const monthDone = [...mine].filter(ds => ds.startsWith(mk) && isWeekday(ds)).length;
+  const g = S.game, already = mine.has(today), weekend = !isWeekday(today), off = !W().active;
+  const title = new Intl.DateTimeFormat("pt-BR", {month:"long", year:"numeric", timeZone:"UTC"}).format(Date.UTC(y, m-1, 1));
+  openModal([
+    h("h2",{text:"🗓️ Presença", style:"font-size:26px"}),
+    h("div",{class:"muted", style:"text-transform:capitalize;font-weight:700", text:title}),
+    h("div",{class:"cal"}, cells),
+    h("div",{class:"cal-legend"}, h("span",{}, h("i",{class:"on"}), "Presença marcada"), h("span",{}, h("i",{class:"today"}), "Hoje"), h("span",{}, h("i",{style:"opacity:.45"}), "Fim de semana")),
+    h("div",{class:"cal-info"},
+      h("span",{text:"Esta semana: " + done + " de 5 dias"}),
+      h("div",{class:"wk-bar"}, wkDays.map(ds => h("span",{class: mine.has(ds) ? "on" : ""}))),
+      h("span",{text:"Este mês: " + monthDone + " de " + weekdaysInMonth(mk) + " dias úteis"}),
+      h("span",{text:"+" + numOr(g.presenceDay,5) + " por dia · +" + numOr(g.presenceWeek,50) + " semana completa · +" + numOr(g.presenceMonth,150) + " mês completo"})),
+    off ? h("div",{class:"notice", style:"margin-bottom:10px", text: W().ended ? "Temporada encerrada. A presença volta a valer quando a próxima temporada começar." : "A temporada ainda não começou."}) : null,
+    h("button",{class:"btn full", disabled: already || weekend || off, onclick:markPresence,
+      text: already ? "✓ Presença de hoje marcada" : weekend ? "Presença só de segunda a sexta" : off ? "Temporada fora do período" : "Marcar presença de hoje"})
+  ], "Calendário de presença");
+  $("modalCard").classList.add("cal-card");
+}
+$("navCal").onclick = () => openCalendar();
+
+/* ----- navegação ----- */
+function openGame(tab){
+  closeModal(); closeMenus();
+  S.view = "game"; if (tab) S.gtab = tab;
+  document.querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-current", "false"));
+  renderAll(); window.scrollTo({top:0});
+}
+$("navGame").onclick = () => openGame("tarefas");
+$("navShop").onclick = () => openGame("loja");
+$("tabGame").onclick = () => openGame();
+$("coinChip").onclick = () => openGame("extrato");
+
+/* ----- ranking na tela principal ----- */
+function renderRankCard(){
+  const card = $("rankCard");
+  const rk = ranking();
+  if (!S.ready.posts || !rk.length){ card.hidden = true; return; }
+  card.hidden = false;
+  const pos = rk.findIndex(r => r.id === S.meId);
+  const row = (r, i) => h("button",{class:"rk-row" + (r.id === S.meId ? " me" : ""), onclick:() => openProfile(r.id)},
+    h("span",{class:"rk-pos", text: i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1) + "º"}),
+    avatarEl(r.id, "sm"),
+    h("span",{class:"rk-name"}, h("b",{text:prof(r.id).name}), h("small",{text:prof(r.id).setor || ""})),
+    h("span",{class:"rk-pts", text:coins(r.earned)}));
+  if (W().ended || W().notStarted){
+    card.replaceChildren(h("h2",{}, "🏆 Ranking", h("span",{class:"grow"}), h("button",{class:"linkbtn", onclick:() => openGame("ranking"), text:"Ver tudo"})),
+      h("p",{class:"muted", style:"margin:0;font-size:14px", text: W().ended ? "A temporada \"" + W().name + "\" foi encerrada. O ranking recomeça na próxima temporada." : "A temporada \"" + W().name + "\" começa em " + fmtD(W().s) + "."}));
+    return;
+  }
+  const top = rk.slice(0, 5).map(row);
+  if (pos >= 5) top.push(h("div",{class:"muted", style:"text-align:center;font-size:12px", text:"⋯"}), row(rk[pos], pos));
+  const wn = W();
+  card.replaceChildren(
+    h("h2",{}, "🏆 Ranking", !wn.open ? h("span",{class:"muted", style:"font-weight:600", text:"· " + wn.name + (wn.ended ? " (encerrada)" : "")}) : null, h("span",{class:"grow"}),
+      h("button",{class:"linkbtn", onclick:() => openGame("ranking"), text:"Ver tudo"})),
+    ...top);
+}
+
+function seasonLabel(){
+  const w = W();
+  if (w.open) return "Temporada sem data definida (conta tudo)";
+  if (w.ended) return w.name + " · encerrada em " + fmtD(w.endedOn);
+  const left = daysBetween(spToday(), w.e);
+  const renew = (S.game.season || {}).renew || "manual";
+  return w.name + " · " + fmtD(w.s) + " a " + fmtD(w.e) + (w.notStarted ? " · começa em breve" : " · " + (left === 0 ? "termina hoje" : "termina em " + left + (left === 1 ? " dia" : " dias")))
+    + (renew !== "manual" ? " · renova automaticamente" : "");
+}
+/* ----- tela de CRAcoins ----- */
+function renderGame(){
+  const v = $("gameView");
+  const act = document.activeElement;
+  if (act && v.contains(act) && act.matches("input,select,textarea")) return;
+  const gest = canManage();
+  const me = statsOf(S.meId), rk = ranking(), pos = rk.findIndex(r => r.id === S.meId) + 1;
+  const se = S.game.season || {};
+  const pendClaims = S.claims.filter(c => c.status === "pendente").length;
+  const pendOrders = S.orders.filter(o => o.status === "pendente").length;
+  const hero = h("section",{class:"g-card"},
+    h("h2",{}, "🏆 CRAcoins"),
+    h("div",{class:"g-season", text: seasonLabel()}),
+    h("div",{class:"g-hero", style:"margin-top:12px"},
+      h("div",{class:"box"}, h("div",{class:"lbl", text:"Seu saldo"}), h("div",{class:"big", text:coins(me.balance)})),
+      h("div",{class:"box"}, h("div",{class:"lbl", text:"Ganhos na temporada"}), h("div",{class:"big", style:"font-size:26px", text:coins(me.earned)})),
+      h("div",{class:"box"}, h("div",{class:"lbl", text:"Posição no ranking"}), h("div",{class:"big", style:"font-size:26px", text: pos ? pos + "º de " + rk.length : "—"})),
+      h("button",{class:"btn ghost", onclick:openCalendar, text: markedToday() ? "🗓️ Presença ✓" : "🗓️ Marcar presença"})),
+    medalsEl(S.meId));
+  const tabs = [["tarefas","Tarefas"],["loja","Loja" + (Object.keys(S.cart).length ? " 🛒" : "")],["ranking","Ranking"],["extrato","Extrato"]];
+  const gtabs = [["aprovacoes","Aprovações" + ((pendClaims + pendOrders) ? " (" + (pendClaims + pendOrders) + ")" : "")],["bonus","Bônus"],["relatorio","Relatório"],["config","Configurações"]];
+  if (!gest && gtabs.some(t => t[0] === S.gtab)) S.gtab = "tarefas";
+  const tb = (k, l) => h("button",{role:"tab", "aria-selected":String(S.gtab === k), onclick:() => { S.gtab = k; renderAll(); }, text:l});
+  const tabsEl = h("div",{class:"g-tabs", role:"tablist"},
+    h("div",{class:"grp"}, tabs.map(([k, l]) => tb(k, l))),
+    gest ? h("div",{class:"grp"}, h("span",{class:"glbl", text:"Gestão"}), gtabs.map(([k, l]) => tb(k, l))) : null);
+  const body = ({tarefas:gTasks, loja:gShop, ranking:gRanking, extrato:gExtrato, aprovacoes:gApprovals, bonus:gBonus, relatorio:gReport, config:gConfig}[S.gtab] || gTasks)();
+  v.replaceChildren(hero, tabsEl, body);
+}
+
+function seasonNotice(){
+  const w = W();
+  if (w.ended) return h("div",{class:"notice", text:"A temporada \"" + w.name + "\" foi encerrada em " + fmtD(w.endedOn) + ". Pontos e tarefas foram reiniciados. A gestão precisa iniciar a próxima temporada para liberar novos pontos."});
+  if (w.notStarted) return h("div",{class:"notice", text:"A temporada \"" + w.name + "\" começa em " + fmtD(w.s) + ". Até lá, tarefas e presenças ainda não valem pontos."});
+  return null;
+}
+/* tarefas */
+function taskForm(t){
+  openForm({title: t ? "Editar tarefa" : "Nova tarefa", submit: t ? "Salvar" : "Criar tarefa", fields:[
+    {key:"title", label:"Nome da tarefa", value:t ? t.title : "", max:"120"},
+    {key:"description", label:"Descrição (opcional)", type:"textarea", value:t ? t.description : ""},
+    {key:"points", label:"CRAcoins obtidos", type:"number", min:"1", step:"1", value:t ? t.points : 10},
+    {key:"mode", label:"Como os pontos são liberados", type:"select", value:t ? t.mode : "auto", options:[["auto","Na hora, quando o colaborador marcar Concluí"],["review","Depois da aprovação da gestão"]]},
+    {key:"active", label:"Tarefa ativa (aparece para a equipe)", type:"checkbox", value:t ? t.active !== false : true}
+  ], onSubmit: async v => {
+    const title = v.title.trim(), points = Math.round(+v.points);
+    if (title.length < 3) return "Informe o nome da tarefa.";
+    if (!(points > 0)) return "Informe quantos CRAcoins a tarefa vale.";
+    const id = t ? t.id : gid();
+    await S.db.doc("tasks/" + id).set({title, description:v.description.trim(), points, mode:v.mode, active:v.active, createdAt:t ? t.createdAt : Date.now(), by:S.meId});
+    toast(t ? "Tarefa atualizada." : "Tarefa criada.");
+  }});
+}
+function claimTask(t){
+  const mine = S.posts.filter(p => p.author === S.meId).slice(0, 30);
+  if (!mine.length){
+    openModal([h("h2",{text:"Publique primeiro", style:"font-size:24px"}),
+      h("p",{text:"Para concluir a tarefa, você precisa ter uma publicação relacionada a ela. Faça a publicação no feed e volte aqui."}),
+      h("button",{class:"btn full", onclick:() => { closeModal(); setFilter("all"); $("postText").focus(); }, text:"Ir publicar"})], "Publique primeiro");
+    return;
+  }
+  openForm({title:"Concluir: " + t.title, intro:"Escolha a publicação que comprova a tarefa." + (t.mode === "review" ? " A gestão vai conferir antes de liberar os CRAcoins." : " Os CRAcoins caem na hora."), submit:"Confirmar conclusão", fields:[
+    {key:"post", label:"Publicação relacionada", type:"select", value:mine[0].id, options:mine.map(p => [p.id, when(p.createdAt) + " · " + ((p.title || p.text || (p.media ? "(foto/vídeo)" : p.link || "publicação")).slice(0, 60))])}
+  ], onSubmit: async v => {
+    const w = W();
+    if (!w.active){ return "A temporada não está ativa no momento."; }
+    const id = t.id + "__" + S.meId + "__" + w.s;
+    const old = S.claims.find(c => c.id === id);
+    if (old && (old.status === "pendente" || old.status === "recusado")) await S.db.doc("claims/" + id).delete();
+    const doc = {taskId:t.id, user:S.meId, postId:v.post, points:t.points | 0, status: t.mode === "review" ? "pendente" : "aprovado", at:Date.now(), season:w.s};
+    await S.db.doc("claims/" + id).set(doc);
+    toast(t.mode === "review" ? "Enviado para aprovação da gestão." : "Tarefa concluída! +" + t.points + " CRAcoins");
+  }});
+}
+function gTasks(){
+  const gest = canManage();
+  const list = S.tasks.filter(t => gest || t.active !== false).sort((a, b) => (b.active !== false) - (a.active !== false) || b.createdAt - a.createdAt);
+  const cards = list.map(t => {
+    const w = W();
+    const c = S.claims.find(x => x.taskId === t.id && x.user === S.meId && (x.season ? x.season === w.s : inWinMs(x.at, w)));
+    const doneN = S.claims.filter(x => x.taskId === t.id && x.status === "aprovado" && (x.season ? x.season === W().s : inWinMs(x.at, W()))).length;
+    let st = null, btn = null;
+    if (c && c.status === "aprovado") st = h("span",{class:"tag ok", text:"✓ Concluída"});
+    else if (c && c.status === "pendente") st = h("span",{class:"tag warn", text:"Aguardando aprovação"});
+    else if (c && c.status === "estornado") st = h("span",{class:"tag bad", text:"Pontos estornados pela gestão"});
+    else {
+      if (c && c.status === "recusado") st = h("span",{class:"tag bad", text:"Recusada — você pode enviar de novo"});
+      if (t.active !== false && W().active) btn = h("button",{class:"btn sm", onclick:() => claimTask(t), text:"Concluí"});
+    }
+    return h("div",{class:"g-card task"},
+      h("div",{class:"info"}, h("b",{text:t.title}), t.description ? h("p",{text:t.description}) : null,
+        h("div",{}, h("span",{class:"tag", text: t.mode === "review" ? "Precisa de aprovação" : "Pontos na hora"}), t.active === false ? h("span",{class:"tag bad", text:"Inativa"}) : null,
+          gest ? h("span",{class:"tag", text:doneN + (doneN === 1 ? " pessoa concluiu" : " pessoas concluíram")}) : null, st)),
+      h("div",{class:"acts"}, h("span",{class:"pts", text:"+" + coins(t.points)}), btn,
+        gest ? h("button",{class:"btn ghost sm", onclick:() => taskForm(t), text:"Editar"}) : null,
+        gest ? h("button",{class:"btn ghost sm", onclick: async () => { if (await askConfirm("Excluir a tarefa \"" + t.title + "\"? Os pontos já ganhos continuam no saldo de quem concluiu.", "Excluir")) { try { await S.db.doc("tasks/" + t.id).delete(); toast("Tarefa excluída."); } catch(e){ toast(authMsg(e)); } } }, text:"Excluir"}) : null));
+  });
+  return h("div",{class:"g-list"},
+    seasonNotice(),
+    gest ? h("button",{class:"btn", style:"align-self:flex-start", onclick:() => taskForm(), text:"+ Nova tarefa"}) : null,
+    cards.length ? cards : h("div",{class:"card empty"}, h("strong",{text:"Nenhuma tarefa ainda"}), gest ? "Crie a primeira tarefa no botão acima." : "Quando a gestão criar tarefas, elas aparecem aqui."));
+}
+
+/* loja */
+function boughtQty(itemId, uid){
+  return S.orders.filter(o => o.user === uid && o.status !== "cancelado" && inWinMs(o.at, W())).reduce((n, o) => n + (o.items || []).filter(i => i.itemId === itemId).reduce((a, i) => a + (i.qty | 0), 0), 0);
+}
+function itemForm(it){
+  openForm({title: it ? "Editar item" : "Novo item da loja", submit: it ? "Salvar" : "Adicionar à loja", fields:[
+    {key:"image", label:"Imagem", type:"image", value:it ? it.image : ""},
+    {key:"name", label:"Nome do item", value:it ? it.name : "", max:"80"},
+    {key:"description", label:"Descrição (opcional)", type:"textarea", value:it ? it.description : ""},
+    {key:"price", label:"Valor em CRAcoins", type:"number", min:"1", step:"1", value:it ? it.price : 100},
+    {key:"stock", label:"Quantidade disponível (estoque)", type:"number", min:"0", step:"1", value:it ? it.stock : 1},
+    {key:"perPerson", label:"Limite por pessoa (0 = sem limite)", type:"number", min:"0", step:"1", value:it ? (it.perPerson || 0) : 1},
+    {key:"active", label:"Item visível na loja", type:"checkbox", value:it ? it.active !== false : true}
+  ], onSubmit: async v => {
+    const name = v.name.trim(), price = Math.round(+v.price), stock = Math.round(+v.stock), per = Math.round(+v.perPerson || 0);
+    if (name.length < 2) return "Informe o nome do item.";
+    if (!(price > 0)) return "Informe o valor em CRAcoins.";
+    if (!(stock >= 0)) return "Informe a quantidade disponível.";
+    const id = it ? it.id : gid();
+    await S.db.doc("shop/" + id).set({name, description:v.description.trim(), price, stock, perPerson:Math.max(0, per), image:v.image || "", active:v.active, createdAt:it ? it.createdAt : Date.now()});
+    toast(it ? "Item atualizado." : "Item adicionado à loja.");
+  }});
+}
+function cartTotal(){ return Object.entries(S.cart).reduce((n, [id, q]) => { const it = itemOf(id); return n + (it ? it.price * q : 0); }, 0); }
+function maxFor(it){
+  let m = it.stock | 0;
+  if ((it.perPerson | 0) > 0) m = Math.min(m, (it.perPerson | 0) - boughtQty(it.id, S.meId));
+  return Math.max(0, m);
+}
+function addToCart(it, d){
+  const cur = S.cart[it.id] || 0, nx = cur + d, mx = maxFor(it);
+  if (nx > mx){ toast(mx <= 0 ? "Você não pode resgatar mais deste item." : "Limite para este item: " + mx + "."); return; }
+  if (nx <= 0) delete S.cart[it.id]; else S.cart[it.id] = nx;
+  renderGame();
+}
+async function checkout(){
+  const items = Object.entries(S.cart).map(([itemId, qty]) => ({itemId, qty}));
+  if (!items.length) return;
+  if (!W().active){ toast("A temporada não está ativa. Os resgates voltam na próxima temporada."); return; }
+  const total = cartTotal(), bal = statsOf(S.meId).balance;
+  for (const {itemId, qty} of items){ const it = itemOf(itemId); if (!it || it.active === false || qty > maxFor(it)){ toast("Algum item do carrinho ficou indisponível. Revise o carrinho."); return; } }
+  if (total > bal){ toast("Saldo insuficiente: você tem " + coins(bal) + " e o carrinho custa " + coins(total) + "."); return; }
+  if (!(await askConfirm("Confirmar o resgate de " + coins(total) + "? A gestão vai combinar a entrega.", "Resgatar"))) return;
+  const {error} = await sb.rpc("purple_checkout", {items});
+  if (error){ toast(/saldo/i.test(error.message) ? "Saldo insuficiente." : /estoque|indispon|limite/i.test(error.message) ? error.message : "Não foi possível concluir o resgate (" + authMsg(error).replace(/\.$/, "") + ")."); return; }
+  S.cart = {}; toast("Resgate realizado! Acompanhe em Meus resgates.");
+  setTimeout(() => Promise.all([S.db.collection("orders").get(), S.db.collection("shop").get()]).then(([o, sh]) => {
+    S.orders = o.docs.map(d => ({id:d.id, ...d.data()})); S.shop = sh.docs.map(d => ({id:d.id, ...d.data()})); S.statsCache.clear(); renderAll();
+  }).catch(() => {}), 300);
+  renderGame();
+}
+const ORDER_ST = {pendente:["warn","Aguardando entrega"], entregue:["ok","Entregue"], cancelado:["bad","Cancelado"]};
+function gShop(){
+  const gest = canManage();
+  const bal = statsOf(S.meId).balance;
+  const items = S.shop.filter(it => gest || it.active !== false).sort((a, b) => (b.active !== false) - (a.active !== false) || a.price - b.price);
+  const cartIds = Object.keys(S.cart).filter(id => itemOf(id));
+  const cart = cartIds.length ? h("section",{class:"g-card"},
+    h("h2",{}, "🛒 Carrinho"),
+    cartIds.map(id => { const it = itemOf(id); return h("div",{class:"cart-row"},
+      h("span",{class:"nm"}, h("b",{text:it.name}), h("div",{class:"muted", style:"font-size:13px", text:coins(it.price) + " cada"})),
+      h("span",{class:"qty"}, h("button",{"aria-label":"Diminuir", onclick:() => addToCart(it, -1), text:"−"}), h("b",{text:String(S.cart[id])}), h("button",{"aria-label":"Aumentar", onclick:() => addToCart(it, 1), text:"+"})),
+      h("b",{text:coins(it.price * S.cart[id])})); }),
+    h("div",{style:"display:flex;justify-content:space-between;margin-top:10px;font-weight:700"}, h("span",{text:"Total"}), h("span",{text:coins(cartTotal())})),
+    h("div",{class:"muted", style:"font-size:13.5px", text:"Seu saldo: " + coins(bal) + (cartTotal() > bal ? " · saldo insuficiente" : "")}),
+    h("div",{style:"display:flex;gap:8px;margin-top:10px"}, h("button",{class:"btn", disabled:cartTotal() > bal, onclick:checkout, text:"Finalizar resgate"}), h("button",{class:"btn ghost", onclick:() => { S.cart = {}; renderGame(); }, text:"Esvaziar"}))) : null;
+  const grid = h("div",{class:"shop-grid"}, items.map(it => {
+    const out = (it.stock | 0) <= 0, mx = maxFor(it);
+    return h("div",{class:"item"},
+      h("div",{class:"img"}, it.image ? h("img",{src:it.image, alt:""}) : "🎁", out ? h("div",{class:"out", text:"INDISPONÍVEL"}) : null),
+      h("div",{class:"body"},
+        h("b",{text:it.name}), it.description ? h("small",{text:it.description}) : null,
+        h("span",{class:"price", text:coins(it.price)}),
+        h("small",{text: out ? "Esgotado" : "Restam " + it.stock + ((it.perPerson | 0) > 0 ? " · até " + it.perPerson + " por pessoa" : "")}),
+        it.active === false ? h("span",{class:"tag bad", text:"Oculto da loja"}) : null,
+        h("button",{class:"btn sm", disabled: out || mx <= 0 || it.active === false, onclick:() => addToCart(it, 1), text: out ? "Indisponível" : mx <= 0 ? "Limite atingido" : "Adicionar ao carrinho"}),
+        gest ? h("div",{style:"display:flex;gap:6px"}, h("button",{class:"btn ghost sm", onclick:() => itemForm(it), text:"Editar"}),
+          h("button",{class:"btn ghost sm", onclick: async () => { if (await askConfirm("Excluir \"" + it.name + "\" da loja?", "Excluir")) { try { await S.db.doc("shop/" + it.id).delete(); delete S.cart[it.id]; toast("Item excluído."); } catch(e){ toast(authMsg(e)); } } }, text:"Excluir"})) : null));
+  }));
+  const mineO = S.orders.filter(o => o.user === S.meId).sort((a, b) => b.at - a.at);
+  const myOrders = h("section",{class:"g-card"}, h("h2",{text:"🛍️ Meus resgates"}),
+    mineO.length ? mineO.map(o => h("div",{class:"ext-row"},
+      h("span",{class:"t"}, (o.items || []).map(i => i.qty + "× " + i.name).join(", "), h("small",{text:fmtMs(o.at)})),
+      h("span",{class:"tag " + (ORDER_ST[o.status] || ORDER_ST.pendente)[0], text:(ORDER_ST[o.status] || ORDER_ST.pendente)[1]}),
+      h("span",{class:"v minus", text:"−" + (o.total | 0)}))) : h("p",{class:"muted", text:"Você ainda não fez resgates."}));
+  return h("div",{class:"g-list"},
+    gest ? h("button",{class:"btn", style:"align-self:flex-start", onclick:() => itemForm(), text:"+ Novo item"}) : null,
+    cart,
+    items.length ? grid : h("div",{class:"card empty"}, h("strong",{text:"A loja está vazia"}), gest ? "Adicione o primeiro prêmio no botão acima." : "Os prêmios aparecem aqui quando a gestão cadastrar."),
+    myOrders);
+}
+
+/* ranking */
+function gRanking(){
+  const rk = ranking();
+  const row = (r, i) => h("button",{class:"rk-row" + (r.id === S.meId ? " me" : ""), onclick:() => openProfile(r.id)},
+    h("span",{class:"rk-pos", text: i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1) + "º"}), avatarEl(r.id, "sm"),
+    h("span",{class:"rk-name"}, h("b",{text:prof(r.id).name}), h("small",{text:[prof(r.id).cargo, prof(r.id).setor].filter(Boolean).join(" · ")})),
+    h("span",{class:"rk-pts", text:coins(r.earned)}));
+  const bySetor = {};
+  rk.forEach(r => { const s = prof(r.id).setor || "Sem setor"; bySetor[s] = bySetor[s] || {pts:0, n:0}; bySetor[s].pts += r.earned; bySetor[s].n++; });
+  const setores = Object.entries(bySetor).sort((a, b) => b[1].pts - a[1].pts);
+  return h("div",{class:"g-list"},
+    h("section",{class:"g-card"}, h("h2",{text:"🏆 Ranking individual"}), h("p",{class:"muted", style:"margin:0 0 6px;font-size:13.5px", text:"Ordenado pelos CRAcoins ganhos na temporada. Resgates na loja não tiram ninguém do ranking."}), rk.map(row)),
+    h("section",{class:"g-card"}, h("h2",{text:"🏢 Ranking por setor"}),
+      setores.map(([s, v], i) => h("div",{class:"rk-row"}, h("span",{class:"rk-pos", text:(i + 1) + "º"}),
+        h("span",{class:"rk-name"}, h("b",{text:s}), h("small",{text:v.n + (v.n === 1 ? " pessoa" : " pessoas")})), h("span",{class:"rk-pts", text:coins(v.pts)})))));
+}
+
+/* extrato */
+function gExtrato(){
+  const st = statsOf(S.meId);
+  return h("section",{class:"g-card"}, h("h2",{text:"📄 Extrato de CRAcoins"}),
+    h("div",{class:"muted", style:"font-size:14px;margin-bottom:6px", text:"Ganhos " + coins(st.earned) + " · Gastos " + coins(st.spent) + " · Saldo " + coins(st.balance)}),
+    st.entries.length ? st.entries.map(e => h("div",{class:"ext-row"}, h("span",{class:"t"}, e.text, h("small",{text:fmtMs(e.at)})),
+      h("span",{class:"v " + (e.amount >= 0 ? "plus" : "minus"), text:(e.amount >= 0 ? "+" : "−") + Math.abs(e.amount)}))) : h("p",{class:"muted", text:"Ainda não há movimentações nesta temporada."}));
+}
+
+/* gestão: aprovações e pedidos */
+async function setClaim(c, status){
+  try { await S.db.doc("claims/" + c.id).update({status, reviewedBy:S.meId, reviewedAt:Date.now()}); toast("Atualizado."); } catch(e){ toast(authMsg(e)); }
+}
+async function setOrder(o, status){
+  try {
+    if (status === "cancelado" && o.status !== "cancelado"){
+      for (const i of o.items || []){ const it = itemOf(i.itemId); if (it) await S.db.doc("shop/" + it.id).update({stock:(it.stock | 0) + (i.qty | 0)}); }
+    }
+    await S.db.doc("orders/" + o.id).update({status, handledBy:S.meId, handledAt:Date.now()});
+    toast(status === "cancelado" ? "Resgate cancelado. CRAcoins e estoque devolvidos." : "Resgate marcado como entregue.");
+  } catch(e){ toast(authMsg(e)); }
+}
+function gApprovals(){
+  const pc = S.claims.filter(c => c.status === "pendente").sort((a, b) => a.at - b.at);
+  const po = S.orders.filter(o => o.status === "pendente").sort((a, b) => a.at - b.at);
+  const recentC = S.claims.filter(c => c.status === "aprovado").sort((a, b) => b.at - a.at).slice(0, 25);
+  const doneO = S.orders.filter(o => o.status !== "pendente").sort((a, b) => b.at - a.at).slice(0, 25);
+  const who = id => h("span",{style:"display:flex;gap:8px;align-items:center"}, avatarEl(id, "xs"), h("b",{text:prof(id).name}));
+  const postBtn = c => S.posts.some(p => p.id === c.postId) ? h("button",{class:"btn ghost sm", onclick:() => openDetail(c.postId), text:"Ver publicação"}) : h("span",{class:"tag bad", text:"Publicação excluída"});
+  return h("div",{class:"g-list"},
+    h("section",{class:"g-card"}, h("h2",{text:"⏳ Tarefas aguardando aprovação (" + pc.length + ")"}),
+      pc.length ? pc.map(c => h("div",{class:"ext-row", style:"flex-wrap:wrap"}, h("span",{class:"t"}, who(c.user), h("small",{text:(taskOf(c.taskId) || {}).title || "tarefa removida"}), h("small",{text:fmtMs(c.at)})),
+        h("span",{class:"pts", text:"+" + (c.points | 0)}), postBtn(c),
+        h("button",{class:"btn sm", onclick:() => setClaim(c, "aprovado"), text:"Aprovar"}),
+        h("button",{class:"btn ghost sm", onclick:() => setClaim(c, "recusado"), text:"Recusar"}))) : h("p",{class:"muted", text:"Nada pendente."})),
+    h("section",{class:"g-card"}, h("h2",{text:"🛍️ Resgates aguardando entrega (" + po.length + ")"}),
+      po.length ? po.map(o => h("div",{class:"ext-row", style:"flex-wrap:wrap"}, h("span",{class:"t"}, who(o.user), h("small",{text:(o.items || []).map(i => i.qty + "× " + i.name).join(", ")}), h("small",{text:fmtMs(o.at)})),
+        h("span",{class:"v minus", text:coins(o.total)}),
+        h("button",{class:"btn sm", onclick:() => setOrder(o, "entregue"), text:"Marcar entregue"}),
+        h("button",{class:"btn ghost sm", onclick: async () => { if (await askConfirm("Cancelar este resgate? Os CRAcoins voltam para a pessoa e o estoque é devolvido.", "Cancelar resgate")) setOrder(o, "cancelado"); }, text:"Cancelar"}))) : h("p",{class:"muted", text:"Nenhum resgate pendente."})),
+    h("section",{class:"g-card"}, h("h2",{text:"✅ Tarefas aprovadas recentemente"}),
+      recentC.length ? recentC.map(c => h("div",{class:"ext-row", style:"flex-wrap:wrap"}, h("span",{class:"t"}, who(c.user), h("small",{text:((taskOf(c.taskId) || {}).title || "tarefa removida") + " · " + fmtMs(c.at)})),
+        h("span",{class:"pts", text:"+" + (c.points | 0)}), postBtn(c),
+        h("button",{class:"btn ghost sm", onclick: async () => { if (await askConfirm("Estornar os " + c.points + " CRAcoins desta tarefa de " + prof(c.user).name + "?", "Estornar")) setClaim(c, "estornado"); }, text:"Estornar"}))) : h("p",{class:"muted", text:"Nenhuma ainda."})),
+    h("section",{class:"g-card"}, h("h2",{text:"📦 Histórico de resgates"}),
+      doneO.length ? doneO.map(o => h("div",{class:"ext-row"}, h("span",{class:"t"}, who(o.user), h("small",{text:(o.items || []).map(i => i.qty + "× " + i.name).join(", ") + " · " + fmtMs(o.at)})),
+        h("span",{class:"tag " + (ORDER_ST[o.status] || ORDER_ST.pendente)[0], text:(ORDER_ST[o.status] || ORDER_ST.pendente)[1]}))) : h("p",{class:"muted", text:"Nenhum ainda."})));
+}
+
+/* gestão: bônus */
+function gBonus(){
+  const people = approvedIds().sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR"));
+  const list = S.bonus.slice().sort((a, b) => b.at - a.at);
+  return h("div",{class:"g-list"},
+    h("button",{class:"btn", style:"align-self:flex-start", onclick:() => openForm({title:"Dar bônus de CRAcoins", submit:"Dar bônus", fields:[
+      {key:"user", label:"Colaborador", type:"select", value:people[0], options:people.map(id => [id, prof(id).name + (prof(id).setor ? " · " + prof(id).setor : "")])},
+      {key:"amount", label:"CRAcoins (use número negativo para ajuste)", type:"number", step:"1", value:20},
+      {key:"reason", label:"Motivo", value:"", max:"120", hint:"Ex.: destaque do mês, elogio de aluno, ajuste de feriado."}
+    ], onSubmit: async v => {
+      const amount = Math.round(+v.amount);
+      if (!amount) return "Informe a quantidade de CRAcoins.";
+      if (!v.reason.trim()) return "Informe o motivo.";
+      await S.db.doc("bonus/" + gid()).set({user:v.user, amount, reason:v.reason.trim(), by:S.meId, at:Date.now()});
+      toast("Bônus registrado.");
+    }}), text:"+ Dar bônus"}),
+    h("section",{class:"g-card"}, h("h2",{text:"🎁 Bônus concedidos"}),
+      list.length ? list.map(b => h("div",{class:"ext-row"}, h("span",{class:"t"}, h("b",{text:prof(b.user).name}), h("small",{text:(b.reason || "") + " · por " + prof(b.by).name + " · " + fmtMs(b.at)})),
+        h("span",{class:"v " + (b.amount >= 0 ? "plus" : "minus"), text:(b.amount >= 0 ? "+" : "−") + Math.abs(b.amount)}),
+        h("button",{class:"btn ghost sm", onclick: async () => { if (await askConfirm("Excluir este bônus?", "Excluir")) { try { await S.db.doc("bonus/" + b.id).delete(); } catch(e){ toast(authMsg(e)); } } }, text:"Excluir"}))) : h("p",{class:"muted", text:"Nenhum bônus ainda."})));
+}
+
+/* gestão: relatório */
+function reportRows(win){
+  return ranking(win).map((r, i) => { const p = prof(r.id); return [i + 1, p.name, p.email, p.cargo, p.setor, p.marca, r.tasksDone, r.presenceDays, r.weeks, r.months, r.earned, r.spent, r.balance]; });
+}
+const REPORT_HEAD = ["Posição","Nome","E-mail","Cargo","Setor","Marca","Tarefas concluídas","Presenças","Semanas completas","Meses completos","CRAcoins ganhos","CRAcoins gastos","Saldo"];
+function downloadCSV(){
+  const per = reportPeriods().find(x => x.key === S.reportKey) || reportPeriods()[0];
+  const win = {s:per.s, e:per.e};
+  toast("Gerando planilha…");
+  downloadSheets("purple-cracoins-" + slugify(per.name), [{name:"Relatório", rows:[["Período", per.name, (per.s > "2000-01-01" ? fmtD(per.s) + " a " + fmtD(per.e) : "")], [], REPORT_HEAD, ...reportRows(win)]}]);
+}
+function gReport(){
+  const pers = reportPeriods();
+  if (!pers.some(x => x.key === S.reportKey)) S.reportKey = pers[0].key;
+  const per = pers.find(x => x.key === S.reportKey);
+  const rows = reportRows({s:per.s, e:per.e});
+  const sel = h("select",{class:"field", style:"width:auto;max-width:100%", "aria-label":"Período do relatório"}, pers.map(x => h("option",{value:x.key, text:x.name + (x.s > "2000-01-01" && x.e < "2999-12-31" ? " · " + fmtD(x.s) + " a " + fmtD(x.e) : "")})));
+  sel.value = S.reportKey;
+  sel.onchange = () => { S.reportKey = sel.value; sel.blur(); renderGame(); };
+  return h("section",{class:"g-card"}, h("h2",{}, "📊 Relatório da temporada", h("span",{class:"grow"}), h("button",{class:"btn sm", onclick:downloadCSV, text:"Baixar planilha"})),
+    h("p",{class:"muted", style:"margin:0 0 8px;font-size:13.5px", text:"Use este relatório no fim da temporada para conferir pontos e tarefas e liberar os prêmios. Temporadas encerradas continuam disponíveis aqui."}),
+    h("div",{style:"margin-bottom:10px"}, sel),
+    h("div",{class:"scroll-x"}, h("table",{class:"g-table"},
+      h("thead",{}, h("tr",{}, ["#","Nome","Cargo","Setor","Tarefas","Presenças","Semanas","Ganhos","Gastos","Saldo"].map(t => h("th",{text:t})))),
+      h("tbody",{}, rows.map(r => h("tr",{}, h("td",{text:String(r[0])}), h("td",{text:r[1]}), h("td",{text:r[3] || "—"}), h("td",{text:(r[4] || "—").replace(/^CSC - /, "")}),
+        h("td",{class:"n", text:String(r[6])}), h("td",{class:"n", text:String(r[7])}), h("td",{class:"n", text:String(r[8])}),
+        h("td",{class:"n", text:String(r[10])}), h("td",{class:"n", text:String(r[11])}), h("td",{class:"n", text:String(r[12])})))))));
+}
+
+const RENEW_OPTS = [["manual","Aguardar a gestão iniciar a próxima temporada"],["monthly","Iniciar automaticamente uma temporada por mês"],["repeat","Repetir automaticamente com a mesma duração"]];
+/* gestão: configurações */
+async function saveGame(patch){
+  const next = {...S.game, ...patch};
+  const prev = S.game.season || {};
+  if (patch.season && prev.start && prev.end && (prev.start !== patch.season.start || prev.end !== patch.season.end)){
+    const hist = (S.game.history || []).filter(x => !(x.start === prev.start && x.end === prev.end));
+    hist.push({name:prev.name || "Temporada", start:prev.start, end:prev.end}); next.history = hist.slice(-24);
+  }
+  await S.db.doc("config/game").set(next); toast("Configurações salvas.");
+}
+function gConfig(){
+  const g = S.game, se = g.season || {};
+  const today = spToday(), first = today.slice(0,8) + "01";
+  const [y, m] = today.split("-").map(Number), lastD = new Date(Date.UTC(y, m, 0)).toISOString().slice(0,10);
+  return h("div",{class:"g-list"},
+    h("section",{class:"g-card"}, h("h2",{text:"📅 Temporada"}),
+      h("p",{style:"margin:0", text: se.start ? seasonLabel() : "Nenhuma temporada definida. Enquanto isso, todos os pontos contam."}),
+      se.start ? h("p",{style:"margin:6px 0 0", text:"Ao encerrar: " + (RENEW_OPTS.find(o => o[0] === (se.renew || "manual")) || RENEW_OPTS[0])[1]}) : null,
+      h("p",{class:"muted", style:"font-size:13.5px", text:"Na virada da data de fim, o saldo, o ranking e as tarefas de todos são reiniciados automaticamente. Os registros antigos ficam guardados e podem ser consultados e baixados na aba Relatório."}),
+      h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},
+        h("button",{class:"btn sm", onclick:() => openForm({title:"Editar temporada", fields:[
+          {key:"name", label:"Nome da temporada", value:se.name || "", max:"60"},
+          {key:"start", label:"Início", type:"date", value:se.start || first},
+          {key:"end", label:"Fim (na virada desta data, pontos e tarefas são reiniciados)", type:"date", value:se.end || lastD},
+          {key:"renew", label:"Quando a temporada encerrar", type:"select", value:se.renew || "manual", options:RENEW_OPTS}
+        ], onSubmit: async v => { if (!v.name.trim()) return "Informe o nome."; if (!v.start || !v.end) return "Informe o início e o fim."; if (v.end < v.start) return "O fim precisa ser depois do início."; await saveGame({season:{name:v.name.trim(), start:v.start, end:v.end, renew:v.renew}}); }}), text:"Ajustar temporada"}),
+        h("button",{class:"btn ghost sm", onclick:() => openForm({title:"Iniciar nova temporada", intro:"Antes de iniciar, baixe o relatório da temporada atual na aba Relatório.", submit:"Iniciar", fields:[
+          {key:"name", label:"Nome da nova temporada", value:"", max:"60"},
+          {key:"start", label:"Início", type:"date", value:today},
+          {key:"end", label:"Fim", type:"date", value:lastD > today ? lastD : addDays(today, 30)},
+          {key:"renew", label:"Quando a temporada encerrar", type:"select", value:se.renew || "manual", options:RENEW_OPTS}
+        ], onSubmit: async v => { if (!v.name.trim()) return "Informe o nome."; if (!v.start || !v.end) return "Informe o início e o fim."; if (v.end < v.start) return "O fim precisa ser depois do início."; await saveGame({season:{name:v.name.trim(), start:v.start, end:v.end, renew:v.renew}}); }}), text:"Iniciar nova temporada"}))),
+    h("section",{class:"g-card"}, h("h2",{text:"🗓️ Pontos de presença"}),
+      h("p",{style:"margin:0", text:"Por dia: " + coins(numOr(g.presenceDay,5)) + " · Semana completa (seg a sex): " + coins(numOr(g.presenceWeek,50)) + " · Mês completo: " + coins(numOr(g.presenceMonth,150))}),
+      h("p",{class:"muted", style:"font-size:13.5px", text:"Em semanas com feriado, use a aba Bônus para compensar quem não conseguiu completar a semana."}),
+      h("button",{class:"btn sm", onclick:() => openForm({title:"Pontos de presença", fields:[
+        {key:"d", label:"CRAcoins por dia de presença", type:"number", min:"0", step:"1", value:numOr(g.presenceDay,5)},
+        {key:"w", label:"Bônus por semana completa", type:"number", min:"0", step:"1", value:numOr(g.presenceWeek,50)},
+        {key:"m", label:"Bônus por mês completo", type:"number", min:"0", step:"1", value:numOr(g.presenceMonth,150)}
+      ], onSubmit: async v => { await saveGame({presenceDay:Math.max(0, Math.round(+v.d)), presenceWeek:Math.max(0, Math.round(+v.w)), presenceMonth:Math.max(0, Math.round(+v.m))}); }}), text:"Editar pontos"})));
+}
+
+/* ----- ganchos no restante do app ----- */
+function renderGameBits(){
+  S.statsCache.clear(); S._win = null;
+  const ok = S.ready.posts && S.meId;
+  $("coinChip").hidden = !ok;
+  if (ok) $("coinVal").textContent = statsOf(S.meId).balance.toLocaleString("pt-BR");
+  $("navGame").setAttribute("aria-current", String(S.view === "game" && S.gtab !== "loja"));
+  $("navShop").setAttribute("aria-current", String(S.view === "game" && S.gtab === "loja"));
+  renderRankCard();
+  if (ok && !S.calShown && W().active && S.ready.presence && $("gate").hidden && $("lock").hidden && $("modal").hidden && !markedToday() && isWeekday(spToday())){
+    S.calShown = true; openCalendar();
+  }
+}
+
 function renderAll(){
   renderMe();
   if (!S.db) return;
@@ -2100,14 +2890,16 @@ function renderAll(){
   if (!$("admin").hidden && !(act && $("adminCard").contains(act) && act.matches("input,select"))) renderAdmin();
   checkLock();
   renderSetorBar();
+  renderGameBits();
   if (S.detailId && !$("modal").hidden){
     const dp = S.posts.find(x => x.id === S.detailId);
     if (!dp) closeModal();
     else if (S.detailCard && S.detailCard.key === cardKey(dp)) renderCard(dp, S.detailCard);
   }
   if (!S.ready.posts) return;
-  $("feedView").hidden = S.view !== "feed"; $("profileView").hidden = S.view !== "profile";
+  $("feedView").hidden = S.view !== "feed"; $("profileView").hidden = S.view !== "profile"; $("gameView").hidden = S.view !== "game";
   if (S.view === "profile"){ renderProfile(); return; }
+  if (S.view === "game"){ renderGame(); return; }
   const feed = $("feed");
   const posts = visiblePosts();
   if (!posts.length){
