@@ -1821,7 +1821,7 @@ function setMode(mode){
   S.mode = mode;
   document.querySelectorAll(".modes button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
   $("comTitle").hidden = mode !== "com"; $("comOpts").hidden = mode !== "com"; $("pollBox").hidden = mode !== "poll";
-  $("pollTargets").hidden = mode === "post";
+  $("pollTargets").hidden = !(mode === "poll" || mode === "com");
   if ($("tgTitle")){
     $("tgTitle").textContent = mode === "com" ? "🎯 Quem recebe este comunicado" : "🎯 Quem pode responder";
     $("tgNote").textContent = "Desmarque \"Todos os setores\" para escolher os times. " + (mode === "com" ? "O comunicado (e a tela travada, se marcada) só aparece" : "A enquete só aparece") + " para as pessoas desses setores. A gestão vê tudo.";
