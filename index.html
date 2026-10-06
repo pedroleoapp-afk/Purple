@@ -386,6 +386,14 @@ select.field{appearance:auto}
 .img-prev img{width:100%;height:100%;object-fit:cover}
 @media (max-width:820px){.coin-chip{padding:6px 10px}.g-hero .big{font-size:32px}}
 
+.targets{margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--sunk)}
+.targets .tl{font-weight:700;font-size:14px;margin-bottom:6px}
+.targets .tg{display:flex;flex-wrap:wrap;gap:6px}
+.targets label{display:flex;align-items:center;gap:6px;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+.targets label.all{font-weight:700}
+.targets input{accent-color:var(--pine)}
+.targets label.off{opacity:.5}
+.tgt-tag{display:inline-flex;gap:4px;align-items:center;font-size:12.5px;font-weight:700;background:var(--pine-soft);color:var(--pine);border-radius:999px;padding:3px 10px;align-self:flex-start}
 /* overlays */
 .gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:grid;place-items:center;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px));overflow:auto}
 .gate.dim{background:rgba(20,15,30,.55);z-index:40}
@@ -529,6 +537,7 @@ select.field{appearance:auto}
           <select id="pollDur" class="field" style="width:auto;padding:6px 10px"><option value="0">Sem prazo</option><option value="1">1 dia</option><option value="3">3 dias</option><option value="7" selected>7 dias</option><option value="30">30 dias</option></select>
         </div>
       </div>
+      <div class="targets" id="pollTargets" hidden></div>
       <div class="checks" id="comOpts" hidden>
         <label><input type="checkbox" id="comPin" checked> Fixar no topo do feed</label>
         <label><input type="checkbox" id="comAck"> Exigir confirmação de leitura: a tela de cada pessoa fica travada neste comunicado até ela clicar em "Li e estou ciente"</label>
@@ -1338,7 +1347,7 @@ function ackedBy(postId, id){ return (S.acks.get(postId) || []).some(r => r.user
 function checkLock(){
   const lock = $("lock");
   if (!S.loggedIn || !S.canWrite || !S.meId || !$("gate").hidden || !S.ready.acks || !S.ready.posts){ lock.hidden = true; return; }
-  const pend = S.posts.filter(p => typeOf(p) === "comunicado" && p.requireAck && p.author !== S.meId && !ackedBy(p.id, S.meId)).sort((a,b) => a.createdAt - b.createdAt);
+  const pend = S.posts.filter(p => typeOf(p) === "comunicado" && p.requireAck && p.author !== S.meId && !ackedBy(p.id, S.meId) && canSeePost(p) && (!pollTargets(p).length || pollTargets(p).includes(prof(S.meId).setor))).sort((a,b) => a.createdAt - b.createdAt);
   if (!pend.length){ lock.hidden = true; S.lockId = null; return; }
   const p = pend[0];
   if (S.lockId === p.id && !lock.hidden) return;
@@ -1441,7 +1450,7 @@ function tileEl(p){
 function renderProfile(){
   const view = $("profileView"), id = S.profileId;
   const p = prof(id);
-  const all = S.posts.filter(x => x.author === id);
+  const all = S.posts.filter(x => x.author === id && canSeePost(x));
   const posts = all.slice().sort((a,b) => S.pfSort === "asc" ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
   const photos = all.filter(x => x.media && x.media.kind === "image").length;
   const received = all.reduce((n,x) => n + (S.reactions.get(x.id) || []).length, 0);
@@ -1488,7 +1497,7 @@ function renderProfile(){
   }
 }
 function openReaders(p){
-  const ids = approvedIds().filter(i => i !== p.author);
+  const ids = approvedIds().filter(i => i !== p.author && (!pollTargets(p).length || pollTargets(p).includes(prof(i).setor)));
   const read = ids.filter(i => ackedBy(p.id, i));
   const notRead = ids.filter(i => !ackedBy(p.id, i));
   const row = i => h("div",{}, avatarEl(i,"xs"), h("span",{text:prof(i).name}));
@@ -1667,6 +1676,7 @@ $("search").addEventListener("input", e => { S.q = e.target.value.trim().toLower
 function visiblePosts(){
   const list = S.posts.filter(p => {
     const t = typeOf(p);
+    if (!canSeePost(p)) return false;
     if (S.author && p.author !== S.author) return false;
     if (S.setor && prof(p.author).setor !== S.setor) return false;
     if (S.filter === "image" && !(p.media && p.media.kind === "image")) return false;
@@ -1717,12 +1727,34 @@ function addOptInput(val){
 }
 function renumber(){ [...$("pollOpts").children].forEach((r,i) => r.firstChild.placeholder = "Opção " + (i+1)); $("addOpt").hidden = $("pollOpts").children.length >= 6; }
 $("addOpt").onclick = () => { addOptInput(); $("pollOpts").lastChild.firstChild.focus(); };
-function resetPoll(){ $("pollOpts").replaceChildren(); addOptInput(); addOptInput(); }
+function renderTargetPicker(){
+  const box = $("pollTargets");
+  const all = h("input",{type:"checkbox", id:"tgAll", checked:true});
+  const items = SETORES.map(x => { const cb = h("input",{type:"checkbox", value:x}); return {cb, lab:h("label",{}, cb, x.replace(/^CSC - /, ""))}; });
+  const sync = () => items.forEach(i => { i.cb.disabled = all.checked; i.lab.classList.toggle("off", all.checked); if (all.checked) i.cb.checked = false; });
+  all.onchange = sync; sync();
+  box.replaceChildren(h("div",{class:"tl", id:"tgTitle", text:"🎯 Quem pode responder"}),
+    h("div",{class:"tg"}, h("label",{class:"all", for:"tgAll"}, all, "Todos os setores"), items.map(i => i.lab)),
+    h("div",{class:"note", id:"tgNote", style:"margin-top:6px", text:""}));
+  box.getTargets = () => all.checked ? [] : items.filter(i => i.cb.checked).map(i => i.cb.value);
+}
+function resetPoll(){ $("pollOpts").replaceChildren(); addOptInput(); addOptInput(); renderTargetPicker(); }
+const pollTargets = p => (p && p.poll && Array.isArray(p.poll.targets)) ? p.poll.targets : (p && Array.isArray(p.targets) ? p.targets : []);
+function canSeePost(p){
+  const tg = pollTargets(p);
+  if (!tg.length || !["poll","comunicado"].includes(typeOf(p))) return true;
+  return canManage() || p.author === S.meId || tg.includes(prof(S.meId).setor);
+}
 resetPoll();
 function setMode(mode){
   S.mode = mode;
   document.querySelectorAll(".modes button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
   $("comTitle").hidden = mode !== "com"; $("comOpts").hidden = mode !== "com"; $("pollBox").hidden = mode !== "poll";
+  $("pollTargets").hidden = mode === "post";
+  if ($("tgTitle")){
+    $("tgTitle").textContent = mode === "com" ? "🎯 Quem recebe este comunicado" : "🎯 Quem pode responder";
+    $("tgNote").textContent = "Desmarque \"Todos os setores\" para escolher os times. " + (mode === "com" ? "O comunicado (e a tela travada, se marcada) só aparece" : "A enquete só aparece") + " para as pessoas desses setores. A gestão vê tudo.";
+  }
   $("mediaTools").hidden = mode === "poll"; if (mode === "poll"){ clearFile(); $("linkWrap").hidden = true; }
   pt.placeholder = mode === "poll" ? "Qual é a pergunta da enquete?" : mode === "com" ? "Escreva o comunicado" : placeholderFor();
   pt.classList.toggle("tall", mode !== "post" || !!pt.value.trim());
@@ -1818,13 +1850,17 @@ $("publish").onclick = async () => {
     if (!text){ setStatus("Escreva a pergunta da enquete.", true); pt.focus(); return; }
     if (opts.length < 2){ setStatus("A enquete precisa de pelo menos duas opções.", true); return; }
     const days = Number($("pollDur").value);
-    post.poll = {options: opts.map((t,i) => ({id:"o" + i, text:t})), closesAt: days ? Date.now() + days*86400000 : null};
+    const targets = $("pollTargets").getTargets ? $("pollTargets").getTargets() : [];
+    if ($("pollTargets").getTargets && !$("tgAll").checked && !targets.length){ setStatus("Escolha pelo menos um setor, ou marque Todos os setores.", true); return; }
+    post.poll = {options: opts.map((t,i) => ({id:"o" + i, text:t})), closesAt: days ? Date.now() + days*86400000 : null, targets};
   } else if (mode === "com"){
     if (!canManage()){ setStatus("Somente Gerente, Coordenador e Supervisor podem publicar comunicados.", true); return; }
     const title = $("comTitle").value.trim();
     if (!title){ setStatus("Dê um título ao comunicado.", true); $("comTitle").focus(); return; }
     if (!text && !S.file && !link){ setStatus("Escreva o conteúdo do comunicado.", true); pt.focus(); return; }
-    post.title = title; post.pinned = $("comPin").checked; post.requireAck = $("comAck").checked;
+    const targets = $("pollTargets").getTargets ? $("pollTargets").getTargets() : [];
+    if ($("pollTargets").getTargets && !$("tgAll").checked && !targets.length){ setStatus("Escolha pelo menos um setor, ou marque Todos os setores.", true); return; }
+    post.title = title; post.pinned = $("comPin").checked; post.requireAck = $("comAck").checked; post.targets = targets;
   } else if (!text && !S.file && !link){ setStatus("Escreva uma mensagem ou adicione uma foto, vídeo ou link.", true); pt.focus(); return; }
   if (link) post.link = link;
   const btn = $("publish"); btn.disabled = true; setStatus("Publicando…");
@@ -2039,14 +2075,18 @@ function exportPoll(p){
     ...votes.slice().sort((a, b) => prof(a.user).name.localeCompare(prof(b.user).name, "pt-BR")).map(v => [...person(v.user), optText(v.option), dt(v.at)])];
   const total = votes.length;
   const summary = [["Pergunta", p.text || ""], ["Criada por", prof(p.author).name], ["Criada em", dt(p.createdAt)],
-    ["Encerramento", p.poll.closesAt ? dt(p.poll.closesAt) : "Sem prazo"], ["Total de respostas", total], [],
+    ["Encerramento", p.poll.closesAt ? dt(p.poll.closesAt) : "Sem prazo"], ["Direcionada para", pollTargets(p).length ? pollTargets(p).join(", ") : "Todos os setores"], ["Total de respostas", total], [],
     ["Opção","Votos","%"], ...(p.poll.options || []).map(o => { const n = votes.filter(v => v.option === o.id).length; return [o.text, n, total ? Math.round(n * 1000 / total) / 10 + "%" : "0%"]; })];
   const voted = new Set(votes.map(v => v.user));
-  const missing = [["Nome","E-mail","Cargo","Setor","Marca"], ...approvedIds().filter(id => !voted.has(id) && id !== p.author).sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR")).map(person)];
+  const missing = [["Nome","E-mail","Cargo","Setor","Marca"], ...approvedIds().filter(id => !voted.has(id) && id !== p.author && (!pollTargets(p).length || pollTargets(p).includes(prof(id).setor))).sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR")).map(person)];
   toast("Gerando planilha…");
   downloadSheets("enquete-" + slugify(p.text) + "-" + spToday(), [{name:"Respostas", rows:answers}, {name:"Resumo", rows:summary}, {name:"Sem resposta", rows:missing}]);
 }
 
+function targetTag(p){
+  const tg = pollTargets(p);
+  return tg.length ? h("span",{class:"tgt-tag", title:tg.join(", "), text:"🎯 Para: " + tg.map(x => x.replace(/^CSC - /, "")).join(", ")}) : null;
+}
 function pollEl(p){
   const votes = S.votes.get(p.id) || [];
   const mine = votes.find(v => v.user === S.meId);
@@ -2069,12 +2109,12 @@ function pollEl(p){
   else if (p.poll.closesAt) foot.push("encerra " + until(p.poll.closesAt));
   if (!mine && !closed && !showRes) foot.push("vote para ver o resultado");
   if (mine && !closed) foot.push("clique na sua opção para desfazer");
-  return h("div",{class:"poll"}, ...opts, h("div",{class:"poll-foot", text:foot.join(" · ")}),
+  return h("div",{class:"poll"}, targetTag(p), ...opts, h("div",{class:"poll-foot", text:foot.join(" · ")}),
     canManage() ? h("button",{class:"btn ghost sm", style:"align-self:flex-start;margin-top:2px", onclick:() => exportPoll(p), text:"📥 Baixar respostas (Excel)"}) : null);
 }
 function ackEl(p){
   if (!(typeOf(p) === "comunicado" && p.requireAck)) return null;
-  const ids = approvedIds().filter(i => i !== p.author);
+  const ids = approvedIds().filter(i => i !== p.author && (!pollTargets(p).length || pollTargets(p).includes(prof(i).setor)));
   const read = ids.filter(i => ackedBy(p.id, i)).length;
   if (canManage() || p.author === S.meId){
     return h("div",{class:"ackbar"}, h("span",{text:"✅ Leitura confirmada por " + read + " de " + ids.length}),
@@ -2143,7 +2183,7 @@ function renderCard(p, c){
   const isCom = t === "comunicado";
   c.card.classList.toggle("com", isCom);
   c.band.hidden = !isCom && !p.pinned;
-  c.band.replaceChildren(h("span",{text: isCom ? "📣 Comunicado" : "📌 Publicação fixada"}), isCom && p.pinned ? h("span",{class:"pin", text:"📌 Fixado"}) : null);
+  c.band.replaceChildren(h("span",{text: isCom ? "📣 Comunicado" : "📌 Publicação fixada"}), isCom ? targetTag(p) : null, isCom && p.pinned ? h("span",{class:"pin", text:"📌 Fixado"}) : null);
   if (!isCom && p.pinned) c.band.style.borderRadius = "13px 13px 0 0";
   const items = [];
   if (canManage()) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); togglePin(p); }, text: p.pinned ? "Desafixar do topo" : "Fixar no topo"}));
