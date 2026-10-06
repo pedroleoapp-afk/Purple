@@ -133,7 +133,8 @@ button{cursor:pointer}
 
 /* composer */
 .composer{padding:12px 16px}
-.modes{display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+.modes{display:flex;flex-wrap:wrap;gap:2px 4px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+@media (max-width:420px){.modes button{padding:8px 9px 10px;font-size:14.5px}}
 .modes button{background:none;border:0;padding:8px 12px 10px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
 .modes button[aria-selected="true"]{color:var(--pine);border-color:var(--pine)}
 .c-top{display:flex;gap:10px;align-items:flex-start}
@@ -278,7 +279,9 @@ select.field{appearance:auto}
 .pf-bar{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);padding:6px 12px}
 .pf-tab{background:none;border:0;padding:10px 12px;font-weight:700;color:var(--muted);border-top:3px solid transparent;margin-top:-7px}
 .pf-tab[aria-selected="true"]{color:var(--ink);border-color:var(--ink)}
-.pf-bar select{margin-left:auto;width:auto;padding:6px 10px}
+.pf-bar{flex-wrap:wrap}
+.pf-bar select{margin-left:auto;width:auto;max-width:100%;padding:6px 10px}
+@media (max-width:420px){.pf-bar select{font-size:13.5px;padding:5px 6px}.pf-tab{padding:10px 8px}}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
 .tile{position:relative;aspect-ratio:1/1;border:0;padding:0;background:var(--sunk);overflow:hidden;display:block;width:100%}
 .tile img,.tile video{width:100%;height:100%;object-fit:cover}
@@ -773,6 +776,7 @@ const rtf = new Intl.RelativeTimeFormat("pt-BR", {numeric:"auto"});
 const dtf = new Intl.DateTimeFormat("pt-BR", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"});
 function when(ms){
   const d = (Date.now() - ms)/1000;
+  if (d < -45){ const f = -d; if (f < 3600) return rtf.format(Math.round(f/60), "minute"); if (f < 86400) return rtf.format(Math.round(f/3600), "hour"); return dtf.format(ms); }
   if (d < 45) return "agora";
   if (d < 3600) return rtf.format(-Math.round(d/60), "minute");
   if (d < 86400) return rtf.format(-Math.round(d/3600), "hour");
@@ -1488,7 +1492,7 @@ function inlineImg(p, img){
 function tileEl(p){
   const t = typeOf(p);
   const rs = (S.reactions.get(p.id) || []).length, cs = (S.comments.get(p.id) || []).length;
-  const label = (t === "comunicado" ? "Comunicado: " : t === "poll" ? "Enquete: " : "Publicação: ") + (p.title || p.text || "foto");
+  const label = (t === "comunicado" ? "Comunicado: " : t === "poll" ? "Enquete: " : t === "kudos" ? "Elogio para " + prof(p.to).name + ": " : "Publicação: ") + (p.title || p.text || "foto");
   const tile = h("button",{class:"tile", "aria-label":label + ", " + when(p.createdAt), onclick:() => openDetail(p.id)});
   const m = p.media;
   if (m && m.kind === "image"){
@@ -1500,11 +1504,11 @@ function tileEl(p){
     else tile.append(h("div",{class:"tt", style:"background:#1D1934;color:#fff;align-items:center"}, h("span",{class:"ico", text:"▶"}), h("b",{text:p.text || "Vídeo"})));
     tile.append(h("span",{class:"kind", text:"▶ vídeo"}));
   } else {
-    const ico = t === "comunicado" ? "📣" : t === "poll" ? "📊" : p.link ? "🔗" : "💬";
+    const ico = t === "comunicado" ? "📣" : t === "poll" ? "📊" : t === "kudos" ? "👏" : p.link ? "🔗" : "💬";
     tile.append(h("div",{class:"tt" + (t === "comunicado" ? " com" : "")}, h("span",{class:"ico", text:ico}), h("b",{text:p.title || p.text || p.link || ""})));
   }
-  if (m && t !== "post") tile.append(h("span",{class:"kind", text: t === "comunicado" ? "📣" : "📊"}));
-  tile.append(h("span",{class:"date", text:new Intl.DateTimeFormat("pt-BR",{day:"2-digit", month:"2-digit", year:"2-digit"}).format(p.createdAt)}),
+  if (m && t !== "post") tile.append(h("span",{class:"kind", text: t === "comunicado" ? "📣" : t === "kudos" ? "👏" : "📊"}));
+  tile.append(h("span",{class:"date", text:new Intl.DateTimeFormat("pt-BR",{day:"2-digit", month:"2-digit", year:"2-digit"}).format(pubAt(p))}),
     h("span",{class:"ov", "aria-hidden":"true"}, h("span",{text:"❤ " + rs}), h("span",{text:"💬 " + cs})));
   return tile;
 }
@@ -2356,7 +2360,7 @@ function renderCard(p, c){
 
 function renderStories(){
   const latest = new Map();
-  for (const p of S.posts) if (p.author && p.media && p.media.kind === "image" && !latest.has(p.author)) latest.set(p.author, p.createdAt);
+  for (const p of S.posts) if (p.author && p.media && p.media.kind === "image" && canSeePost(p) && !isScheduled(p) && !latest.has(p.author)) latest.set(p.author, pubAt(p));
   const items = [];
   if (S.canWrite && S.meId){
     items.push(h("button",{class:"story", onclick:() => { setFilter("all"); setMode("post"); $("pickPhoto").click(); }},
@@ -2376,7 +2380,7 @@ function renderStories(){
 }
 function renderRank(){
   const since = Date.now() - 30*86400000, cnt = new Map();
-  for (const p of S.posts) if (p.createdAt >= since && p.author) cnt.set(p.author, (cnt.get(p.author)||0) + 1);
+  for (const p of S.posts) if (pubAt(p) >= since && pubAt(p) <= Date.now() && p.author && canSeePost(p)) cnt.set(p.author, (cnt.get(p.author)||0) + 1);
   const top = [...cnt].sort((a,b) => b[1]-a[1]).slice(0,5);
   $("rank").replaceChildren(...(top.length ? top.map(([id,n]) =>
     h("button",{onclick:() => openProfile(id)}, avatarEl(id,"sm"), h("span",{class:"nm", text:prof(id).name}), h("span",{class:"cnt", text:plural(n,"post","posts")})))
@@ -2409,7 +2413,8 @@ function renderMe(){
   $("modeCom").hidden = !canManage(); $("modePoll").hidden = !canManage();
   document.querySelector(".modes").hidden = !S.canWrite;
   { const sel = $("kudosTo"), cur = sel.value, ids = approvedIds().filter(i => i !== S.meId).sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR"));
-    if (sel.dataset.k !== ids.join()){ sel.replaceChildren(h("option",{value:"", text:"Escolha um colega"}), ...ids.map(i => h("option",{value:i, text:prof(i).name + (prof(i).setor ? " · " + prof(i).setor.replace(/^CSC - /, "") : "")}))); sel.value = cur; sel.dataset.k = ids.join(); } }
+    const key = ids.map(i => i + ":" + prof(i).name + ":" + prof(i).setor).join("|");
+    if (sel.dataset.k !== key){ sel.replaceChildren(h("option",{value:"", text:"Escolha um colega"}), ...ids.map(i => h("option",{value:i, text:prof(i).name + (prof(i).setor ? " · " + prof(i).setor.replace(/^CSC - /, "") : "")}))); sel.value = cur; sel.dataset.k = key; } }
   if ((S.mode === "poll" || S.mode === "com") && !canManage()) setMode("post");
   $("composer").hidden = !S.canWrite;
 }
