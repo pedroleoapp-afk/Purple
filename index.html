@@ -423,6 +423,31 @@ a.mention:hover{text-decoration:underline}
 .kudos-box{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
 .kudos-box label{font-weight:700;font-size:14px}
 .kudos-box select{flex:1;min-width:180px}
+.kudos-box #kudosTeam{flex:0 1 190px;min-width:150px}
+.kudos-warn{flex-basis:100%;margin:0;color:var(--danger);font-weight:700}
+.tile .pin-b{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;border-radius:6px;font-size:12px;padding:1px 6px}
+.tile.pinned{outline:3px solid var(--mustard);outline-offset:-3px}
+.pf-list .card.pf-pinned::before{content:"📌 Fixada no perfil";display:block;padding:8px 14px 0;font-size:12.5px;font-weight:700;color:var(--muted)}
+.ext-row.reset{background:var(--mustard-soft);border-radius:10px;padding-left:8px;padding-right:8px}
+.ext-row.old{opacity:.6}
+.crop-wrap{position:fixed;inset:0;z-index:96;background:rgba(20,15,30,.7);display:grid;place-items:center;padding:16px}
+.crop-card{background:var(--surface);color:var(--ink);border-radius:18px;padding:18px;width:min(340px,100%);display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.crop-card h2{margin:0;font-size:22px}
+.crop-stage{width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#111;touch-action:none;cursor:grab;user-select:none}
+.crop-stage:active{cursor:grabbing}
+.crop-stage canvas{width:100%;height:100%;display:block}
+.crop-zoom{display:flex;align-items:center;gap:10px;font-weight:700}
+.crop-zoom input{flex:1;accent-color:var(--pine)}
+.rep-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.rep-bar .field{width:auto;max-width:100%}
+.rep-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.rep-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:10px 0}
+.rep-kpis div{background:var(--sunk);border-radius:12px;padding:10px}
+.rep-kpis b{display:block;font-family:var(--display);font-size:22px}
+.rep-kpis small{color:var(--muted);font-size:12.5px;font-weight:700}
+details.rep-sec{border-top:1px solid var(--line);padding:8px 0}
+details.rep-sec summary{cursor:pointer;font-weight:800;padding:4px 0}
+details.rep-sec .g-table td{white-space:normal}
 .dt-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 .dt-row label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:700;color:var(--muted)}
 .dt-row input{padding:6px 8px}
@@ -573,7 +598,7 @@ a.mention:hover{text-decoration:underline}
         <button role="tab" data-mode="com" aria-selected="false" id="modeCom" hidden>Comunicado</button>
         <button role="tab" data-mode="kudos" aria-selected="false" id="modeKudos">👏 Elogio</button>
       </div>
-      <div class="kudos-box" id="kudosBox" hidden><label for="kudosTo">Elogiar</label><select class="field" id="kudosTo"></select></div>
+      <div class="kudos-box" id="kudosBox" hidden><label for="kudosTo">Elogiar</label><select class="field" id="kudosTeam" aria-label="Time do colega"></select><select class="field" id="kudosTo"></select><div class="note kudos-warn" id="kudosWarn" role="status" hidden></div></div>
       <label class="sr" for="comTitle">Título do comunicado</label>
       <input class="field com-title" id="comTitle" maxlength="120" placeholder="Título do comunicado" hidden>
       <div class="c-top">
@@ -1027,7 +1052,7 @@ function maybeStartAll(){
   coll("bonus", null, flat("bonus"));
   coll("shop", null, flat("shop"));
   coll("orders", null, flat("orders"));
-  ["challenges","quizzes","quizscores","quizanswers","quizkeys","library","reports"].forEach(n => coll(n, null, flat(n)));
+  ["challenges","quizzes","quizscores","quizanswers","quizkeys","library","reports","resets"].forEach(n => coll(n, null, flat(n)));
 }
 const AUTH_MSG = [
   [/invalid login credentials/i, "E-mail ou senha incorretos."],
@@ -1278,14 +1303,21 @@ function openGate(mode){
   const photoPrev = h("span",{}, avatarEl(S.meId));
   const photoIn = h("input",{type:"file", accept:"image/png,image/jpeg,image/webp", hidden:true});
   const photoErr = h("div",{class:"err"});
+  const useCropped = async src => {
+    try {
+      const out = await openCropper(src);
+      if (!out) return;
+      newPhoto = out; removePhoto = false; photoPrev.replaceChildren(h("img",{class:"avatar", src:newPhoto, alt:"Nova foto de perfil"})); photoErr.textContent = "";
+    } catch(e){ photoErr.textContent = "Não foi possível usar essa imagem. Tente outra foto."; }
+  };
   photoIn.onchange = async () => {
-    const f = photoIn.files[0]; if (!f) return;
-    try { newPhoto = await cropAvatar(f); removePhoto = false; photoPrev.replaceChildren(h("img",{class:"avatar", src:newPhoto, alt:"Nova foto de perfil"})); photoErr.textContent = ""; }
-    catch(e){ photoErr.textContent = "Não foi possível usar essa imagem. Tente outra foto."; }
+    const f = photoIn.files[0]; photoIn.value = ""; if (!f) return;
+    try { await useCropped(await fileToDataUrl(f)); } catch(e){ photoErr.textContent = "Não foi possível usar essa imagem. Tente outra foto."; }
   };
   const photoRow = h("div",{class:"photo-row"}, photoPrev,
     h("div",{style:"display:flex;gap:6px;flex-wrap:wrap"},
       h("button",{class:"btn ghost sm", type:"button", onclick:() => photoIn.click(), text:"Escolher foto"}),
+      S.avatars.has(S.meId) ? h("button",{class:"btn ghost sm", type:"button", onclick:() => useCropped(newPhoto || S.avatars.get(S.meId)), text:"Ajustar enquadramento"}) : null,
       S.avatars.has(S.meId) ? h("button",{class:"btn ghost sm", type:"button", onclick:() => { newPhoto = null; removePhoto = true; photoPrev.replaceChildren(h("span",{class:"avatar","aria-hidden":"true"})); }, text:"Remover"}) : null),
     photoIn);
   const err = h("div",{class:"err", role:"alert"});
@@ -1516,7 +1548,9 @@ function renderProfile(){
   const view = $("profileView"), id = S.profileId;
   const p = prof(id);
   const all = S.posts.filter(x => x.author === id && canSeePost(x));
-  const posts = all.slice().sort((a,b) => S.pfSort === "asc" ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
+  const pins = pinsOf(id).filter(pid => all.some(x => x.id === pid));
+  const pinRank = x => { const i = pins.indexOf(x.id); return i < 0 ? 99 : i; };
+  const posts = all.slice().sort((a,b) => pinRank(a) - pinRank(b) || (S.pfSort === "asc" ? pubAt(a) - pubAt(b) : pubAt(b) - pubAt(a)));
   const photos = all.filter(x => x.media && x.media.kind === "image").length;
   const received = all.reduce((n,x) => n + (S.reactions.get(x.id) || []).length, 0);
   const isMe = id === S.meId;
@@ -1558,11 +1592,12 @@ function renderProfile(){
     view.replaceChildren(head, body); return;
   }
   if (S.pfLayout === "grid"){
-    view.replaceChildren(head, h("div",{class:"card", style:"overflow:hidden"}, h("div",{class:"grid3"}, posts.map(tileEl))));
+    view.replaceChildren(head, h("div",{class:"card", style:"overflow:hidden"}, h("div",{class:"grid3"}, posts.map(x => { const t = tileEl(x); if (pins.includes(x.id)){ t.classList.add("pinned"); t.append(h("span",{class:"pin-b", title:"Fixada no perfil", text:"📌"})); } return t; }))));
   } else {
     let list = view.querySelector(".pf-list");
     if (!list){ list = h("div",{class:"pf-list"}); }
     syncCards(list, posts, S.pcards);
+    posts.forEach(x => { const c = S.pcards.get(x.id); if (c) c.card.classList.toggle("pf-pinned", pins.includes(x.id)); });
     if (view.firstChild !== head || view.children[1] !== list) view.replaceChildren(head, list);
   }
 }
@@ -1832,6 +1867,7 @@ function setMode(mode){
   }
   $("mediaTools").hidden = mode === "poll"; if (mode === "poll"){ clearFile(); $("linkWrap").hidden = true; }
   $("kudosBox").hidden = mode !== "kudos";
+  if (mode === "kudos" && typeof kudosCheck === "function") kudosCheck();
   pt.placeholder = mode === "poll" ? "Qual é a pergunta da enquete?" : mode === "com" ? "Escreva o comunicado" : mode === "kudos" ? "Conte o que essa pessoa fez de especial (você pode usar @ para marcar)" : placeholderFor();
   pt.classList.toggle("tall", mode !== "post" || !!pt.value.trim());
   setStatus("");
@@ -1942,6 +1978,7 @@ $("publish").onclick = async () => {
     const to = $("kudosTo").value;
     if (!to){ setStatus("Escolha quem você quer elogiar.", true); return; }
     if (!text){ setStatus("Escreva o elogio.", true); pt.focus(); return; }
+    if (kudosToThisMonth(to)){ setStatus("Você já elogiou essa pessoa em " + monthWord() + ". Cada colega pode receber um elogio seu por mês.", true); return; }
     if (kudosThisWeek() >= numOr(S.game.kudosPerWeek, 3)){ setStatus("Você já enviou " + numOr(S.game.kudosPerWeek, 3) + " elogios nos últimos 7 dias. Tente de novo em alguns dias.", true); return; }
     post.type = "kudos"; post.to = to;
   }
@@ -2288,6 +2325,7 @@ function renderCard(p, c){
   if (!isCom && !isKudos) c.band.style.borderRadius = "13px 13px 0 0";
   const items = [];
   if (S.meId && p.author === S.meId && S.canWrite) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); editPost(p); }, text:"Editar publicação"}));
+  if (S.meId && p.author === S.meId && S.canWrite && !isScheduled(p)) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); toggleProfilePin(p); }, text: pinsOf(S.meId).includes(p.id) ? "Desafixar do meu perfil" : "📌 Fixar no meu perfil"}));
   if (isKudos && canManage() && !p.kudosRewarded) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); rewardKudos(p); }, text:"Dar CRAcoins pelo elogio"}));
   if (canManage()) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); togglePin(p); }, text: p.pinned ? "Desafixar do topo" : "Fixar no topo"}));
   if (typeOf(p) === "poll" && p.poll && canManage()) items.push(h("button",{role:"menuitem", onclick:() => { closeMenus(); exportPoll(p); }, text:"Baixar respostas (Excel)"}));
@@ -2412,9 +2450,7 @@ function renderMe(){
   if (S.mode === "post") pt.placeholder = placeholderFor();
   $("modeCom").hidden = !canManage(); $("modePoll").hidden = !canManage();
   document.querySelector(".modes").hidden = !S.canWrite;
-  { const sel = $("kudosTo"), cur = sel.value, ids = approvedIds().filter(i => i !== S.meId).sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR"));
-    const key = ids.map(i => i + ":" + prof(i).name + ":" + prof(i).setor).join("|");
-    if (sel.dataset.k !== key){ sel.replaceChildren(h("option",{value:"", text:"Escolha um colega"}), ...ids.map(i => h("option",{value:i, text:prof(i).name + (prof(i).setor ? " · " + prof(i).setor.replace(/^CSC - /, "") : "")}))); sel.value = cur; sel.dataset.k = key; } }
+  fillKudosTo();
   if ((S.mode === "poll" || S.mode === "com") && !canManage()) setMode("post");
   $("composer").hidden = !S.canWrite;
 }
@@ -2473,19 +2509,34 @@ function reportPeriods(){
 const taskOf = id => S.tasks.find(t => t.id === id);
 const itemOf = id => S.shop.find(t => t.id === id);
 
+/* Zeragens de CRAcoins feitas pela gestão. Regra idêntica à função p_reset_ms do banco. */
+const resetsFor = uid => (S.resets || []).filter(r => r.scope === "all" || (r.users || []).includes(uid));
+const resetCut = uid => resetsFor(uid).reduce((m, r) => Math.max(m, r.at || 0), 0);
+/* Sem janela informada = situação atual (saldo, ranking e extrato), já considerando a zeragem.
+   Com janela informada (relatórios) = números originais do período. */
 function statsOf(uid, win){
-  const w = win || W(), ck = uid + "|" + w.s + "|" + w.e;
+  const w = win || W(), cut = win ? 0 : resetCut(uid), ck = uid + "|" + w.s + "|" + w.e + "|" + cut;
   if (S.statsCache.has(ck)) return S.statsCache.get(ck);
+  const st = computeStats(uid, w, cut);
+  if (cut && cut >= msOfDate(w.s)){
+    const raw = computeStats(uid, w, 0);
+    const lines = resetsFor(uid).filter(r => inWinMs(r.at, w)).map(r => ({at:r.at, amount:-((r.amounts || {})[uid] || 0), text:"Saldo zerado pela gestão", reset:true}));
+    st.entries = st.entries.concat(lines, raw.entries.filter(e => e.at < cut)).sort((a, b) => b.at - a.at);
+    st.resetAt = cut;
+  }
+  S.statsCache.set(ck, st); return st;
+}
+function computeStats(uid, w, cut){
   const g = S.game, entries = [];
   let earned = 0, spent = 0, tasksDone = 0;
-  for (const c of S.claims) if (c.user === uid && c.status === "aprovado" && inWinMs(c.at, w)){
+  for (const c of S.claims) if (c.user === uid && c.status === "aprovado" && inWinMs(c.at, w) && c.at >= cut){
     earned += (c.points | 0); tasksDone++;
     const t = taskOf(c.taskId); entries.push({at:c.at, amount:c.points | 0, text:"Tarefa: " + (t ? t.title : "tarefa removida")});
   }
-  for (const b of S.bonus) if (b.user === uid && inWinMs(b.at, w)){
+  for (const b of S.bonus) if (b.user === uid && inWinMs(b.at, w) && b.at >= cut){
     earned += (b.amount | 0); entries.push({at:b.at, amount:b.amount | 0, text:"Bônus da gestão" + (b.reason ? ": " + b.reason : "")});
   }
-  const days = [...new Set(S.presence.filter(p => p.user === uid && isWeekday(p.date) && inWinDate(p.date, w)).map(p => p.date))].sort();
+  const days = [...new Set(S.presence.filter(p => p.user === uid && isWeekday(p.date) && inWinDate(p.date, w) && (p.at || msOfDate(p.date)) >= cut).map(p => p.date))].sort();
   const pd = numOr(g.presenceDay, 5), pw = numOr(g.presenceWeek, 50), pm = numOr(g.presenceMonth, 150);
   days.forEach(ds => { earned += pd; entries.push({at:msOfDate(ds) + 43200000, amount:pd, text:"Presença em " + fmtD(ds)}); });
   const wk = {}; days.forEach(ds => { const k = mondayOf(ds); wk[k] = (wk[k] || 0) + 1; });
@@ -2495,25 +2546,24 @@ function statsOf(uid, win){
   let months = 0;
   for (const [k, n] of Object.entries(mo)) if (n === weekdaysInMonth(k)){ months++; earned += pm; entries.push({at:msOfDate(k + "-28") + 86400000, amount:pm, text:"Mês completo de presença (" + k.split("-").reverse().join("/") + ")"}); }
   let orders = 0;
-  for (const o of S.orders) if (o.user === uid && o.status !== "cancelado" && inWinMs(o.at, w)){
+  for (const o of S.orders) if (o.user === uid && o.status !== "cancelado" && inWinMs(o.at, w) && o.at >= cut){
     spent += (o.total | 0); orders++;
     entries.push({at:o.at, amount:-(o.total | 0), text:"Resgate na loja: " + (o.items || []).map(i => i.qty + "× " + i.name).join(", ")});
   }
   entries.sort((a, b) => b.at - a.at);
-  for (const q of S.quizscores) if (q.user === uid && inWinMs(q.at, w)){
+  for (const q of S.quizscores) if (q.user === uid && inWinMs(q.at, w) && q.at >= cut){
     earned += (q.score | 0); entries.push({at:q.at, amount:q.score | 0, text:"Quiz: " + ((S.quizzes.find(x => x.id === q.quizId) || {}).title || "quiz") + " (" + q.correct + "/" + q.total + " acertos)"});
   }
-  for (const c of celebrationEntries(uid, w)){ earned += c.amount; entries.push(c); }
+  for (const c of celebrationEntries(uid, w)) if (c.at >= cut){ earned += c.amount; entries.push(c); }
   entries.sort((a, b) => b.at - a.at);
-  const st = {earned, spent, balance:earned - spent, tasksDone, presenceDays:days.length, weeks, months, orders, entries, days};
-  S.statsCache.set(ck, st); return st;
+  return {earned, spent, balance:earned - spent, tasksDone, presenceDays:days.length, weeks, months, orders, entries, days};
 }
 function ranking(win){
   return approvedIds().map(id => ({id, ...statsOf(id, win)})).sort((a, b) => b.earned - a.earned || prof(a.id).name.localeCompare(prof(b.id).name, "pt-BR"));
 }
 function medalsOf(uid){
-  const st = statsOf(uid), rk = ranking(), pos = rk.findIndex(r => r.id === uid) + 1, out = [];
-  if (pos >= 1 && pos <= 3 && st.earned > 0) out.push(["🏆", "Top 3 da temporada"]);
+  const st = statsOf(uid, W()), out = [];
+  if (canManage()){ const rk = ranking(), pos = rk.findIndex(r => r.id === uid) + 1; if (pos >= 1 && pos <= 3 && rk[pos - 1].earned > 0) out.push(["🏆", "Top 3 da temporada"]); }
   if (st.months >= 1) out.push(["🏅", "Mês perfeito"]);
   if (st.weeks >= 1) out.push(["🗓️", "Semana perfeita"]);
   if (st.presenceDays >= 20) out.push(["⭐", "20 presenças"]);
@@ -2537,6 +2587,7 @@ function openForm({title, intro, fields, submit, onSubmit}){
       const el = h("input",{type:"checkbox", id}); el.checked = !!f.value; inputs[f.key] = el;
       return h("label",{class:"chk", for:id}, el, f.label);
     }
+    if (f.type === "targets"){ const tf = targetsField(f.value, f.label); inputs[f.key] = tf; return tf.el; }
     let el;
     if (f.type === "textarea") el = h("textarea",{class:"field", id, rows:"3", maxlength:f.max || "500", value:f.value || ""});
     else if (f.type === "select"){ el = h("select",{class:"field", id}, f.options.map(([v, l]) => h("option",{value:v, text:l}))); el.value = f.value != null ? String(f.value) : ""; }
@@ -2644,6 +2695,7 @@ $("coinChip").onclick = () => openGame("extrato");
 /* ----- ranking na tela principal ----- */
 function renderRankCard(){
   const card = $("rankCard");
+  if (!canManage()){ card.hidden = true; return; }
   const rk = ranking();
   if (!S.ready.posts || !rk.length){ card.hidden = true; return; }
   card.hidden = false;
@@ -2682,7 +2734,7 @@ function renderGame(){
   const act = document.activeElement;
   if (act && v.contains(act) && act.matches("input,select,textarea")) return;
   const gest = canManage();
-  const me = statsOf(S.meId), rk = ranking(), pos = rk.findIndex(r => r.id === S.meId) + 1;
+  const me = statsOf(S.meId), rk = gest ? ranking() : [], pos = rk.findIndex(r => r.id === S.meId) + 1;
   const se = S.game.season || {};
   const pendClaims = S.claims.filter(c => c.status === "pendente").length;
   const pendOrders = S.orders.filter(o => o.status === "pendente").length;
@@ -2692,18 +2744,19 @@ function renderGame(){
     h("div",{class:"g-hero", style:"margin-top:12px"},
       h("div",{class:"box"}, h("div",{class:"lbl", text:"Seu saldo"}), h("div",{class:"big", text:coins(me.balance)})),
       h("div",{class:"box"}, h("div",{class:"lbl", text:"Ganhos na temporada"}), h("div",{class:"big", style:"font-size:26px", text:coins(me.earned)})),
-      h("div",{class:"box"}, h("div",{class:"lbl", text:"Posição no ranking"}), h("div",{class:"big", style:"font-size:26px", text: pos ? pos + "º de " + rk.length : "—"})),
+      gest ? h("div",{class:"box"}, h("div",{class:"lbl", text:"Posição no ranking"}), h("div",{class:"big", style:"font-size:26px", text: pos ? pos + "º de " + rk.length : "—"})) : null,
       h("button",{class:"btn ghost", onclick:openCalendar, text: markedToday() ? "🗓️ Presença ✓" : "🗓️ Marcar presença"})),
     medalsEl(S.meId));
-  const tabs = [["tarefas","Tarefas"],["desafios","Desafios"],["quiz","Quiz"],["loja","Loja" + (Object.keys(S.cart).length ? " 🛒" : "")],["ranking","Ranking"],["extrato","Extrato"]];
+  const tabs = [["tarefas","Tarefas"],["desafios","Desafios"],["quiz","Quiz"],["loja","Loja" + (Object.keys(S.cart).length ? " 🛒" : "")]].concat(gest ? [["ranking","Ranking"]] : [], [["extrato","Extrato"]]);
   const openRep = S.reports.filter(r => r.status === "aberta").length;
-  const gtabs = [["aprovacoes","Aprovações" + ((pendClaims + pendOrders + openRep) ? " (" + (pendClaims + pendOrders + openRep) + ")" : "")],["bonus","Bônus"],["indicadores","Indicadores"],["engajamento","Engajamento"],["relatorio","Relatório"],["config","Configurações"]];
-  if (!gest && gtabs.some(t => t[0] === S.gtab)) S.gtab = "tarefas";
+  const gtabs = [["aprovacoes","Aprovações" + ((pendClaims + pendOrders + openRep) ? " (" + (pendClaims + pendOrders + openRep) + ")" : "")],["bonus","Bônus"],["indicadores","Indicadores"],["relatorios","Relatórios"],["config","Configurações"]];
+  if (S.gtab === "relatorio" || S.gtab === "engajamento") S.gtab = "relatorios";
+  if (!gest && (gtabs.some(t => t[0] === S.gtab) || S.gtab === "ranking")) S.gtab = "tarefas";
   const tb = (k, l) => h("button",{role:"tab", "aria-selected":String(S.gtab === k), onclick:() => { S.gtab = k; renderAll(); }, text:l});
   const tabsEl = h("div",{class:"g-tabs", role:"tablist"},
     h("div",{class:"grp"}, tabs.map(([k, l]) => tb(k, l))),
     gest ? h("div",{class:"grp"}, h("span",{class:"glbl", text:"Gestão"}), gtabs.map(([k, l]) => tb(k, l))) : null);
-  const body = ({tarefas:gTasks, desafios:gChallenges, quiz:gQuiz, indicadores:gIndicators, engajamento:gEngagement, loja:gShop, ranking:gRanking, extrato:gExtrato, aprovacoes:gApprovals, bonus:gBonus, relatorio:gReport, config:gConfig}[S.gtab] || gTasks)();
+  const body = ({tarefas:gTasks, desafios:gChallenges, quiz:gQuiz, indicadores:gIndicators, relatorios:gReports, loja:gShop, ranking:gRanking, extrato:gExtrato, aprovacoes:gApprovals, bonus:gBonus, config:gConfig}[S.gtab] || gTasks)();
   v.replaceChildren(hero, tabsEl, body);
 }
 
@@ -2721,13 +2774,15 @@ function taskForm(t){
     {key:"points", label:"CRAcoins obtidos", type:"number", min:"1", step:"1", value:t ? t.points : 10},
     {key:"repeat", label:"Frequência", type:"select", value:t ? (t.repeat || "none") : "none", options:REPEAT_OPTS},
     {key:"mode", label:"Como os pontos são liberados", type:"select", value:t ? t.mode : "auto", options:[["auto","Na hora, quando o colaborador marcar Concluí"],["review","Depois da aprovação da gestão"]]},
+    {key:"targets", type:"targets", value:t ? t.targets : []},
     {key:"active", label:"Tarefa ativa (aparece para a equipe)", type:"checkbox", value:t ? t.active !== false : true}
   ], onSubmit: async v => {
     const title = v.title.trim(), points = Math.round(+v.points);
+    if (!v.targets) return "Escolha pelo menos um time, ou marque Todos os setores.";
     if (title.length < 3) return "Informe o nome da tarefa.";
     if (!(points > 0)) return "Informe quantos CRAcoins a tarefa vale.";
     const id = t ? t.id : gid();
-    await S.db.doc("tasks/" + id).set({title, description:v.description.trim(), points, repeat:v.repeat || "none", mode:v.mode, active:v.active, createdAt:t ? t.createdAt : Date.now(), by:S.meId});
+    await S.db.doc("tasks/" + id).set({title, description:v.description.trim(), points, repeat:v.repeat || "none", mode:v.mode, targets:v.targets, active:v.active, createdAt:t ? t.createdAt : Date.now(), by:S.meId});
     toast(t ? "Tarefa atualizada." : "Tarefa criada.");
   }});
 }
@@ -2755,7 +2810,7 @@ function claimTask(t){
 }
 function gTasks(){
   const gest = canManage();
-  const list = S.tasks.filter(t => gest || t.active !== false).sort((a, b) => (b.active !== false) - (a.active !== false) || b.createdAt - a.createdAt);
+  const list = S.tasks.filter(t => (gest || t.active !== false) && forMe(t)).sort((a, b) => (b.active !== false) - (a.active !== false) || b.createdAt - a.createdAt);
   const cards = list.map(t => {
     const w = W();
     const c = myClaimFor(t);
@@ -2771,7 +2826,7 @@ function gTasks(){
     return h("div",{class:"g-card task"},
       h("div",{class:"info"}, h("b",{text:t.title}), t.description ? h("p",{text:t.description}) : null,
         h("div",{}, t.repeat === "daily" || t.repeat === "weekly" ? h("span",{class:"tag warn", text: t.repeat === "daily" ? "🔁 Missão diária" : "🔁 Missão semanal"}) : null,
-          h("span",{class:"tag", text: t.mode === "review" ? "Precisa de aprovação" : "Pontos na hora"}), t.active === false ? h("span",{class:"tag bad", text:"Inativa"}) : null,
+          h("span",{class:"tag", text: t.mode === "review" ? "Precisa de aprovação" : "Pontos na hora"}), t.active === false ? h("span",{class:"tag bad", text:"Inativa"}) : null, gest ? targetTag(t) : null,
           gest ? h("span",{class:"tag", text:doneN + (doneN === 1 ? " pessoa concluiu" : " pessoas concluíram")}) : null, st)),
       h("div",{class:"acts"}, h("span",{class:"pts", text:"+" + coins(t.points)}), btn,
         gest ? h("button",{class:"btn ghost sm", onclick:() => taskForm(t), text:"Editar"}) : null,
@@ -2795,14 +2850,16 @@ function itemForm(it){
     {key:"price", label:"Valor em CRAcoins", type:"number", min:"1", step:"1", value:it ? it.price : 100},
     {key:"stock", label:"Quantidade disponível (estoque)", type:"number", min:"0", step:"1", value:it ? it.stock : 1},
     {key:"perPerson", label:"Limite por pessoa (0 = sem limite)", type:"number", min:"0", step:"1", value:it ? (it.perPerson || 0) : 1},
+    {key:"targets", type:"targets", value:it ? it.targets : []},
     {key:"active", label:"Item visível na loja", type:"checkbox", value:it ? it.active !== false : true}
   ], onSubmit: async v => {
+    if (!v.targets) return "Escolha pelo menos um time, ou marque Todos os setores.";
     const name = v.name.trim(), price = Math.round(+v.price), stock = Math.round(+v.stock), per = Math.round(+v.perPerson || 0);
     if (name.length < 2) return "Informe o nome do item.";
     if (!(price > 0)) return "Informe o valor em CRAcoins.";
     if (!(stock >= 0)) return "Informe a quantidade disponível.";
     const id = it ? it.id : gid();
-    await S.db.doc("shop/" + id).set({name, description:v.description.trim(), price, stock, perPerson:Math.max(0, per), image:v.image || "", active:v.active, createdAt:it ? it.createdAt : Date.now()});
+    await S.db.doc("shop/" + id).set({name, description:v.description.trim(), price, stock, perPerson:Math.max(0, per), image:v.image || "", targets:v.targets, active:v.active, createdAt:it ? it.createdAt : Date.now()});
     toast(it ? "Item atualizado." : "Item adicionado à loja.");
   }});
 }
@@ -2823,7 +2880,7 @@ async function checkout(){
   if (!items.length) return;
   if (!W().active){ toast("A temporada não está ativa. Os resgates voltam na próxima temporada."); return; }
   const total = cartTotal(), bal = statsOf(S.meId).balance;
-  for (const {itemId, qty} of items){ const it = itemOf(itemId); if (!it || it.active === false || qty > maxFor(it)){ toast("Algum item do carrinho ficou indisponível. Revise o carrinho."); return; } }
+  for (const {itemId, qty} of items){ const it = itemOf(itemId); if (!it || it.active === false || !forMe(it) || qty > maxFor(it)){ toast("Algum item do carrinho ficou indisponível. Revise o carrinho."); return; } }
   if (total > bal){ toast("Saldo insuficiente: você tem " + coins(bal) + " e o carrinho custa " + coins(total) + "."); return; }
   if (!(await askConfirm("Confirmar o resgate de " + coins(total) + "? A gestão vai combinar a entrega.", "Resgatar"))) return;
   const {error} = await sb.rpc("purple_checkout", {items});
@@ -2838,8 +2895,8 @@ const ORDER_ST = {pendente:["warn","Aguardando entrega"], entregue:["ok","Entreg
 function gShop(){
   const gest = canManage();
   const bal = statsOf(S.meId).balance;
-  const items = S.shop.filter(it => gest || it.active !== false).sort((a, b) => (b.active !== false) - (a.active !== false) || a.price - b.price);
-  const cartIds = Object.keys(S.cart).filter(id => itemOf(id));
+  const items = S.shop.filter(it => (gest || it.active !== false) && forMe(it)).sort((a, b) => (b.active !== false) - (a.active !== false) || a.price - b.price);
+  const cartIds = Object.keys(S.cart).filter(id => itemOf(id) && forMe(itemOf(id)));
   const cart = cartIds.length ? h("section",{class:"g-card"},
     h("h2",{}, "🛒 Carrinho"),
     cartIds.map(id => { const it = itemOf(id); return h("div",{class:"cart-row"},
@@ -2857,7 +2914,7 @@ function gShop(){
         h("b",{text:it.name}), it.description ? h("small",{text:it.description}) : null,
         h("span",{class:"price", text:coins(it.price)}),
         h("small",{text: out ? "Esgotado" : "Restam " + it.stock + ((it.perPerson | 0) > 0 ? " · até " + it.perPerson + " por pessoa" : "")}),
-        it.active === false ? h("span",{class:"tag bad", text:"Oculto da loja"}) : null,
+        it.active === false ? h("span",{class:"tag bad", text:"Oculto da loja"}) : null, gest ? targetTag(it) : null,
         h("button",{class:"btn sm", disabled: out || mx <= 0 || it.active === false, onclick:() => addToCart(it, 1), text: out ? "Indisponível" : mx <= 0 ? "Limite atingido" : "Adicionar ao carrinho"}),
         gest ? h("div",{style:"display:flex;gap:6px"}, h("button",{class:"btn ghost sm", onclick:() => itemForm(it), text:"Editar"}),
           h("button",{class:"btn ghost sm", onclick: async () => { if (await askConfirm("Excluir \"" + it.name + "\" da loja?", "Excluir")) { try { await S.db.doc("shop/" + it.id).delete(); delete S.cart[it.id]; toast("Item excluído."); } catch(e){ toast(authMsg(e)); } } }, text:"Excluir"})) : null));
@@ -2877,6 +2934,7 @@ function gShop(){
 
 /* ranking */
 function gRanking(){
+  if (!canManage()) return gTasks();
   const rk = ranking();
   const row = (r, i) => h("button",{class:"rk-row" + (r.id === S.meId ? " me" : ""), onclick:() => openProfile(r.id)},
     h("span",{class:"rk-pos", text: i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1) + "º"}), avatarEl(r.id, "sm"),
@@ -2897,8 +2955,9 @@ function gExtrato(){
   const st = statsOf(S.meId);
   return h("section",{class:"g-card"}, h("h2",{text:"📄 Extrato de CRAcoins"}),
     h("div",{class:"muted", style:"font-size:14px;margin-bottom:6px", text:"Ganhos " + coins(st.earned) + " · Gastos " + coins(st.spent) + " · Saldo " + coins(st.balance)}),
-    st.entries.length ? st.entries.map(e => h("div",{class:"ext-row"}, h("span",{class:"t"}, e.text, h("small",{text:fmtMs(e.at)})),
-      h("span",{class:"v " + (e.amount >= 0 ? "plus" : "minus"), text:(e.amount >= 0 ? "+" : "−") + Math.abs(e.amount)}))) : h("p",{class:"muted", text:"Ainda não há movimentações nesta temporada."}));
+    st.resetAt ? h("div",{class:"notice", style:"margin-bottom:8px", text:"Seu saldo foi zerado pela gestão em " + fmtMs(st.resetAt) + ". Ganhos, gastos e saldo contam a partir dessa data. As movimentações anteriores continuam listadas abaixo."}) : null,
+    st.entries.length ? st.entries.map(e => h("div",{class:"ext-row" + (e.reset ? " reset" : "") + (st.resetAt && e.at < st.resetAt && !e.reset ? " old" : "")}, h("span",{class:"t"}, e.reset ? h("b",{text:"🧹 " + e.text}) : e.text, h("small",{text:fmtMs(e.at)})),
+      h("span",{class:"v " + (e.amount >= 0 && !e.reset ? "plus" : "minus"), text: e.reset ? (e.amount ? "−" + Math.abs(e.amount) + " → 0" : "→ 0") : (e.amount >= 0 ? "+" : "−") + Math.abs(e.amount)}))) : h("p",{class:"muted", text:"Ainda não há movimentações nesta temporada."}));
 }
 
 /* gestão: aprovações e pedidos */
@@ -3012,7 +3071,7 @@ function gConfig(){
     h("section",{class:"g-card"}, h("h2",{text:"📅 Temporada"}),
       h("p",{style:"margin:0", text: se.start ? seasonLabel() : "Nenhuma temporada definida. Enquanto isso, todos os pontos contam."}),
       se.start ? h("p",{style:"margin:6px 0 0", text:"Ao encerrar: " + (RENEW_OPTS.find(o => o[0] === (se.renew || "manual")) || RENEW_OPTS[0])[1]}) : null,
-      h("p",{class:"muted", style:"font-size:13.5px", text:"Na virada da data de fim, o saldo, o ranking e as tarefas de todos são reiniciados automaticamente. Os registros antigos ficam guardados e podem ser consultados e baixados na aba Relatório."}),
+      h("p",{class:"muted", style:"font-size:13.5px", text:"Na virada da data de fim, o saldo, o ranking e as tarefas de todos são reiniciados automaticamente. Os registros antigos ficam guardados e podem ser consultados e baixados na aba Relatórios."}),
       h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},
         h("button",{class:"btn sm", onclick:() => openForm({title:"Editar temporada", fields:[
           {key:"name", label:"Nome da temporada", value:se.name || "", max:"60"},
@@ -3020,7 +3079,7 @@ function gConfig(){
           {key:"end", label:"Fim (na virada desta data, pontos e tarefas são reiniciados)", type:"date", value:se.end || lastD},
           {key:"renew", label:"Quando a temporada encerrar", type:"select", value:se.renew || "manual", options:RENEW_OPTS}
         ], onSubmit: async v => { if (!v.name.trim()) return "Informe o nome."; if (!v.start || !v.end) return "Informe o início e o fim."; if (v.end < v.start) return "O fim precisa ser depois do início."; await saveGame({season:{name:v.name.trim(), start:v.start, end:v.end, renew:v.renew}}); }}), text:"Ajustar temporada"}),
-        h("button",{class:"btn ghost sm", onclick:() => openForm({title:"Iniciar nova temporada", intro:"Antes de iniciar, baixe o relatório da temporada atual na aba Relatório.", submit:"Iniciar", fields:[
+        h("button",{class:"btn ghost sm", onclick:() => openForm({title:"Iniciar nova temporada", intro:"Antes de iniciar, baixe o relatório da temporada atual na aba Relatórios.", submit:"Iniciar", fields:[
           {key:"name", label:"Nome da nova temporada", value:"", max:"60"},
           {key:"start", label:"Início", type:"date", value:today},
           {key:"end", label:"Fim", type:"date", value:lastD > today ? lastD : addDays(today, 30)},
@@ -3043,6 +3102,7 @@ function gConfig(){
         {key:"bc", label:"CRAcoins no aniversário (0 = desligado)", type:"number", min:"0", step:"1", value:numOr(g.birthdayCoins, 30)},
         {key:"ac", label:"CRAcoins por ano de casa (0 = desligado)", type:"number", min:"0", step:"1", value:numOr(g.anniversaryCoins, 50)}
       ], onSubmit: async v => { await saveGame({kudosPerWeek:Math.max(1, Math.round(+v.kw)), kudosCoins:Math.max(0, Math.round(+v.kc)), birthdayCoins:Math.max(0, Math.round(+v.bc)), anniversaryCoins:Math.max(0, Math.round(+v.ac))}); }}), text:"Editar"})),
+    resetSection(),
     h("section",{class:"g-card"}, h("h2",{text:"💾 Backup dos dados"}),
       h("p",{class:"muted", style:"margin:0 0 10px;font-size:14px", text:"Baixe uma cópia de todos os dados do Purple (cadastros, publicações, pontos, resgates etc.). Fotos e vídeos não entram no arquivo. Senhas nunca são incluídas."}),
       h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"}, h("button",{class:"btn sm", onclick:downloadBackup, text:"Baixar backup completo (JSON)"}), h("button",{class:"btn ghost sm", onclick:downloadPeople, text:"Baixar cadastros (Excel)"}))));
@@ -3067,7 +3127,7 @@ function renderGameBits(){
    comemorações, missões, desafios, quiz, engajamento, indicadores,
    biblioteca, denúncias, backup e app instalável
    ===================================================================== */
-S.challenges = []; S.quizzes = []; S.quizscores = []; S.quizanswers = []; S.quizkeys = []; S.library = []; S.reports = [];
+S.challenges = []; S.quizzes = []; S.quizscores = []; S.quizanswers = []; S.quizkeys = []; S.library = []; S.reports = []; S.resets = [];
 Object.assign(GDEF, {kudosPerWeek:3, kudosCoins:20, birthdayCoins:30, anniversaryCoins:50, indicators:[]});
 const effPinned = p => !!p.pinned && !(p.expiresAt && Date.now() > p.expiresAt);
 const pubAt = p => p.publishAt || p.createdAt;
@@ -3208,7 +3268,7 @@ async function resolveReport(r, status){
 const kudosThisWeek = () => S.posts.filter(p => typeOf(p) === "kudos" && p.author === S.meId && p.createdAt > Date.now() - 7 * 86400000).length;
 function startKudos(to, text){
   closeModal(); setFilter("all"); setMode("kudos");
-  if (to) $("kudosTo").value = to;
+  if (to){ $("kudosTeam").value = ""; fillKudosTo(); $("kudosTo").value = to; kudosCheck(); }
   if (text && !pt.value) pt.value = text;
   pt.focus(); window.scrollTo({top:0});
 }
@@ -3250,6 +3310,7 @@ function computeNotifs(){
     if (msg) out.push({at:c.reviewedAt, icon:"✅", text:msg, go:() => openGame("tarefas")});
   }
   for (const o of S.orders) if (o.user === me && o.handledAt) out.push({at:o.handledAt, icon:"🛍️", text: o.status === "entregue" ? "Seu resgate foi entregue" : "Seu resgate foi cancelado e os CRAcoins voltaram", go:() => openGame("loja")});
+  for (const r of S.resets || []) if (r.by !== me && (r.scope === "all" || (r.users || []).includes(me))) out.push({at:r.at, icon:"🧹", text:"A gestão zerou o saldo de CRAcoins" + (r.scope === "all" ? " de todos" : r.scope === "setor" ? " do seu time" : " da sua conta"), go:() => openGame("extrato")});
   for (const b of S.bonus) if (b.user === me && b.by !== me) out.push({at:b.at, icon:"🪙", text:(b.amount >= 0 ? "Você ganhou " : "Ajuste de ") + Math.abs(b.amount) + " CRAcoins" + (b.reason ? ": " + b.reason : ""), go:() => openGame("extrato")});
   if (canManage()){
     for (const [id, m] of S.members) if (id !== me && !apr(id)) out.push({at:m.joinedAt || m.updatedAt || 0, icon:"🔑", text:"Nova solicitação de acesso: " + (m.displayName || m.email), go:() => openAdmin()});
@@ -3375,7 +3436,7 @@ function openQuiz(q){
     send.disabled = true;
     const {data, error} = await sb.rpc("purple_submit_quiz", {quiz_id:q.id, answers});
     send.disabled = false;
-    if (error){ err.textContent = /já respondeu/i.test(error.message) ? "Você já respondeu este quiz." : authMsg(error); return; }
+    if (error){ err.textContent = /já respondeu/i.test(error.message) ? "Você já respondeu este quiz." : /seu time/i.test(error.message) ? "Este quiz não está disponível para o seu time." : authMsg(error); return; }
     closeModal(); toast("Quiz enviado! Você ganhou " + (data || 0) + " CRAcoins.");
     try { const s2 = await S.db.collection("quizscores").get(); S.quizscores = s2.docs.map(d => ({id:d.id, ...d.data()})); } catch(e){}
     renderAll();
@@ -3390,6 +3451,7 @@ function quizEditor(q){
   const pts = h("input",{class:"field", type:"number", min:"1", step:"1", value:String(q ? numOr(q.pointsPerQuestion, 10) : 10)});
   const active = h("input",{type:"checkbox"}); active.checked = q ? q.active !== false : true;
   const box = h("div",{class:"g-list"}), err = h("div",{class:"err", role:"alert"});
+  const tgf = targetsField(q ? q.targets : []);
   const paint = () => box.replaceChildren(...state.map((s, i) => h("div",{class:"quiz-edit"},
     h("div",{style:"display:flex;gap:6px;align-items:center"}, h("b",{text:"Pergunta " + (i + 1)}), h("span",{class:"grow", style:"flex:1"}),
       state.length > 1 ? h("button",{class:"btn ghost sm", onclick:() => { state.splice(i, 1); paint(); }, text:"Remover"}) : null),
@@ -3404,11 +3466,12 @@ function quizEditor(q){
   const save = h("button",{class:"btn", text:"Salvar quiz"});
   save.onclick = async () => {
     if (title.value.trim().length < 3){ err.textContent = "Informe o nome do quiz."; return; }
+    if (!tgf.value){ err.textContent = "Escolha pelo menos um time, ou marque Todos os setores."; return; }
     for (const s of state){ if (!s.q.trim()) { err.textContent = "Preencha todas as perguntas."; return; } if (s.options.some(o => !o.trim())) { err.textContent = "Preencha todas as opções ou remova as vazias."; return; } }
     save.disabled = true;
     try {
       const id = q ? q.id : gid();
-      await S.db.doc("quizzes/" + id).set({title:title.value.trim(), pointsPerQuestion:Math.max(1, Math.round(+pts.value || 10)), active:active.checked, questions:state.map(s => ({q:s.q.trim(), options:s.options.map(o => o.trim())})), createdAt:q ? q.createdAt : Date.now()});
+      await S.db.doc("quizzes/" + id).set({title:title.value.trim(), pointsPerQuestion:Math.max(1, Math.round(+pts.value || 10)), active:active.checked, targets:tgf.value, questions:state.map(s => ({q:s.q.trim(), options:s.options.map(o => o.trim())})), createdAt:q ? q.createdAt : Date.now()});
       await S.db.doc("quizkeys/" + id).set({answers:state.map(s => s.correct)});
       close(); toast(q ? "Quiz atualizado." : "Quiz criado.");
     } catch(e){ err.textContent = authMsg(e); }
@@ -3418,7 +3481,7 @@ function quizEditor(q){
     h("h2",{text: q ? "Editar quiz" : "Novo quiz", style:"font-size:24px"}),
     h("label",{class:"f", text:"Nome do quiz"}), title,
     h("label",{class:"f", text:"CRAcoins por resposta certa"}), pts,
-    h("label",{class:"chk", style:"display:flex;gap:8px;margin:10px 0"}, active, "Quiz ativo (aparece para a equipe)"),
+    h("label",{class:"chk", style:"display:flex;gap:8px;margin:10px 0"}, active, "Quiz ativo (aparece para a equipe)"), tgf.el,
     box, h("button",{class:"btn ghost sm", style:"margin-top:8px", onclick:() => { state.push({q:"", options:["",""], correct:0}); paint(); }, text:"+ Adicionar pergunta"}), err,
     h("div",{style:"display:flex;gap:8px;justify-content:flex-end;margin-top:14px"}, h("button",{class:"btn ghost", onclick:close, text:"Cancelar"}), save)));
   document.body.append(wrap);
@@ -3432,14 +3495,14 @@ function quizResults(q){
 }
 function gQuiz(){
   const gest = canManage();
-  const list = S.quizzes.filter(q => gest || q.active !== false).sort((a, b) => b.createdAt - a.createdAt);
+  const list = S.quizzes.filter(q => (gest || q.active !== false) && forMe(q)).sort((a, b) => b.createdAt - a.createdAt);
   return h("div",{class:"g-list"},
     seasonNotice(),
     gest ? h("button",{class:"btn", style:"align-self:flex-start", onclick:() => quizEditor(), text:"+ Novo quiz"}) : null,
     list.length ? list.map(q => { const mine = myQuizScore(q); const n = S.quizscores.filter(x => x.quizId === q.id && inSeasonQ(x)).length;
       return h("div",{class:"g-card task"},
         h("div",{class:"info"}, h("b",{text:"🧠 " + q.title}), h("p",{text:q.questions.length + " perguntas · " + numOr(q.pointsPerQuestion, 10) + " CRAcoins por acerto"}),
-          h("div",{}, q.active === false ? h("span",{class:"tag bad", text:"Inativo"}) : null, mine ? h("span",{class:"tag ok", text:"Você acertou " + mine.correct + " de " + mine.total + " (+" + mine.score + ")"}) : null,
+          h("div",{}, q.active === false ? h("span",{class:"tag bad", text:"Inativo"}) : null, gest ? targetTag(q) : null, mine ? h("span",{class:"tag ok", text:"Você acertou " + mine.correct + " de " + mine.total + " (+" + mine.score + ")"}) : null,
             gest ? h("span",{class:"tag", text:n + (n === 1 ? " resposta" : " respostas")}) : null)),
         h("div",{class:"acts"},
           !mine && q.active !== false && W().active ? h("button",{class:"btn sm", onclick:() => openQuiz(q), text:"Responder"}) : null,
@@ -3628,7 +3691,7 @@ function downloadBackup(){
     publicacoes:pick(S.posts), comentarios:[].concat(...[...S.comments.values()]), reacoes:[].concat(...[...S.reactions.values()]),
     votos:[].concat(...[...S.votes.values()]), leituras:[].concat(...[...S.acks.values()]),
     tarefas:S.tasks, conclusoes:S.claims, presencas:S.presence, bonus:S.bonus, loja:S.shop, resgates:S.orders,
-    desafios:S.challenges, quizzes:S.quizzes, quizResultados:S.quizscores, biblioteca:S.library, denuncias:S.reports};
+    desafios:S.challenges, quizzes:S.quizzes, quizResultados:S.quizscores, biblioteca:S.library, denuncias:S.reports, zeragens:S.resets};
   saveBlob(new Blob([JSON.stringify(data, null, 1)], {type:"application/json"}), "purple-backup-" + spToday() + ".json");
   toast("Backup baixado. Guarde o arquivo em local seguro.");
 }
@@ -3665,6 +3728,367 @@ function reportsSection(){
           try { if (r.kind === "comment") await S.db.doc("comments/" + cm.id).delete(); else await S.db.doc("posts/" + p.id).delete(); await resolveReport(r, "removida"); } catch(e){ toast(authMsg(e)); } }, text:"Excluir conteúdo"}) : null,
         h("button",{class:"btn ghost sm", onclick:() => resolveReport(r, "descartada"), text: (r.kind === "comment" ? cm : p) ? "Descartar" : "Encerrar"}));
     }) : h("p",{class:"muted", text:"Nenhuma denúncia aberta."}));
+}
+
+/* =====================================================================
+   LOTE: itens por time, zerar CRAcoins, fixar no perfil, elogios por mês,
+   recorte da foto de perfil e relatórios
+   ===================================================================== */
+/* ---------- itens direcionados a times (tarefas, loja, quiz) ---------- */
+const tgOf = x => (x && Array.isArray(x.targets)) ? x.targets : [];
+const forMe = x => canManage() || !tgOf(x).length || tgOf(x).includes(mySetor());
+function targetsField(val, title){
+  const all = h("input",{type:"checkbox"}); all.checked = !(val && val.length);
+  const items = SETORES.map(x => { const cb = h("input",{type:"checkbox", value:x}); cb.checked = !!(val && val.includes(x)); return {cb, lab:h("label",{}, cb, x.replace(/^CSC - /, ""))}; });
+  const sync = () => items.forEach(i => { i.cb.disabled = all.checked; i.lab.classList.toggle("off", all.checked); if (all.checked) i.cb.checked = false; });
+  all.onchange = sync; sync();
+  const el = h("div",{class:"targets"}, h("div",{class:"tl", text:title || "🎯 Disponível para"}),
+    h("div",{class:"tg"}, h("label",{class:"all"}, all, "Todos os setores"), items.map(i => i.lab)),
+    h("div",{class:"note", style:"margin-top:6px", text:"Desmarque \"Todos os setores\" para escolher os times. Só quem é desses times vê e participa. A gestão vê tudo."}));
+  return {el, get value(){ if (all.checked) return []; const v = items.filter(i => i.cb.checked).map(i => i.cb.value); return v.length ? v : null; }};
+}
+
+/* ---------- publicações fixadas no próprio perfil ---------- */
+const PIN_MAX = 3;
+const pinsOf = id => { const v = (S.members.get(id) || {}).profilePins; return Array.isArray(v) ? v : []; };
+async function toggleProfilePin(p){
+  const cur = pinsOf(S.meId).filter(x => postById(x));
+  let next;
+  if (cur.includes(p.id)) next = cur.filter(x => x !== p.id);
+  else {
+    if (cur.length >= PIN_MAX){ toast("Você já fixou " + PIN_MAX + " publicações no seu perfil. Desafixe uma para fixar esta."); return; }
+    next = [p.id, ...cur];
+  }
+  try {
+    await S.db.doc("members/" + S.meId).update({profilePins:next});
+    S.members.set(S.meId, {...(S.members.get(S.meId) || {}), profilePins:next});
+    toast(next.includes(p.id) ? "Publicação fixada no seu perfil." : "Publicação desafixada do seu perfil.");
+    renderAll();
+  } catch(e){ toast("Não foi possível alterar (" + authMsg(e).replace(/\.$/, "") + ")."); }
+}
+
+/* ---------- elogios: filtro por time e um elogio por colega por mês ---------- */
+const monthStartMs = () => msOfDate(spToday().slice(0, 8) + "01");
+const monthWord = () => MONTHS[+spToday().slice(5, 7) - 1].toLowerCase();
+const kudosToThisMonth = to => !!to && S.posts.some(p => typeOf(p) === "kudos" && p.author === S.meId && p.to === to && p.createdAt >= monthStartMs());
+function fillKudosTo(){
+  const team = $("kudosTeam"), sel = $("kudosTo");
+  if (!team.options.length){ team.replaceChildren(h("option",{value:"", text:"Todos os times"}), ...SETORES.map(x => h("option",{value:x, text:x.replace(/^CSC - /, "")}))); }
+  const tv = team.value, cur = sel.value;
+  const ids = approvedIds().filter(i => i !== S.meId && (!tv || prof(i).setor === tv)).sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR"));
+  const key = tv + "#" + ids.map(i => i + ":" + prof(i).name + ":" + prof(i).setor).join("|");
+  if (sel.dataset.k === key) return;
+  sel.replaceChildren(h("option",{value:"", text: ids.length ? "Escolha um colega" : "Ninguém neste time"}),
+    ...ids.map(i => h("option",{value:i, text:prof(i).name + (prof(i).setor ? " · " + prof(i).setor.replace(/^CSC - /, "") : "")})));
+  sel.value = ids.includes(cur) ? cur : ""; sel.dataset.k = key;
+  kudosCheck();
+}
+function kudosCheck(){
+  const to = $("kudosTo").value, w = $("kudosWarn"), hit = kudosToThisMonth(to);
+  w.hidden = !hit;
+  w.textContent = hit ? "Você já elogiou essa pessoa em " + monthWord() + ". Cada colega pode receber um elogio seu por mês." : "";
+  return !hit;
+}
+$("kudosTeam").onchange = () => { fillKudosTo(); };
+$("kudosTo").onchange = () => { kudosCheck(); };
+
+/* ---------- recorte da foto de perfil ---------- */
+function openCropper(src){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onerror = () => reject(new Error("image_decode"));
+    img.onload = () => {
+      const V = 600, iw = img.naturalWidth, ih = img.naturalHeight;
+      if (!iw || !ih){ reject(new Error("image_decode")); return; }
+      const base = V / Math.min(iw, ih);
+      let z = 1, ox = (V - iw * base) / 2, oy = (V - ih * base) / 2;
+      const cv = h("canvas",{width:String(V), height:String(V), "aria-label":"Prévia da foto. Arraste para posicionar."});
+      const ctx = cv.getContext("2d");
+      const zoom = h("input",{type:"range", min:"1", max:"4", step:"0.01", value:"1", "aria-label":"Zoom"});
+      const clamp = () => { const sw = iw * base * z, sh = ih * base * z; ox = Math.min(0, Math.max(V - sw, ox)); oy = Math.min(0, Math.max(V - sh, oy)); };
+      const draw = () => {
+        clamp();
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, V, V);
+        ctx.drawImage(img, ox, oy, iw * base * z, ih * base * z);
+        ctx.save(); ctx.fillStyle = "rgba(10,8,20,.55)"; ctx.beginPath(); ctx.rect(0, 0, V, V); ctx.arc(V / 2, V / 2, V / 2 - 4, 0, Math.PI * 2, true); ctx.fill("evenodd");
+        ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(V / 2, V / 2, V / 2 - 4, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+      };
+      const setZoom = nz => { nz = Math.min(4, Math.max(1, nz)); const cx = (V / 2 - ox) / z, cy = (V / 2 - oy) / z; z = nz; ox = V / 2 - cx * z; oy = V / 2 - cy * z; zoom.value = String(z); draw(); };
+      zoom.oninput = () => setZoom(+zoom.value);
+      let drag = null;
+      const scale = () => V / cv.getBoundingClientRect().width;
+      cv.addEventListener("pointerdown", e => { drag = {x:e.clientX, y:e.clientY, ox, oy}; try { cv.setPointerCapture(e.pointerId); } catch(_){} e.preventDefault(); });
+      cv.addEventListener("pointermove", e => { if (!drag) return; const k = scale(); ox = drag.ox + (e.clientX - drag.x) * k; oy = drag.oy + (e.clientY - drag.y) * k; draw(); });
+      const end = () => { drag = null; };
+      cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+      cv.addEventListener("wheel", e => { e.preventDefault(); setZoom(z * (e.deltaY < 0 ? 1.08 : 1 / 1.08)); }, {passive:false});
+      const close = v => { wrap.remove(); document.removeEventListener("keydown", onKey, true); resolve(v); };
+      const onKey = e => {
+        if (e.key === "Escape"){ e.stopPropagation(); close(null); return; }
+        const st = 12 * scale();
+        if (e.target === zoom) return;
+        if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key) && document.activeElement === cv){
+          e.preventDefault(); if (e.key === "ArrowLeft") ox += st; if (e.key === "ArrowRight") ox -= st; if (e.key === "ArrowUp") oy += st; if (e.key === "ArrowDown") oy -= st; draw();
+        }
+      };
+      const ok = h("button",{class:"btn", text:"Usar esta foto"});
+      ok.onclick = () => {
+        const O = 320, k = O / V, c = document.createElement("canvas"); c.width = c.height = O;
+        const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, O, O);
+        x.drawImage(img, ox * k, oy * k, iw * base * z * k, ih * base * z * k);
+        for (let q = 0.88; q >= 0.4; q -= 0.08){ const out = c.toDataURL("image/jpeg", q); if (out.length < 90000){ close(out); return; } }
+        close(c.toDataURL("image/jpeg", 0.35));
+      };
+      cv.tabIndex = 0;
+      const wrap = h("div",{class:"crop-wrap"},
+        h("div",{class:"crop-card", role:"dialog", "aria-modal":"true", "aria-label":"Ajustar foto de perfil"},
+          h("h2",{text:"Ajustar foto"}),
+          h("div",{class:"muted", style:"font-size:14px", text:"Arraste a foto para posicionar e use o zoom. O que fica dentro do círculo é a sua foto de perfil."}),
+          h("div",{class:"crop-stage"}, cv),
+          h("label",{class:"crop-zoom"}, h("span",{text:"−"}), zoom, h("span",{text:"+"})),
+          h("div",{style:"display:flex;gap:8px;justify-content:flex-end"}, h("button",{class:"btn ghost", onclick:() => close(null), text:"Cancelar"}), ok)));
+      wrap.addEventListener("click", e => { if (e.target === wrap) close(null); });
+      document.addEventListener("keydown", onKey, true);
+      document.body.append(wrap); draw(); ok.focus();
+    };
+    img.src = src;
+  });
+}
+
+/* ---------- zerar CRAcoins (gestão) ---------- */
+function resetScopeLabel(r){
+  if (r.scope === "all") return "Geral";
+  if (r.scope === "setor") return "Por time: " + (r.setores || []).map(x => x.replace(/^CSC - /, "")).join(", ");
+  return "Individual: " + (r.users || []).map(id => prof(id).name).join(", ");
+}
+async function doReset(scope, users, setores, label){
+  if (!users.length){ return "Não há ninguém aprovado para zerar nessa escolha."; }
+  const amounts = {}; let total = 0;
+  users.forEach(id => { const b = statsOf(id).balance; amounts[id] = b; total += Math.max(0, b); });
+  const msg = "Zerar o saldo de " + plural(users.length, "pessoa", "pessoas") + " (" + label + ")? " + (users.length === 1 ? "Hoje o saldo é de " : "Hoje essas pessoas somam ") + coins(total) + ". O saldo e os pontos do ranking recomeçam do zero a partir de agora. O histórico não é apagado.";
+  if (!(await askConfirm(msg, "Zerar CRAcoins"))) return "";
+  await S.db.doc("resets/" + gid()).set({scope, users: scope === "all" ? [] : users, setores: setores || [], amounts, count:users.length, at:Date.now(), by:S.meId});
+  try { const s2 = await S.db.collection("resets").get(); S.resets = s2.docs.map(d => ({id:d.id, ...d.data()})); } catch(e){}
+  S.statsCache.clear(); renderAll();
+  toast("CRAcoins zerados para " + plural(users.length, "pessoa", "pessoas") + ".");
+  return "";
+}
+function resetSection(){
+  const people = approvedIds().sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR"));
+  const hist = (S.resets || []).slice().sort((a, b) => b.at - a.at);
+  const formAll = () => openForm({title:"Zerar CRAcoins de todos", intro:"Zera o saldo e os pontos do ranking de todas as pessoas aprovadas (" + people.length + ").", submit:"Continuar", fields:[], onSubmit: async () => { const m = await doReset("all", people, [], "geral"); return m; }});
+  const formTeam = () => openForm({title:"Zerar CRAcoins por time", intro:"Escolha um ou mais times.", submit:"Continuar",
+    fields:SETORES.map((x, i) => ({key:"s" + i, label:x + " (" + people.filter(id => prof(id).setor === x).length + ")", type:"checkbox", value:false})),
+    onSubmit: async v => {
+      const setores = SETORES.filter((x, i) => v["s" + i]);
+      if (!setores.length) return "Escolha pelo menos um time.";
+      return doReset("setor", people.filter(id => setores.includes(prof(id).setor)), setores, setores.map(x => x.replace(/^CSC - /, "")).join(", "));
+    }});
+  const formOne = () => openForm({title:"Zerar CRAcoins de uma pessoa", submit:"Continuar", fields:[
+      {key:"user", label:"Colaborador", type:"select", value:"", options:[["","Escolha a pessoa"], ...people.map(id => [id, prof(id).name + (prof(id).setor ? " · " + prof(id).setor.replace(/^CSC - /, "") : "") + " · saldo " + statsOf(id).balance])]}
+    ], onSubmit: async v => { if (!v.user) return "Escolha a pessoa."; return doReset("user", [v.user], [], prof(v.user).name); }});
+  return h("section",{class:"g-card"}, h("h2",{text:"🧹 Zerar CRAcoins"}),
+    h("p",{class:"muted", style:"margin:0 0 10px;font-size:13.5px", text:"Zera o saldo e os pontos do ranking a partir de agora. Nada é apagado: o extrato mostra a linha \"Saldo zerado pela gestão\" e os relatórios de períodos anteriores mantêm os números originais. Fica registrado quem zerou e quando."}),
+    h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},
+      h("button",{class:"btn sm", onclick:formAll, text:"Zerar geral"}),
+      h("button",{class:"btn ghost sm", onclick:formTeam, text:"Zerar por time"}),
+      h("button",{class:"btn ghost sm", onclick:formOne, text:"Zerar individual"})),
+    hist.length ? h("div",{style:"margin-top:12px"}, h("b",{text:"Zeragens realizadas"}),
+      hist.slice(0, 20).map(r => h("div",{class:"ext-row"}, h("span",{class:"t"}, resetScopeLabel(r), h("small",{text:plural(r.count || (r.users || []).length, "pessoa", "pessoas") + " · por " + prof(r.by).name + " · " + fmtMs(r.at)}))))) : null);
+}
+
+/* ---------- relatórios ---------- */
+function repWindow(){
+  const pers = reportPeriods();
+  const opts = pers.concat([{key:"custom", name:"Período personalizado (escolher datas)"}]);
+  if (!opts.some(x => x.key === S.repKey)) S.repKey = pers[0].key;
+  if (S.repKey === "custom"){
+    if (!S.repS) S.repS = spToday().slice(0, 8) + "01";
+    if (!S.repE) S.repE = spToday();
+    const s = S.repS <= S.repE ? S.repS : S.repE, e = S.repS <= S.repE ? S.repE : S.repS;
+    return {opts, per:{key:"custom", name:"De " + fmtD(s) + " a " + fmtD(e), s, e}};
+  }
+  return {opts, per:pers.find(x => x.key === S.repKey)};
+}
+const perRange = per => per.s > "2000-01-01" && per.e < "2999-12-31" ? fmtD(per.s) + " a " + fmtD(per.e) : "Todo o período";
+function repCtx(win){
+  const allC = [].concat(...[...S.comments.values()]), allR = [].concat(...[...S.reactions.values()]);
+  const firstPres = S.presence.reduce((m, p) => (!m || p.date < m) ? p.date : m, "");
+  return {win, allC, allR, now:Date.now(), firstPres};
+}
+const kindLabel = x => { const t = typeOf(x); return t === "kudos" ? "Elogio" : t === "comunicado" ? "Comunicado" : t === "poll" ? "Enquete" : x.media && x.media.kind === "image" ? "Foto" : x.media && x.media.kind === "video" ? "Vídeo" : x.link ? "Link" : "Texto"; };
+const POST_KINDS = ["Texto","Foto","Vídeo","Link","Comunicado","Enquete","Elogio"];
+const shortTxt = x => ((x && (x.title || x.text || x.link)) || (x && x.media ? "(foto/vídeo)" : "")).replace(/\s+/g, " ").slice(0, 100);
+const CLAIM_ST = {aprovado:"Concluída", pendente:"Aguardando aprovação", recusado:"Recusada", estornado:"Estornada"};
+function activityOf(id, ctx){
+  const win = ctx.win, p = prof(id), m = S.members.get(id) || {}, a = apr(id) || {}, now = ctx.now;
+  const inW = ms => !!ms && inWinMs(ms, win);
+  const sees = x => !pollTargets(x).length || pollTargets(x).includes(p.setor);
+  const posts = S.posts.filter(x => x.author === id && inW(pubAt(x)) && pubAt(x) <= now)
+    .map(x => ({at:pubAt(x), kind:kindLabel(x), text:shortTxt(x), reactions:(S.reactions.get(x.id) || []).length, comments:(S.comments.get(x.id) || []).length}));
+  const byType = {}; posts.forEach(x => byType[x.kind] = (byType[x.kind] || 0) + 1);
+  const mine = new Set(S.posts.filter(x => x.author === id).map(x => x.id));
+  const comments = ctx.allC.filter(c => c.author === id && inW(c.createdAt)).map(c => { const pp = postById(c.postId); return {at:c.createdAt, text:(c.text || "").slice(0, 150), on:pp ? prof(pp.author).name + ": " + shortTxt(pp) : "publicação excluída"}; });
+  const rGiven = ctx.allR.filter(r => r.user === id && inW(r.at)).map(r => { const pp = postById(r.postId); return {at:r.at, kind:(RX[r.kind] || {}).label || r.kind, on:pp ? prof(pp.author).name + ": " + shortTxt(pp) : "publicação excluída"}; });
+  const rRecv = ctx.allR.filter(r => mine.has(r.postId) && r.user !== id && inW(r.at)).map(r => ({at:r.at, kind:(RX[r.kind] || {}).label || r.kind, by:prof(r.user).name, on:shortTxt(postById(r.postId))}));
+  const kSent = S.posts.filter(x => typeOf(x) === "kudos" && x.author === id && inW(x.createdAt)).map(x => ({at:x.createdAt, who:prof(x.to).name, text:(x.text || "").slice(0, 150)}));
+  const kRecv = S.posts.filter(x => typeOf(x) === "kudos" && x.to === id && inW(x.createdAt)).map(x => ({at:x.createdAt, who:prof(x.author).name, text:(x.text || "").slice(0, 150)}));
+  const polls = S.posts.filter(x => typeOf(x) === "poll" && x.poll && x.author !== id && sees(x) && inW(pubAt(x)) && pubAt(x) <= now).map(x => {
+    const v = (S.votes.get(x.id) || []).find(v => v.user === id), o = v && (x.poll.options || []).find(o => o.id === v.option);
+    return {at:pubAt(x), q:shortTxt(x), answer:o ? o.text : "", votedAt:v ? v.at : null}; });
+  const coms = S.posts.filter(x => typeOf(x) === "comunicado" && x.requireAck && x.author !== id && sees(x) && inW(pubAt(x)) && pubAt(x) <= now).map(x => {
+    const k = (S.acks.get(x.id) || []).find(r => r.user === id); return {at:pubAt(x), title:shortTxt(x), readAt:k ? k.at : null}; });
+  const t = spToday() < win.e ? spToday() : win.e;
+  let from = win.s > "2000-01-01" ? win.s : (ctx.firstPres || t);
+  const joined = m.joinedAt ? new Intl.DateTimeFormat("en-CA", {timeZone:"America/Sao_Paulo"}).format(m.joinedAt) : "";
+  if (joined && joined > from) from = joined;
+  let wd = 0; for (let d = from; d <= t; d = addDays(d, 1)) if (isWeekday(d)) wd++;
+  const presence = [...new Set(S.presence.filter(x => x.user === id && isWeekday(x.date) && inWinDate(x.date, win)).map(x => x.date))].sort();
+  const tasks = S.claims.filter(c => c.user === id && inW(c.at)).sort((x, y) => x.at - y.at).map(c => ({at:c.at, title:(taskOf(c.taskId) || {}).title || "tarefa removida", status:CLAIM_ST[c.status] || c.status, ok:c.status === "aprovado", points:c.points | 0}));
+  const quiz = S.quizscores.filter(q => q.user === id && inW(q.at)).map(q => ({at:q.at, title:(S.quizzes.find(z => z.id === q.quizId) || {}).title || "quiz", correct:q.correct | 0, total:q.total | 0, score:q.score | 0}));
+  const chals = S.challenges.filter(ch => (!ch.setor || ch.setor === p.setor) && ch.start <= win.e && ch.end >= win.s).map(ch => {
+    const val = challengeProgress(ch), got = S.bonus.filter(b => b.challengeId === ch.id && b.user === id).reduce((n, b) => n + (b.amount | 0), 0);
+    return {title:ch.title, team:ch.setor ? ch.setor.replace(/^CSC - /, "") : "Todos", period:fmtD(ch.start) + " a " + fmtD(ch.end), progress:val + (ch.metric === "presence" ? "%" : "") + " de " + ch.target + (ch.metric === "presence" ? "%" : ""), done:val >= ch.target, status: val >= ch.target ? "Concluído" : ch.end < spToday() ? "Não atingido" : "Em andamento", reward:got}; });
+  const bonus = S.bonus.filter(b => b.user === id && inW(b.at)).map(b => ({at:b.at, amount:b.amount | 0, reason:b.reason || "", by:prof(b.by).name}));
+  const orders = S.orders.filter(o => o.user === id && inW(o.at)).map(o => ({at:o.at, items:(o.items || []).map(i => i.qty + "× " + i.name).join(", "), total:o.total | 0, status:(ORDER_ST[o.status] || ORDER_ST.pendente)[1], ok:o.status !== "cancelado"}));
+  const resets = resetsFor(id).filter(r => inW(r.at)).map(r => ({at:r.at, amount:(r.amounts || {})[id] || 0, scope:resetScopeLabel(r), by:prof(r.by).name}));
+  return {id, p, m, a, posts, byType, comments, rGiven, rRecv, kSent, kRecv, polls, coms, presence, wd, tasks, quiz, chals, bonus, orders, resets,
+    st:statsOf(id, win), balanceNow:statsOf(id).balance};
+}
+const pctTxt = (a, b) => b ? Math.round(a * 100 / b) + "%" : "—";
+const fmtOr = ms => ms ? fmtMs(ms) : "";
+function sumAct(x){
+  const vOk = x.polls.filter(q => q.answer).length, cOk = x.coms.filter(c => c.readAt).length;
+  return {posts:x.posts.length, comments:x.comments.length, rGiven:x.rGiven.length, rRecv:x.rRecv.length, kSent:x.kSent.length, kRecv:x.kRecv.length,
+    polls:vOk, pollsEl:x.polls.length, coms:cOk, comsReq:x.coms.length, presence:x.presence.length, wd:x.wd,
+    tasks:x.tasks.filter(t => t.ok).length, quiz:x.quiz.length, quizOk:x.quiz.reduce((n, q) => n + q.correct, 0), quizTot:x.quiz.reduce((n, q) => n + q.total, 0),
+    chals:x.chals.filter(c => c.done).length, earned:x.st.earned, spent:x.st.spent, redemptions:x.orders.filter(o => o.ok).length};
+}
+/* linhas de cada tipo de atividade (para as abas do Excel) */
+const ACT_SHEETS = [
+  ["Publicações", ["Data","Tipo","Conteúdo","Reações","Comentários"], x => x.posts.map(r => [fmtMs(r.at), r.kind, r.text, r.reactions, r.comments])],
+  ["Comentários", ["Data","Comentário","Na publicação"], x => x.comments.map(r => [fmtMs(r.at), r.text, r.on])],
+  ["Reações dadas", ["Data","Reação","Na publicação"], x => x.rGiven.map(r => [fmtMs(r.at), r.kind, r.on])],
+  ["Reações recebidas", ["Data","Reação","De","Na publicação"], x => x.rRecv.map(r => [fmtMs(r.at), r.kind, r.by, r.on])],
+  ["Elogios enviados", ["Data","Para","Elogio"], x => x.kSent.map(r => [fmtMs(r.at), r.who, r.text])],
+  ["Elogios recebidos", ["Data","De","Elogio"], x => x.kRecv.map(r => [fmtMs(r.at), r.who, r.text])],
+  ["Enquetes", ["Publicada em","Pergunta","Resposta escolhida","Respondeu em"], x => x.polls.map(r => [fmtMs(r.at), r.q, r.answer || "Não respondeu", fmtOr(r.votedAt)])],
+  ["Comunicados", ["Publicado em","Comunicado","Situação","Lido em"], x => x.coms.map(r => [fmtMs(r.at), r.title, r.readAt ? "Lido" : "Pendente", fmtOr(r.readAt)])],
+  ["Presenças", ["Data","Dia da semana"], x => x.presence.map(d => [fmtD(d), ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][dowOf(d)]])],
+  ["Tarefas", ["Data","Tarefa","Situação","CRAcoins"], x => x.tasks.map(r => [fmtMs(r.at), r.title, r.status, r.points])],
+  ["Quiz", ["Data","Quiz","Acertos","Perguntas","CRAcoins"], x => x.quiz.map(r => [fmtMs(r.at), r.title, r.correct, r.total, r.score])],
+  ["Desafios do time", ["Desafio","Time","Período","Progresso","Situação","Prêmio recebido"], x => x.chals.map(r => [r.title, r.team, r.period, r.progress, r.status, r.reward])],
+  ["Bônus", ["Data","CRAcoins","Motivo","Por"], x => x.bonus.map(r => [fmtMs(r.at), r.amount, r.reason, r.by])],
+  ["Resgates", ["Data","Itens","CRAcoins","Situação"], x => x.orders.map(r => [fmtMs(r.at), r.items, r.total, r.status])],
+  ["Zeragens", ["Data","Tipo","Saldo zerado","Por"], x => x.resets.map(r => [fmtMs(r.at), r.scope, r.amount, r.by])]
+];
+const SUM_HEAD = ["Nome","E-mail","Cargo","Setor","Marca","Publicações", ...POST_KINDS.map(k => "Publicações: " + k), "Comentários","Reações dadas","Reações recebidas","Elogios enviados","Elogios recebidos",
+  "Enquetes respondidas","Enquetes disponíveis","Comunicados lidos","Comunicados com leitura obrigatória","Presenças","Dias úteis no período","Tarefas concluídas","Quiz respondidos","Acertos no quiz",
+  "Desafios do time concluídos","Bônus recebidos","Resgates","CRAcoins ganhos no período","CRAcoins gastos no período","Saldo do período","Saldo atual","Posição no ranking do período"];
+function sumRow(x, pos){
+  const s = sumAct(x);
+  return [x.p.name, x.p.email, x.p.cargo, x.p.setor, x.p.marca, s.posts, ...POST_KINDS.map(k => x.byType[k] || 0), s.comments, s.rGiven, s.rRecv, s.kSent, s.kRecv,
+    s.polls, s.pollsEl, s.coms, s.comsReq, s.presence, s.wd, s.tasks, s.quiz, s.quizOk + "/" + s.quizTot, s.chals, x.bonus.length, s.redemptions, s.earned, s.spent, s.earned - s.spent, x.balanceNow, pos || ""];
+}
+function personSheets(x, per){
+  const p = x.p, m = x.m, a = x.a;
+  const cad = [["Período", per.name, perRange(per)], [], ["Nome", p.name], ["E-mail", p.email], ["Cargo", p.cargo || ""], ["Setor", p.setor || ""], ["Marca", p.marca || ""],
+    ["Situação", a.status || "pendente"], ["Tipo de acesso", (ACCESS_OPTS.find(o => o[0] === (a.access || "auto")) || ["", ""])[1]],
+    ["Aniversário", m.birthDay ? m.birthDay.split("-").reverse().join("/") : ""], ["Admissão", m.admission ? fmtD(m.admission) : ""], ["Saldo atual", x.balanceNow]];
+  const s = sumAct(x);
+  const res = [["Indicador","Valor"], ["Publicações", s.posts], ...POST_KINDS.map(k => ["Publicações: " + k, x.byType[k] || 0]), ["Comentários", s.comments], ["Reações dadas", s.rGiven], ["Reações recebidas", s.rRecv],
+    ["Elogios enviados", s.kSent], ["Elogios recebidos", s.kRecv], ["Enquetes respondidas", s.polls + " de " + s.pollsEl], ["Comunicados lidos", s.coms + " de " + s.comsReq + " (" + pctTxt(s.coms, s.comsReq) + ")"],
+    ["Presenças", s.presence + " de " + s.wd + " dias úteis (" + pctTxt(s.presence, s.wd) + ")"], ["Tarefas concluídas", s.tasks], ["Quiz respondidos", s.quiz + " (" + s.quizOk + "/" + s.quizTot + " acertos)"],
+    ["Desafios do time concluídos", s.chals], ["Resgates", s.redemptions], ["CRAcoins ganhos no período", s.earned], ["CRAcoins gastos no período", s.spent], ["Saldo do período", s.earned - s.spent], ["Saldo atual", x.balanceNow]];
+  return [{name:"Cadastro", rows:cad}, {name:"Resumo", rows:res}, ...ACT_SHEETS.map(([n, head, fn]) => ({name:n, rows:[head, ...fn(x)]}))];
+}
+function allPeopleSheets(list, per){
+  const rk = ranking({s:per.s, e:per.e}), posOf = id => rk.findIndex(r => r.id === id) + 1;
+  const lead = x => [x.p.name, x.p.email, x.p.setor || ""];
+  return [{name:"Resumo", rows:[["Período", per.name, perRange(per)], [], SUM_HEAD, ...list.map(x => sumRow(x, posOf(x.id)))]},
+    ...ACT_SHEETS.map(([n, head, fn]) => ({name:n, rows:[["Nome","E-mail","Setor", ...head], ...[].concat(...list.map(x => fn(x).map(r => [...lead(x), ...r])))]}))];
+}
+function teamAgg(list){
+  const by = {};
+  list.forEach(x => {
+    const k = x.p.setor || "Sem setor", s = sumAct(x);
+    const o = by[k] = by[k] || {n:0, posts:0, comments:0, rGiven:0, rRecv:0, kSent:0, kRecv:0, polls:0, pollsEl:0, coms:0, comsReq:0, presence:0, wd:0, tasks:0, quiz:0, quizOk:0, quizTot:0, earned:0, spent:0, balanceNow:0, redemptions:0, chals:new Set()};
+    o.n++; ["posts","comments","rGiven","rRecv","kSent","kRecv","polls","pollsEl","coms","comsReq","presence","wd","tasks","quiz","quizOk","quizTot","earned","spent","redemptions"].forEach(f => o[f] += s[f]);
+    o.balanceNow += x.balanceNow; x.chals.filter(c => c.done).forEach(c => o.chals.add(c.title + c.period));
+  });
+  return Object.entries(by).sort((a, b) => a[0].localeCompare(b[0], "pt-BR"));
+}
+const TEAM_HEAD = ["Time","Pessoas","Publicações","Comentários","Reações dadas","Reações recebidas","Elogios enviados","Elogios recebidos","Presença média","Tarefas concluídas","Quiz respondidos","Acertos no quiz","Desafios concluídos","CRAcoins ganhos","CRAcoins gastos","Saldo do período","Saldo atual do time","Resgates"];
+const teamRow = ([k, o]) => [k, o.n, o.posts, o.comments, o.rGiven, o.rRecv, o.kSent, o.kRecv, pctTxt(o.presence, o.wd), o.tasks, o.quiz, pctTxt(o.quizOk, o.quizTot), o.chals.size, o.earned, o.spent, o.earned - o.spent, o.balanceNow, o.redemptions];
+const ENG_T_HEAD = ["Time","Pessoas","Leitura de comunicados","Participação em enquetes","Presença","Publicações","Comentários","Reações","Elogios enviados","Elogios recebidos","Tarefas concluídas"];
+const engTRow = ([k, o]) => [k, o.n, pctTxt(o.coms, o.comsReq), pctTxt(o.polls, o.pollsEl), pctTxt(o.presence, o.wd), o.posts, o.comments, o.rGiven, o.kSent, o.kRecv, o.tasks];
+const ENG_P_HEAD = ["Nome","E-mail","Setor","Leitura de comunicados","Comunicados lidos","Participação em enquetes","Enquetes respondidas","Presença","Presenças","Publicações","Comentários","Reações","Elogios enviados","Elogios recebidos","Tarefas concluídas"];
+const engPRow = x => { const s = sumAct(x); return [x.p.name, x.p.email, x.p.setor || "", pctTxt(s.coms, s.comsReq), s.coms + "/" + s.comsReq, pctTxt(s.polls, s.pollsEl), s.polls + "/" + s.pollsEl, pctTxt(s.presence, s.wd), s.presence + "/" + s.wd, s.posts, s.comments, s.rGiven, s.kSent, s.kRecv, s.tasks]; };
+function tableEl(head, rows, numFrom){
+  return h("div",{class:"scroll-x"}, h("table",{class:"g-table"}, h("thead",{}, h("tr",{}, head.map(t => h("th",{text:t})))),
+    h("tbody",{}, rows.length ? rows.map(r => h("tr",{}, r.map((v, i) => h("td",{class: i >= (numFrom == null ? 1 : numFrom) && typeof v !== "string" || /^\d+%$|^—$|^\d+\/\d+$/.test(String(v)) ? "n" : "", text:String(v == null ? "" : v).replace(/^CSC - /, "")})))) : [h("tr",{}, h("td",{colspan:String(head.length), class:"muted", text:"Nada no período."}))])));
+}
+function gReports(){
+  if (!canManage()) return gTasks();
+  const {opts, per} = repWindow(), win = {s:per.s, e:per.e};
+  const ctx = repCtx(win);
+  const ids = approvedIds().sort((a, b) => prof(a).name.localeCompare(prof(b).name, "pt-BR"));
+  const sel = h("select",{class:"field", "aria-label":"Período do relatório"}, opts.map(x => h("option",{value:x.key, text:x.name + (x.s && x.s > "2000-01-01" && x.e < "2999-12-31" ? " · " + fmtD(x.s) + " a " + fmtD(x.e) : "")})));
+  sel.value = S.repKey; sel.onchange = () => { S.repKey = sel.value; sel.blur(); renderGame(); };
+  const dateIn = (k, lab) => { const i = h("input",{class:"field", type:"date", value:S[k], "aria-label":lab}); i.onchange = () => { if (i.value){ S[k] = i.value; } i.blur(); renderGame(); }; return h("label",{style:"display:flex;gap:6px;align-items:center;font-weight:700;font-size:14px"}, lab, i); };
+  const bar = h("div",{class:"rep-bar"}, h("b",{text:"Período:"}), sel, S.repKey === "custom" ? dateIn("repS", "De") : null, S.repKey === "custom" ? dateIn("repE", "até") : null);
+  if (!["ind","team","eng"].includes(S.repTab)) S.repTab = "ind";
+  const chip = (k, t) => h("button",{class:"chip", "aria-pressed":String(S.repTab === k), onclick:() => { S.repTab = k; renderGame(); }, text:t});
+  const tabs = h("div",{class:"rep-tabs"}, chip("ind","👤 Individual"), chip("team","🏢 Por time"), chip("eng","📈 Engajamento"));
+  const fname = k => "purple-" + k + "-" + slugify(per.name);
+  let body;
+  if (S.repTab === "ind"){
+    const team = h("select",{class:"field", "aria-label":"Time"}, h("option",{value:"", text:"Todos os times"}), SETORES.map(x => h("option",{value:x, text:x.replace(/^CSC - /, "")})));
+    team.value = S.repTeam || ""; team.onchange = () => { S.repTeam = team.value; S.repUser = ""; team.blur(); renderGame(); };
+    const list = ids.filter(id => !S.repTeam || prof(id).setor === S.repTeam);
+    if (!list.includes(S.repUser)) S.repUser = list[0] || "";
+    const who = h("select",{class:"field", "aria-label":"Pessoa"}, list.length ? list.map(id => h("option",{value:id, text:prof(id).name + (prof(id).setor ? " · " + prof(id).setor.replace(/^CSC - /, "") : "")})) : [h("option",{value:"", text:"Ninguém neste time"})]);
+    who.value = S.repUser; who.onchange = () => { S.repUser = who.value; who.blur(); renderGame(); };
+    const x = S.repUser ? activityOf(S.repUser, ctx) : null;
+    const allBtn = h("button",{class:"btn ghost sm", onclick:() => { toast("Gerando planilha de todos…"); const L = ids.map(id => activityOf(id, repCtx(win))); downloadSheets(fname("individual-todos"), allPeopleSheets(L, per)); }, text:"Baixar Excel de todos"});
+    if (!x){ body = h("div",{}, h("div",{class:"rep-bar"}, team, who, allBtn), h("p",{class:"muted", text:"Escolha uma pessoa."})); }
+    else {
+      const s = sumAct(x);
+      const kp = (v, l) => h("div",{}, h("b",{text:String(v)}), h("small",{text:l}));
+      const sec = (title, n, head, rows) => h("details",{class:"rep-sec"}, h("summary",{text:title + " (" + n + ")"}), tableEl(head, rows, 99));
+      body = h("div",{},
+        h("div",{class:"rep-bar"}, team, who,
+          h("button",{class:"btn sm", onclick:() => { toast("Gerando planilha…"); downloadSheets(fname("individual-" + slugify(x.p.name)), personSheets(x, per)); }, text:"Baixar Excel desta pessoa"}), allBtn),
+        h("div",{style:"display:flex;gap:12px;align-items:center;margin-top:6px"}, avatarEl(x.id), h("div",{}, h("b",{style:"font-size:18px", text:x.p.name}),
+          h("div",{class:"muted", style:"font-size:13.5px", text:[x.p.cargo, x.p.setor, x.p.marca, x.p.email].filter(Boolean).join(" · ")}),
+          h("div",{class:"muted", style:"font-size:13.5px", text:[(x.m.birthDay ? "🎂 " + x.m.birthDay.split("-").reverse().join("/") : ""), (x.m.admission ? "🏢 desde " + fmtD(x.m.admission) : ""), "Situação: " + (x.a.status || "pendente")].filter(Boolean).join(" · ")}))),
+        h("div",{class:"rep-kpis"},
+          kp(s.posts, "Publicações"), kp(s.comments, "Comentários"), kp(s.rGiven + " / " + s.rRecv, "Reações dadas / recebidas"), kp(s.kSent + " / " + s.kRecv, "Elogios enviados / recebidos"),
+          kp(s.polls + "/" + s.pollsEl, "Enquetes respondidas"), kp(s.coms + "/" + s.comsReq, "Comunicados lidos"), kp(s.presence + "/" + s.wd, "Presenças (dias úteis)"),
+          kp(s.tasks, "Tarefas concluídas"), kp(s.quiz, "Quiz respondidos"), kp(s.chals, "Desafios do time concluídos"), kp(coins(s.earned), "Ganhos no período"), kp(coins(s.spent), "Gastos no período"), kp(coins(x.balanceNow), "Saldo atual")),
+        h("div",{class:"muted", style:"font-size:13.5px;margin-bottom:4px", text:"Publicações por tipo: " + (POST_KINDS.filter(k => x.byType[k]).map(k => k + " " + x.byType[k]).join(" · ") || "nenhuma")}),
+        ...ACT_SHEETS.map(([n, head, fn]) => { const rows = fn(x); return sec(n, rows.length, head, rows); }));
+    }
+  } else if (S.repTab === "team"){
+    const L = ids.map(id => activityOf(id, ctx)), agg = teamAgg(L), rows = agg.map(teamRow);
+    body = h("div",{},
+      h("div",{class:"rep-bar"}, h("button",{class:"btn sm", onclick:() => downloadSheets(fname("por-time"), [{name:"Por time", rows:[["Período", per.name, perRange(per)], [], TEAM_HEAD, ...rows]}]), text:"Baixar Excel"})),
+      h("p",{class:"muted", style:"margin:0 0 8px;font-size:13.5px", text:"Totais de cada time no período. Presença média = presenças ÷ dias úteis possíveis. Saldo atual do time considera as zeragens feitas pela gestão."}),
+      tableEl(TEAM_HEAD, rows));
+  } else {
+    const L = ids.map(id => activityOf(id, ctx)), agg = teamAgg(L);
+    const tRows = agg.map(engTRow), pRows = L.map(engPRow);
+    const items = {}; S.orders.filter(o => o.status !== "cancelado" && inWinMs(o.at, win)).forEach(o => (o.items || []).forEach(i => items[i.name] = (items[i.name] || 0) + (i.qty | 0)));
+    const itemRows = Object.entries(items).sort((a, b) => b[1] - a[1]);
+    body = h("div",{},
+      h("div",{class:"rep-bar"}, h("button",{class:"btn sm", onclick:() => downloadSheets(fname("engajamento"), [{name:"Por time", rows:[["Período", per.name, perRange(per)], [], ENG_T_HEAD, ...tRows]}, {name:"Por pessoa", rows:[ENG_P_HEAD, ...pRows]}, {name:"Itens resgatados", rows:[["Item","Quantidade"], ...itemRows]}]), text:"Baixar Excel"})),
+      h("h3",{text:"Por time", style:"margin:6px 0"}), tableEl(ENG_T_HEAD, tRows),
+      h("h3",{text:"Por pessoa", style:"margin:14px 0 6px"}), tableEl(ENG_P_HEAD.filter((_, i) => i !== 1), pRows.map(r => r.filter((_, i) => i !== 1)), 2),
+      h("h3",{text:"Itens mais resgatados", style:"margin:14px 0 6px"}), itemRows.length ? itemRows.slice(0, 10).map(([n, q]) => h("div",{class:"ext-row"}, h("span",{class:"t", text:n}), h("b",{text:q + "×"}))) : h("p",{class:"muted", text:"Nenhum resgate no período."}));
+  }
+  return h("section",{class:"g-card"}, h("h2",{text:"📊 Relatórios"}),
+    h("p",{class:"muted", style:"margin:0 0 8px;font-size:13.5px", text:"Escolha o período e o tipo de relatório. Os números de cada período são os originais, mesmo depois de uma zeragem de CRAcoins. Temporadas encerradas continuam disponíveis aqui."}),
+    bar, tabs, body);
 }
 
 function renderAll(){
