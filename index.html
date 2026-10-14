@@ -424,6 +424,85 @@ a.mention:hover{text-decoration:underline}
 .kudos-box label{font-weight:700;font-size:14px}
 .kudos-box select{flex:1;min-width:180px}
 .kudos-box #kudosTeam{flex:0 1 190px;min-width:150px}
+/* ajustes de celular e quebras de linha */
+.gate-card.detail{max-height:calc(100dvh - 40px);overflow-y:auto;overscroll-behavior:contain}
+.gate-card.detail .x{position:sticky;top:12px;float:right;margin:12px 12px -50px 0;z-index:2}
+.gate-card.detail .post{margin-top:0;padding-top:56px}
+.cform{min-width:0}.cwrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.cform .box{min-width:0}.cform textarea{min-width:0;width:100%}
+.cwrap .fmt-bar{display:none}.cform:focus-within .fmt-bar{display:flex}
+.ext-row{flex-wrap:wrap}.ext-row .t{flex:1 1 170px;overflow-wrap:anywhere}
+.p-title,.cmt .txt,.lock-body,.tag,.tgt-tag,.medal,.rk-name b,.rk-name small,.pf-bio,.pf-role,.notif .nt,.poll .opt span{overflow-wrap:anywhere}
+.tag,.tgt-tag{white-space:normal}
+.g-card h2{flex-wrap:wrap}
+.poll .opt{height:auto;min-height:44px}
+.poll .opt span:not(.bar):not(.pct){white-space:normal;text-align:left}
+.p-text strong,.cmt strong,.lock-body strong{font-weight:800}
+mark{background:var(--mustard-soft);color:inherit;border-radius:4px;padding:0 3px;box-shadow:inset 0 -2px 0 var(--mustard)}
+.fmt-bar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+#fmtBar{margin:8px 0 0 52px}
+.fmt-bar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;min-width:34px;height:30px;padding:0 8px;font-size:14px;cursor:pointer}
+.fmt-bar button:hover{background:var(--hover)}
+.fmt-bar .hint{font-size:12px;color:var(--muted);margin-left:4px}
+/* gestão */
+/* stories */
+.story .ring.add{position:relative}
+.story .badge-plus{position:absolute;right:-2px;bottom:-2px;width:22px;height:22px;border-radius:50%;background:var(--pine);color:var(--pine-ink);border:2px solid var(--surface);display:grid;place-items:center;font-size:15px;font-weight:800;line-height:1}
+.sv-wrap{position:fixed;inset:0;z-index:97;background:#000;display:flex;align-items:center;justify-content:center}
+.sv{position:relative;width:min(440px,100vw);height:min(100dvh,800px);background:#111;color:#fff;overflow:hidden;display:flex;flex-direction:column}
+@media (min-width:600px){.sv{border-radius:16px}}
+.sv-bars{position:absolute;top:8px;left:8px;right:8px;display:flex;gap:4px;z-index:3}
+.sv-bars span{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
+.sv-bars span i{display:block;height:100%;width:0;background:#fff}
+.sv-head{position:absolute;top:18px;left:10px;right:10px;display:flex;align-items:center;gap:8px;z-index:3;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.sv-head .avatar{width:34px;height:34px}
+.sv-head b{font-size:15px}.sv-head small{opacity:.8;font-size:12.5px}
+.sv-head button{background:rgba(0,0,0,.35);border:0;color:#fff;border-radius:50%;width:36px;height:36px;font-size:17px}
+.sv-body{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.sv-body img,.sv-body video{max-width:100%;max-height:100%;object-fit:contain}
+.sv-text{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:40px 28px;text-align:center;font-family:var(--display);font-weight:800;font-size:28px;line-height:1.2;white-space:pre-wrap;overflow-wrap:anywhere}
+.sv-text > span{display:block;max-width:100%}
+.sv-text mark,.sv-cap mark{background:#FFC629;color:#1D1934;box-shadow:none}
+.sv-cap{position:absolute;left:0;right:0;bottom:70px;padding:10px 16px;background:linear-gradient(transparent,rgba(0,0,0,.6));font-size:16px;white-space:pre-wrap;overflow-wrap:anywhere;z-index:2}
+.sv-nav{position:absolute;top:70px;bottom:70px;width:35%;z-index:1;background:none;border:0}
+.sv-nav.prev{left:0}.sv-nav.next{right:0}
+.sv-foot{position:absolute;left:0;right:0;bottom:0;padding:12px;display:flex;gap:8px;justify-content:center;align-items:center;z-index:3}
+.sv-foot button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:8px 12px;font-size:18px}
+.sv-foot button.on{background:#fff;color:#111}
+.sv-foot .views{font-size:14px;font-weight:700}
+.sv-menu{position:absolute;top:60px;right:10px;background:#fff;color:#111;border-radius:10px;z-index:4;display:flex;flex-direction:column;min-width:190px;overflow:hidden}
+.sv-menu button{background:none;border:0;padding:10px 14px;text-align:left;font-size:14.5px}
+.sv-menu button:hover{background:#f1f1f1}
+.st-new .bgs{display:flex;gap:8px;margin:8px 0}
+.st-new .bgs button{width:34px;height:34px;border-radius:50%;border:3px solid transparent}
+.st-new .bgs button[aria-pressed="true"]{border-color:var(--ink)}
+.st-prev{width:100%;aspect-ratio:9/14;max-height:46vh;border-radius:14px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;color:#fff;margin:8px 0}
+.st-prev img,.st-prev video{max-width:100%;max-height:100%}
+.st-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.st-grid button{position:relative;aspect-ratio:9/14;border:0;border-radius:8px;overflow:hidden;background:#111;color:#fff;padding:6px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;overflow-wrap:anywhere}
+.st-grid button img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.st-grid button small{position:absolute;left:4px;bottom:4px;background:rgba(0,0,0,.6);border-radius:6px;padding:1px 5px;font-size:11px;font-weight:600}
+.st-grid button .live{position:absolute;top:4px;left:4px;background:var(--mustard);color:#1D1934;border-radius:6px;padding:1px 5px;font-size:11px}
+/* relatórios: gráficos */
+.rep-sum{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:6px 0 14px}
+.rep-sum div{background:var(--sunk);border-radius:12px;padding:10px 12px}
+.rep-sum b{display:block;font-family:var(--display);font-size:24px}
+.rep-sum small{display:block;color:var(--muted);font-size:12.5px;font-weight:700}
+.rep-sum em{display:block;font-style:normal;font-size:12.5px;color:var(--muted);margin-top:2px}
+.rep-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:14px}
+.chart{background:var(--sunk);border-radius:12px;padding:12px}
+.chart h4{margin:0 0 10px;font-size:14px}
+.vbars{display:flex;align-items:flex-end;gap:6px;height:130px;padding-top:16px}
+.vbars .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.vbars .c i{display:block;width:100%;max-width:26px;background:var(--pine);border-radius:4px 4px 0 0;min-height:2px}
+.vbars .c b{font-size:11.5px;font-weight:700;margin-bottom:2px}
+.vbars .c small{font-size:10.5px;color:var(--muted);margin-top:4px;white-space:nowrap}
+.hbars{display:flex;flex-direction:column;gap:6px}
+.hbars .r{display:grid;grid-template-columns:minmax(70px,38%) 1fr 40px;gap:8px;align-items:center;font-size:12.5px}
+.hbars .r span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbars .r .tr{height:10px;background:var(--line);border-radius:4px;overflow:hidden}
+.hbars .r .tr i{display:block;height:100%;background:var(--pine);border-radius:0 4px 4px 0}
+.hbars .r b{text-align:right;font-variant-numeric:tabular-nums}
 .kudos-warn{flex-basis:100%;margin:0;color:var(--danger);font-weight:700}
 .tile .pin-b{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;border-radius:6px;font-size:12px;padding:1px 6px}
 .tile.pinned{outline:3px solid var(--mustard);outline-offset:-3px}
@@ -574,6 +653,7 @@ details.rep-sec .g-table td{white-space:normal}
     <button class="nav-item" data-f="link"><span class="nav-ico">🔗</span>Links</button>
     <div class="nav-sep"></div>
     <button class="nav-item" id="navGame"><span class="nav-ico">🏆</span>CRAcoins</button>
+    <button class="nav-item" id="navGestao" hidden><span class="nav-ico">🛠️</span>Gestão</button>
     <button class="nav-item" id="navShop"><span class="nav-ico">🛍️</span>Loja</button>
     <button class="nav-item" id="navCal"><span class="nav-ico">🗓️</span>Presença</button>
     <button class="nav-item" id="navLib"><span class="nav-ico">📚</span>Biblioteca</button>
@@ -588,7 +668,7 @@ details.rep-sec .g-table td{white-space:normal}
     <div class="card rank-card" id="celebCard" hidden></div>
     <div class="card rank-card" id="rankCard" hidden></div>
     <div class="card rank-card" id="chalCard" hidden></div>
-    <div class="card stories" id="stories" aria-label="Fotos da equipe"></div>
+    <div class="card stories" id="stories" aria-label="Stories da equipe"></div>
     <div id="notice"></div>
 
     <section class="card composer" id="composer" hidden aria-label="Nova publicação">
@@ -606,6 +686,7 @@ details.rep-sec .g-table td{white-space:normal}
         <label class="sr" for="postText">Mensagem</label>
         <textarea id="postText" rows="1" maxlength="3000" placeholder="No que você está pensando?"></textarea>
       </div>
+      <div class="fmt-bar" id="fmtBar" role="toolbar" aria-label="Formatação do texto"></div>
       <div class="pollbox" id="pollBox" hidden>
         <div id="pollOpts" style="display:flex;flex-direction:column;gap:8px"></div>
         <div class="row-inline">
@@ -1052,7 +1133,8 @@ function maybeStartAll(){
   coll("bonus", null, flat("bonus"));
   coll("shop", null, flat("shop"));
   coll("orders", null, flat("orders"));
-  ["challenges","quizzes","quizscores","quizanswers","quizkeys","library","reports","resets"].forEach(n => coll(n, null, flat(n)));
+  ["challenges","quizzes","quizscores","quizanswers","quizkeys","library","reports","resets","stories","storyviews","nudges"].forEach(n => coll(n, null, flat(n)));
+  refreshPollTotals(); setInterval(refreshPollTotals, 30000);
 }
 const AUTH_MSG = [
   [/invalid login credentials/i, "E-mail ou senha incorretos."],
@@ -1454,9 +1536,9 @@ function checkLock(){
   btn.onclick = async () => { btn.disabled = true; btn.textContent = "Registrando…"; await ack(p.id); };
   $("lockCard").replaceChildren(
     h("div",{class:"lock-badge", text:"📣 Comunicado com leitura obrigatória" + (pend.length > 1 ? " · 1 de " + pend.length : "")}),
-    h("h2",{id:"lTitle", text:p.title || "Comunicado"}),
+    h("h2",{id:"lTitle"}, ...fmtNodes(p.title || "Comunicado")),
     h("div",{class:"gate-who"}, avatarEl(p.author,"sm"), h("div",{}, h("b",{text:a.name}), h("div",{class:"when", text:[when(p.createdAt), a.cargo].filter(Boolean).join(" · ")}))),
-    p.text ? h("div",{class:"lock-body"}, linkify(p.text)) : null,
+    p.text ? h("div",{class:"lock-body"}, ...fmtNodes(p.text, p.mentions)) : null,
     mediaEl(p, () => {}), p.link ? linkEl(p.link) : null,
     h("div",{class:"note", text:"Sua confirmação de leitura fica registrada para a gestão."}),
     btn);
@@ -1524,7 +1606,7 @@ function inlineImg(p, img){
 function tileEl(p){
   const t = typeOf(p);
   const rs = (S.reactions.get(p.id) || []).length, cs = (S.comments.get(p.id) || []).length;
-  const label = (t === "comunicado" ? "Comunicado: " : t === "poll" ? "Enquete: " : t === "kudos" ? "Elogio para " + prof(p.to).name + ": " : "Publicação: ") + (p.title || p.text || "foto");
+  const label = (t === "comunicado" ? "Comunicado: " : t === "poll" ? "Enquete: " : t === "kudos" ? "Elogio para " + prof(p.to).name + ": " : "Publicação: ") + plainTxt(p.title || p.text || "foto");
   const tile = h("button",{class:"tile", "aria-label":label + ", " + when(p.createdAt), onclick:() => openDetail(p.id)});
   const m = p.media;
   if (m && m.kind === "image"){
@@ -1537,7 +1619,7 @@ function tileEl(p){
     tile.append(h("span",{class:"kind", text:"▶ vídeo"}));
   } else {
     const ico = t === "comunicado" ? "📣" : t === "poll" ? "📊" : t === "kudos" ? "👏" : p.link ? "🔗" : "💬";
-    tile.append(h("div",{class:"tt" + (t === "comunicado" ? " com" : "")}, h("span",{class:"ico", text:ico}), h("b",{text:p.title || p.text || p.link || ""})));
+    tile.append(h("div",{class:"tt" + (t === "comunicado" ? " com" : "")}, h("span",{class:"ico", text:ico}), h("b",{text:plainTxt(p.title || p.text || p.link || "")})));
   }
   if (m && t !== "post") tile.append(h("span",{class:"kind", text: t === "comunicado" ? "📣" : t === "kudos" ? "👏" : "📊"}));
   tile.append(h("span",{class:"date", text:new Intl.DateTimeFormat("pt-BR",{day:"2-digit", month:"2-digit", year:"2-digit"}).format(pubAt(p))}),
@@ -1582,7 +1664,7 @@ function renderProfile(){
               h("div",{}, h("b",{text:String(received)}), received === 1 ? "reação recebida" : "reações recebidas")))),
         p.bio ? h("div",{class:"pf-bio", text:p.bio}) : (isMe ? h("div",{class:"pf-bio muted", text:"Você ainda não escreveu sua bio."}) : null),
         p.email ? h("a",{class:"pf-mail", href:"mailto:" + p.email, text:p.email}) : null,
-        isMe && S.canWrite ? h("div",{class:"pf-actions"}, h("button",{class:"btn ghost", onclick:() => openGate("edit"), text:"Editar perfil"})) : null),
+        isMe && S.canWrite ? h("div",{class:"pf-actions"}, h("button",{class:"btn ghost", onclick:() => openGate("edit"), text:"Editar perfil"}), h("button",{class:"btn ghost", onclick:openStoryArchive, text:"🗂️ Arquivo de stories"})) : null),
       h("div",{class:"pf-bar", role:"tablist"}, tab("grid","▦ Grade"), tab("list","☰ Lista"), sort));
     const md = medalsEl(id); if (md) head.querySelector(".pf-info").append(md);
   }
@@ -1611,7 +1693,8 @@ function openReaders(p){
     h("p",{class:"muted", text:(p.title || "Comunicado") + " · " + read.length + " de " + ids.length + " confirmaram"}),
     h("div",{class:"readers"},
       h("div",{}, h("h3",{text:"Leram (" + read.length + ")"}), read.length ? read.map(row) : h("div",{class:"muted", text:"Ninguém ainda."})),
-      h("div",{}, h("h3",{text:"Pendentes (" + notRead.length + ")"}), notRead.length ? notRead.map(row) : h("div",{class:"muted", text:"Todos confirmaram."})))
+      h("div",{}, h("h3",{text:"Pendentes (" + notRead.length + ")"}), notRead.length ? notRead.map(row) : h("div",{class:"muted", text:"Todos confirmaram."}))),
+    canManage() && notRead.length ? h("button",{class:"btn sm", style:"margin-top:12px", onclick:() => sendNudge(p, notRead), text:"🔔 Reenviar lembrete aos pendentes (" + notRead.length + ")"}) : null
   ], "Confirmações de leitura");
 }
 
@@ -2028,7 +2111,7 @@ $("publish").onclick = async () => {
       }
     }
     await S.db.doc("posts/" + id).set(post);
-    pt.value = ""; $("comTitle").value = ""; $("comAck").checked = false; $("comPin").checked = true;
+    pt.value = ""; $("comTitle").value = ""; $("comAck").checked = false; $("comPin").checked = true; clearDraft();
     $("postLink").value = ""; $("linkWrap").hidden = true; $("toggleLink").setAttribute("aria-pressed","false");
     clearFile(); resetPoll(); $("comPub").value = ""; $("comExp").value = ""; setMode("post"); pt.classList.remove("tall");
     setStatus(mode === "com" ? "Comunicado publicado." : mode === "poll" ? "Enquete publicada." : "Publicado.");
@@ -2061,7 +2144,8 @@ async function vote(p, optId){
   try {
     if (mine && mine.option === optId) await ref.delete();
     else await ref.set({postId:p.id, user:S.meId, option:optId, at:Date.now()});
-  } catch(e){ if (isDenied(e)) readOnly(); }
+    refreshPollTotals();
+  } catch(e){ if (p.poll.closesAt && Date.now() > p.poll.closesAt) toast("Esta enquete já foi encerrada."); else if (isDenied(e)) readOnly(); }
 }
 async function togglePin(p){ try { await S.db.doc("posts/" + p.id).update({pinned:!p.pinned}); } catch(e){ toast("Não foi possível alterar a fixação."); } }
 async function addComment(postId, ta, btn){
@@ -2103,6 +2187,7 @@ $("meChip").onclick = (e) => {
     h("button",{role:"menuitem", onclick:() => { closeMenus(); openProfile(S.meId); }, text:"Meu perfil"}),
     h("button",{role:"menuitem", onclick:() => { closeMenus(); setFilter("mine"); }, text:"Minhas publicações"}),
     S.canWrite && S.meId ? h("button",{role:"menuitem", onclick:() => { closeMenus(); openGate("edit"); }, text:"Editar meu perfil"}) : null,
+    canManage() ? h("button",{role:"menuitem", onclick:() => { closeMenus(); openGame(S.lastGtab || "aprovacoes"); }, text:"🛠️ Gestão"}) : null,
     canAdmin() ? h("button",{role:"menuitem", onclick:() => { closeMenus(); openAdmin(); }, text:"Gerenciar acessos"}) : null,
     h("button",{role:"menuitem", onclick:() => { closeMenus(); openLibrary(); }, text:"📚 Biblioteca"}),
     h("button",{role:"menuitem", onclick:() => { closeMenus(); installApp(); }, text:"📲 Instalar o app"}),
@@ -2220,8 +2305,9 @@ function pollEl(p){
   const votes = S.votes.get(p.id) || [];
   const mine = votes.find(v => v.user === S.meId);
   const closed = !!(p.poll.closesAt && Date.now() > p.poll.closesAt);
-  const showRes = !!mine || closed || p.author === S.meId || canManage();
-  const total = votes.length;
+  const showRes = closed || p.author === S.meId || canManage();
+  const total = showRes ? votes.length : (S.pollTotals[p.id] != null ? S.pollTotals[p.id] : null);
+  if (closed && !canManage() && p.author !== S.meId) checkClosedPoll(p);
   const opts = p.poll.options.map(o => {
     const n = votes.filter(v => v.option === o.id).length;
     const pct = total ? Math.round(n * 100 / total) : 0;
@@ -2230,16 +2316,20 @@ function pollEl(p){
     return h("button",{class:"opt" + (isMine ? " mine" : ""), disabled: closed || !S.canWrite, "aria-pressed":String(!!isMine),
       title: names || null, onclick:() => vote(p, o.id)},
       showRes ? h("span",{class:"bar", style:"width:" + pct + "%"}) : null,
-      h("span",{text:(isMine ? "✓ " : "") + o.text}),
+      h("span",{}, isMine ? "✓ " : "", ...fmtNodes(o.text)),
       showRes ? h("span",{class:"pct", text:pct + "%"}) : null);
   });
-  const foot = [plural(total,"voto","votos")];
+  const foot = [];
+  if (total != null) foot.push(plural(total,"voto","votos"));
   if (closed) foot.push("enquete encerrada");
   else if (p.poll.closesAt) foot.push("encerra " + until(p.poll.closesAt));
-  if (!mine && !closed && !showRes) foot.push("vote para ver o resultado");
-  if (mine && !closed) foot.push("clique na sua opção para desfazer");
+  if (!closed && showRes) foot.push("resultado parcial, visível só para a gestão até encerrar");
+  if (!closed && !showRes) foot.push("o resultado aparece quando a enquete encerrar");
+  if (mine && !closed) foot.push("toque em outra opção para trocar ou na sua para desfazer");
   return h("div",{class:"poll"}, targetTag(p), ...opts, h("div",{class:"poll-foot", text:foot.join(" · ")}),
-    canManage() ? h("button",{class:"btn ghost sm", style:"align-self:flex-start;margin-top:2px", onclick:() => exportPoll(p), text:"📥 Baixar respostas (Excel)"}) : null);
+    canManage() ? h("div",{style:"display:flex;gap:6px;flex-wrap:wrap;margin-top:2px"},
+      !closed ? h("button",{class:"btn sm", onclick:() => closePoll(p), text:"⏹️ Encerrar enquete agora"}) : null,
+      h("button",{class:"btn ghost sm", onclick:() => exportPoll(p), text:"📥 Baixar respostas (Excel)"})) : null);
 }
 function ackEl(p){
   if (!(typeOf(p) === "comunicado" && p.requireAck)) return null;
@@ -2300,7 +2390,7 @@ function buildCard(p){
   send.onclick = () => addComment(p.id, ta, send);
   ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); addComment(p.id, ta, send); } });
   const meSlot = h("span");
-  const form = h("div",{class:"cform"}, meSlot, h("div",{class:"box"}, ta, send));
+  const form = h("div",{class:"cform"}, meSlot, h("div",{class:"cwrap"}, h("div",{class:"box"}, ta, send), fmtBar(() => ta)));
   comments.append(list, form);
   card.append(band, head, title, text, poll, ...(media ? [media] : []), ...(link ? [link] : []), ackBox, stats, actions, comments);
   return {card, band, head, title, text, poll, ackBox, stats, reactBtn, list, form, meSlot, key: cardKey(p)};
@@ -2340,7 +2430,8 @@ function renderCard(p, c){
       h("button",{class:"who-btn", title:a.email || null, onclick:() => openProfile(p.author), text:a.name}),
       h("div",{class:"when", title:dtf.format(pubAt(p)), text:[when(pubAt(p)) + (p.editedAt ? " · editado" : ""), a.cargo, a.setor].filter(Boolean).join(" · ")})),
     dots);
-  c.title.textContent = p.title || ""; c.title.hidden = !p.title;
+  if (c.title.dataset.src !== (p.title || "")){ c.title.replaceChildren(...fmtNodes(p.title || "")); c.title.dataset.src = p.title || ""; }
+  c.title.hidden = !p.title;
   const srcKey = (p.text || "") + "|" + (p.mentions || []).join(",");
   if (c.text.dataset.src !== srcKey){ c.text.replaceChildren(...rich(p.text, p.mentions)); c.text.dataset.src = srcKey; }
   c.text.hidden = !p.text;
@@ -2396,26 +2487,6 @@ function renderCard(p, c){
   c.meSlot.replaceChildren(avatarEl(S.meId,"sm"));
 }
 
-function renderStories(){
-  const latest = new Map();
-  for (const p of S.posts) if (p.author && p.media && p.media.kind === "image" && canSeePost(p) && !isScheduled(p) && !latest.has(p.author)) latest.set(p.author, pubAt(p));
-  const items = [];
-  if (S.canWrite && S.meId){
-    items.push(h("button",{class:"story", onclick:() => { setFilter("all"); setMode("post"); $("pickPhoto").click(); }},
-      h("span",{class:"ring seen"}, h("span",{class:"plus", text:"+"})), h("span",{class:"nm",text:"Nova foto"})));
-  }
-  for (const [id, t] of latest){
-    const p = prof(id);
-    const fresh = Date.now() - t < 86400000;
-    const on = S.author === id && S.filter === "image";
-    const img = p.avatar ? h("img",{src:p.avatar, alt:""}) : h("span",{class:"plus", "aria-hidden":"true", text:(p.name[0]||"?").toUpperCase()});
-    items.push(h("button",{class:"story", "aria-pressed":String(on), title:"Ver fotos de " + p.name,
-      onclick:() => on ? setFilter("all") : setFilter("image", id)},
-      h("span",{class:"ring" + (fresh ? "" : " seen")}, img), h("span",{class:"nm", text:id === S.meId ? "Você" : firstName(id)})));
-  }
-  $("stories").replaceChildren(...items);
-  $("stories").hidden = !items.length;
-}
 function renderRank(){
   const since = Date.now() - 30*86400000, cnt = new Map();
   for (const p of S.posts) if (pubAt(p) >= since && pubAt(p) <= Date.now() && p.author && canSeePost(p)) cnt.set(p.author, (cnt.get(p.author)||0) + 1);
@@ -2609,7 +2680,7 @@ function openForm({title, intro, fields, submit, onSubmit}){
     }
     else el = h("input",{class:"field", id, type:f.type || "text", value:f.value != null ? String(f.value) : "", min:f.min, step:f.step, maxlength:f.max});
     inputs[f.key] = el;
-    return h("div",{}, h("label",{class:"f", for:id, text:f.label}), el, f.hint ? h("div",{class:"note", text:f.hint}) : null);
+    return h("div",{}, h("label",{class:"f", for:id, text:f.label}), f.fmt ? fmtBar(() => el) : null, el, f.hint ? h("div",{class:"note", text:f.hint}) : null);
   });
   const close = () => { wrap.remove(); document.removeEventListener("keydown", onKey, true); };
   const onKey = e => { if (e.key === "Escape"){ e.stopPropagation(); close(); } };
@@ -2681,13 +2752,16 @@ function openCalendar(){
 $("navCal").onclick = () => openCalendar();
 
 /* ----- navegação ----- */
+const GEST_TABS = ["aprovacoes","ranking","bonus","relatorios","config","indicadores","relatorio","engajamento"];
+const isGestTab = k => GEST_TABS.includes(k);
 function openGame(tab){
   closeModal(); closeMenus();
-  S.view = "game"; if (tab) S.gtab = tab;
+  S.view = "game"; if (tab) S.gtab = tab; if (tab && isGestTab(tab)) S.lastGtab = tab;
   document.querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-current", "false"));
   renderAll(); window.scrollTo({top:0});
 }
 $("navGame").onclick = () => openGame("tarefas");
+$("navGestao").onclick = () => openGame(S.lastGtab || "aprovacoes");
 $("navShop").onclick = () => openGame("loja");
 $("tabGame").onclick = () => openGame();
 $("coinChip").onclick = () => openGame("extrato");
@@ -2734,29 +2808,35 @@ function renderGame(){
   const act = document.activeElement;
   if (act && v.contains(act) && act.matches("input,select,textarea")) return;
   const gest = canManage();
-  const me = statsOf(S.meId), rk = gest ? ranking() : [], pos = rk.findIndex(r => r.id === S.meId) + 1;
+  const me = statsOf(S.meId);
   const se = S.game.season || {};
   const pendClaims = S.claims.filter(c => c.status === "pendente").length;
   const pendOrders = S.orders.filter(o => o.status === "pendente").length;
-  const hero = h("section",{class:"g-card"},
-    h("h2",{}, "🏆 CRAcoins"),
-    h("div",{class:"g-season", text: seasonLabel()}),
-    h("div",{class:"g-hero", style:"margin-top:12px"},
-      h("div",{class:"box"}, h("div",{class:"lbl", text:"Seu saldo"}), h("div",{class:"big", text:coins(me.balance)})),
-      h("div",{class:"box"}, h("div",{class:"lbl", text:"Ganhos na temporada"}), h("div",{class:"big", style:"font-size:26px", text:coins(me.earned)})),
-      gest ? h("div",{class:"box"}, h("div",{class:"lbl", text:"Posição no ranking"}), h("div",{class:"big", style:"font-size:26px", text: pos ? pos + "º de " + rk.length : "—"})) : null,
-      h("button",{class:"btn ghost", onclick:openCalendar, text: markedToday() ? "🗓️ Presença ✓" : "🗓️ Marcar presença"})),
-    medalsEl(S.meId));
-  const tabs = [["tarefas","Tarefas"],["desafios","Desafios"],["quiz","Quiz"],["loja","Loja" + (Object.keys(S.cart).length ? " 🛒" : "")]].concat(gest ? [["ranking","Ranking"]] : [], [["extrato","Extrato"]]);
   const openRep = S.reports.filter(r => r.status === "aberta").length;
-  const gtabs = [["aprovacoes","Aprovações" + ((pendClaims + pendOrders + openRep) ? " (" + (pendClaims + pendOrders + openRep) + ")" : "")],["bonus","Bônus"],["indicadores","Indicadores"],["relatorios","Relatórios"],["config","Configurações"]];
   if (S.gtab === "relatorio" || S.gtab === "engajamento") S.gtab = "relatorios";
-  if (!gest && (gtabs.some(t => t[0] === S.gtab) || S.gtab === "ranking")) S.gtab = "tarefas";
-  const tb = (k, l) => h("button",{role:"tab", "aria-selected":String(S.gtab === k), onclick:() => { S.gtab = k; renderAll(); }, text:l});
-  const tabsEl = h("div",{class:"g-tabs", role:"tablist"},
-    h("div",{class:"grp"}, tabs.map(([k, l]) => tb(k, l))),
-    gest ? h("div",{class:"grp"}, h("span",{class:"glbl", text:"Gestão"}), gtabs.map(([k, l]) => tb(k, l))) : null);
-  const body = ({tarefas:gTasks, desafios:gChallenges, quiz:gQuiz, indicadores:gIndicators, relatorios:gReports, loja:gShop, ranking:gRanking, extrato:gExtrato, aprovacoes:gApprovals, bonus:gBonus, config:gConfig}[S.gtab] || gTasks)();
+  if (S.gtab === "indicadores") S.gtab = "aprovacoes";
+  if (!gest && isGestTab(S.gtab)) S.gtab = "tarefas";
+  const tb = (k, l) => h("button",{role:"tab", "aria-selected":String(S.gtab === k), onclick:() => { S.gtab = k; if (isGestTab(k)) S.lastGtab = k; renderAll(); }, text:l});
+  let hero, tabsEl;
+  if (isGestTab(S.gtab)){
+    const pend = pendClaims + pendOrders + openRep;
+    hero = h("section",{class:"g-card"}, h("h2",{}, "🛠️ Gestão"), h("div",{class:"g-season", text: seasonLabel()}),
+      h("p",{class:"muted", style:"margin:6px 0 0;font-size:13.5px", text:"Aprovações, ranking, bônus, relatórios e configurações. Esta área só aparece para a gestão."}));
+    const gtabs = [["aprovacoes","Aprovações" + (pend ? " (" + pend + ")" : "")],["ranking","Ranking"],["bonus","Bônus"],["relatorios","Relatórios"],["config","Configurações"]];
+    tabsEl = h("div",{class:"g-tabs", role:"tablist"}, h("div",{class:"grp"}, gtabs.map(([k, l]) => tb(k, l))));
+  } else {
+    hero = h("section",{class:"g-card"},
+      h("h2",{}, "🏆 CRAcoins", h("span",{class:"grow"}), gest ? h("button",{class:"btn ghost sm", onclick:() => openGame(S.lastGtab || "aprovacoes"), text:"🛠️ Gestão"}) : null),
+      h("div",{class:"g-season", text: seasonLabel()}),
+      h("div",{class:"g-hero", style:"margin-top:12px"},
+        h("div",{class:"box"}, h("div",{class:"lbl", text:"Seu saldo"}), h("div",{class:"big", text:coins(me.balance)})),
+        h("div",{class:"box"}, h("div",{class:"lbl", text:"Ganhos na temporada"}), h("div",{class:"big", style:"font-size:26px", text:coins(me.earned)})),
+        h("button",{class:"btn ghost", onclick:openCalendar, text: markedToday() ? "🗓️ Presença ✓" : "🗓️ Marcar presença"})),
+      medalsEl(S.meId));
+    const tabs = [["tarefas","Tarefas"],["desafios","Desafios"],["quiz","Quiz"],["loja","Loja" + (Object.keys(S.cart).length ? " 🛒" : "")],["extrato","Extrato"]];
+    tabsEl = h("div",{class:"g-tabs", role:"tablist"}, h("div",{class:"grp"}, tabs.map(([k, l]) => tb(k, l))));
+  }
+  const body = ({tarefas:gTasks, desafios:gChallenges, quiz:gQuiz, relatorios:gReports, loja:gShop, ranking:gRanking, extrato:gExtrato, aprovacoes:gApprovals, bonus:gBonus, config:gConfig}[S.gtab] || gTasks)();
   v.replaceChildren(hero, tabsEl, body);
 }
 
@@ -3114,7 +3194,9 @@ function renderGameBits(){
   const ok = S.ready.posts && S.meId;
   $("coinChip").hidden = !ok;
   if (ok) $("coinVal").textContent = statsOf(S.meId).balance.toLocaleString("pt-BR");
-  $("navGame").setAttribute("aria-current", String(S.view === "game" && S.gtab !== "loja"));
+  $("navGame").setAttribute("aria-current", String(S.view === "game" && S.gtab !== "loja" && !isGestTab(S.gtab)));
+  $("navGestao").hidden = !canManage();
+  $("navGestao").setAttribute("aria-current", String(S.view === "game" && isGestTab(S.gtab)));
   $("navShop").setAttribute("aria-current", String(S.view === "game" && S.gtab === "loja"));
   renderRankCard();
   if (ok && !S.calShown && W().active && S.ready.presence && $("gate").hidden && $("lock").hidden && $("modal").hidden && !markedToday() && isWeekday(spToday())){
@@ -3127,7 +3209,7 @@ function renderGameBits(){
    comemorações, missões, desafios, quiz, engajamento, indicadores,
    biblioteca, denúncias, backup e app instalável
    ===================================================================== */
-S.challenges = []; S.quizzes = []; S.quizscores = []; S.quizanswers = []; S.quizkeys = []; S.library = []; S.reports = []; S.resets = [];
+S.challenges = []; S.quizzes = []; S.quizscores = []; S.quizanswers = []; S.quizkeys = []; S.library = []; S.reports = []; S.resets = []; S.stories = []; S.storyviews = []; S.nudges = []; S.pollTotals = {};
 Object.assign(GDEF, {kudosPerWeek:3, kudosCoins:20, birthdayCoins:30, anniversaryCoins:50, indicators:[]});
 const effPinned = p => !!p.pinned && !(p.expiresAt && Date.now() > p.expiresAt);
 const pubAt = p => p.publishAt || p.createdAt;
@@ -3199,9 +3281,30 @@ function mentionize(str, ids){
   if (last < str.length) out.push(document.createTextNode(str.slice(last)));
   return out;
 }
-function rich(text, mentions){
+function plainRich(text, mentions){
   return linkify(text).flatMap(n => n.nodeType === 3 ? mentionize(n.textContent, mentions) : [n]);
 }
+/* Formatação: *negrito*, _itálico_ e ==destaque== (o mesmo jeito do WhatsApp) */
+const FMT_RE = /(^|[\s(\[{"'“‘>\-])(\*|_|==)(?=\S)([^\n]*?\S)\2(?=$|[\s.,;:!?)\]}"'”’<\-])/;
+function fmtNodes(str, mentions){
+  const out = []; let rest = String(str || "");
+  for (let guard = 0; rest && guard < 500; guard++){
+    const m = FMT_RE.exec(rest);
+    if (!m){ out.push(...plainRich(rest, mentions)); break; }
+    const start = m.index + m[1].length;
+    if (start > 0) out.push(...plainRich(rest.slice(0, start), mentions));
+    out.push(h(m[2] === "*" ? "strong" : m[2] === "_" ? "em" : "mark", {}, ...fmtNodes(m[3], mentions)));
+    rest = rest.slice(m.index + m[0].length);
+  }
+  return out;
+}
+function plainTxt(str){
+  let t = String(str || ""), prev;
+  const re = new RegExp(FMT_RE.source, "g");
+  do { prev = t; t = t.replace(re, "$1$3"); } while (t !== prev);
+  return t;
+}
+function rich(text, mentions){ return fmtNodes(text, mentions); }
 let mentionPop = null;
 function attachMention(ta){
   const close = () => { if (mentionPop){ mentionPop.remove(); mentionPop = null; } };
@@ -3230,8 +3333,8 @@ function attachMention(ta){
 /* ---------- edição e denúncia ---------- */
 function editPost(p){
   const fields = [];
-  if (typeOf(p) === "comunicado") fields.push({key:"title", label:"Título", value:p.title || "", max:"120"});
-  fields.push({key:"text", label: typeOf(p) === "poll" ? "Pergunta" : "Texto", type:"textarea", value:p.text || "", max:"3000"});
+  if (typeOf(p) === "comunicado") fields.push({key:"title", label:"Título", value:p.title || "", max:"120", fmt:true});
+  fields.push({key:"text", label: typeOf(p) === "poll" ? "Pergunta" : "Texto", type:"textarea", value:p.text || "", max:"3000", fmt:true});
   if (p.link !== undefined) fields.push({key:"link", label:"Link", value:p.link || ""});
   openForm({title:"Editar publicação", fields, onSubmit: async v => {
     const patch = {text:(v.text || "").trim(), editedAt:Date.now(), mentions:computeMentions(v.text)};
@@ -3242,7 +3345,7 @@ function editPost(p){
   }});
 }
 function editComment(cm){
-  openForm({title:"Editar comentário", fields:[{key:"text", label:"Comentário", type:"textarea", value:cm.text, max:"1000"}], onSubmit: async v => {
+  openForm({title:"Editar comentário", fields:[{key:"text", label:"Comentário", type:"textarea", value:cm.text, max:"1000", fmt:true}], onSubmit: async v => {
     const t = v.text.trim(); if (!t) return "O comentário não pode ficar vazio.";
     await S.db.doc("comments/" + cm.id).update({text:t, editedAt:Date.now(), mentions:computeMentions(t)}); toast("Comentário editado.");
   }});
@@ -3292,7 +3395,7 @@ function computeNotifs(){
     const at = pubAt(p); if (at > now) continue;
     const t = typeOf(p), tg = pollTargets(p);
     if (p.author !== me && (t === "comunicado" || t === "poll") && (!tg.length || tg.includes(st)))
-      out.push({at, icon: t === "comunicado" ? "📣" : "📊", text:(t === "comunicado" ? "Novo comunicado: " : "Nova enquete: ") + (p.title || p.text || "").slice(0, 80), go:() => openDetail(p.id)});
+      out.push({at, icon: t === "comunicado" ? "📣" : "📊", text:(t === "comunicado" ? "Novo comunicado: " : "Nova enquete: ") + plainTxt(p.title || p.text || "").slice(0, 80), go:() => openDetail(p.id)});
     if (t === "kudos" && p.to === me) out.push({at, icon:"👏", text:prof(p.author).name + " te enviou um elogio", go:() => openDetail(p.id)});
     if (p.author !== me && (p.mentions || []).includes(me)) out.push({at, icon:"💬", text:prof(p.author).name + " mencionou você numa publicação", go:() => openDetail(p.id)});
   }
@@ -3301,7 +3404,7 @@ function computeNotifs(){
     for (const cm of list){
       if (cm.author === me) continue;
       if ((cm.mentions || []).includes(me)) out.push({at:cm.createdAt, icon:"💬", text:prof(cm.author).name + " mencionou você num comentário", go:() => openDetail(pid)});
-      else if (p.author === me) out.push({at:cm.createdAt, icon:"🗨️", text:prof(cm.author).name + " comentou: \"" + cm.text.slice(0, 60) + "\"", go:() => openDetail(pid)});
+      else if (p.author === me) out.push({at:cm.createdAt, icon:"🗨️", text:prof(cm.author).name + " comentou: \"" + plainTxt(cm.text).slice(0, 60) + "\"", go:() => openDetail(pid)});
     }
   }
   for (const c of S.claims) if (c.user === me && c.reviewedAt && c.reviewedBy !== me){
@@ -3311,6 +3414,9 @@ function computeNotifs(){
   }
   for (const o of S.orders) if (o.user === me && o.handledAt) out.push({at:o.handledAt, icon:"🛍️", text: o.status === "entregue" ? "Seu resgate foi entregue" : "Seu resgate foi cancelado e os CRAcoins voltaram", go:() => openGame("loja")});
   for (const r of S.resets || []) if (r.by !== me && (r.scope === "all" || (r.users || []).includes(me))) out.push({at:r.at, icon:"🧹", text:"A gestão zerou o saldo de CRAcoins" + (r.scope === "all" ? " de todos" : r.scope === "setor" ? " do seu time" : " da sua conta"), go:() => openGame("extrato")});
+  for (const n of S.nudges || []) if ((n.users || []).includes(me)){ const p = postById(n.postId); if (p && !ackedBy(p.id, me)) out.push({at:n.at, icon:"🔔", text:"Lembrete da gestão: leia o comunicado \"" + plainTxt(p.title || p.text || "").slice(0, 60) + "\"", go:() => openDetail(p.id)}); }
+  for (const v of S.storyviews || []) if (v.react && v.user !== me){ const st = (S.stories || []).find(x => x.id === v.storyId); if (st && st.author === me) out.push({at:v.reactAt || v.at, icon:v.react, text:prof(v.user).name + " reagiu " + v.react + " ao seu story", go:() => openStoryViewer([st], 0)}); }
+  for (const p of S.posts) if (typeOf(p) === "poll" && p.poll && p.poll.closesAt && p.poll.closesAt <= Date.now() && p.author !== me && (S.votes.get(p.id) || []).some(v => v.user === me)) out.push({at:p.poll.closesAt, icon:"📊", text:"Enquete encerrada, veja o resultado: " + plainTxt(p.text || "").slice(0, 60), go:() => openDetail(p.id)});
   for (const b of S.bonus) if (b.user === me && b.by !== me) out.push({at:b.at, icon:"🪙", text:(b.amount >= 0 ? "Você ganhou " : "Ajuste de ") + Math.abs(b.amount) + " CRAcoins" + (b.reason ? ": " + b.reason : ""), go:() => openGame("extrato")});
   if (canManage()){
     for (const [id, m] of S.members) if (id !== me && !apr(id)) out.push({at:m.joinedAt || m.updatedAt || 0, icon:"🔑", text:"Nova solicitação de acesso: " + (m.displayName || m.email), go:() => openAdmin()});
@@ -3918,7 +4024,7 @@ function repCtx(win){
 }
 const kindLabel = x => { const t = typeOf(x); return t === "kudos" ? "Elogio" : t === "comunicado" ? "Comunicado" : t === "poll" ? "Enquete" : x.media && x.media.kind === "image" ? "Foto" : x.media && x.media.kind === "video" ? "Vídeo" : x.link ? "Link" : "Texto"; };
 const POST_KINDS = ["Texto","Foto","Vídeo","Link","Comunicado","Enquete","Elogio"];
-const shortTxt = x => ((x && (x.title || x.text || x.link)) || (x && x.media ? "(foto/vídeo)" : "")).replace(/\s+/g, " ").slice(0, 100);
+const shortTxt = x => plainTxt((x && (x.title || x.text || x.link)) || (x && x.media ? "(foto/vídeo)" : "")).replace(/\s+/g, " ").slice(0, 100);
 const CLAIM_ST = {aprovado:"Concluída", pendente:"Aguardando aprovação", recusado:"Recusada", estornado:"Estornada"};
 function activityOf(id, ctx){
   const win = ctx.win, p = prof(id), m = S.members.get(id) || {}, a = apr(id) || {}, now = ctx.now;
@@ -4037,12 +4143,13 @@ function gReports(){
   sel.value = S.repKey; sel.onchange = () => { S.repKey = sel.value; sel.blur(); renderGame(); };
   const dateIn = (k, lab) => { const i = h("input",{class:"field", type:"date", value:S[k], "aria-label":lab}); i.onchange = () => { if (i.value){ S[k] = i.value; } i.blur(); renderGame(); }; return h("label",{style:"display:flex;gap:6px;align-items:center;font-weight:700;font-size:14px"}, lab, i); };
   const bar = h("div",{class:"rep-bar"}, h("b",{text:"Período:"}), sel, S.repKey === "custom" ? dateIn("repS", "De") : null, S.repKey === "custom" ? dateIn("repE", "até") : null);
-  if (!["ind","team","eng"].includes(S.repTab)) S.repTab = "ind";
+  if (!["ind","team","eng","alerts"].includes(S.repTab)) S.repTab = "ind";
   const chip = (k, t) => h("button",{class:"chip", "aria-pressed":String(S.repTab === k), onclick:() => { S.repTab = k; renderGame(); }, text:t});
-  const tabs = h("div",{class:"rep-tabs"}, chip("ind","👤 Individual"), chip("team","🏢 Por time"), chip("eng","📈 Engajamento"));
+  const tabs = h("div",{class:"rep-tabs"}, chip("ind","👤 Individual"), chip("team","🏢 Por time"), chip("eng","📈 Engajamento"), chip("alerts","⚠️ Alertas"));
   const fname = k => "purple-" + k + "-" + slugify(per.name);
   let body;
-  if (S.repTab === "ind"){
+  if (S.repTab === "alerts"){ body = alertsEl(ids); }
+  else if (S.repTab === "ind"){
     const team = h("select",{class:"field", "aria-label":"Time"}, h("option",{value:"", text:"Todos os times"}), SETORES.map(x => h("option",{value:x, text:x.replace(/^CSC - /, "")})));
     team.value = S.repTeam || ""; team.onchange = () => { S.repTeam = team.value; S.repUser = ""; team.blur(); renderGame(); };
     const list = ids.filter(id => !S.repTeam || prof(id).setor === S.repTeam);
@@ -4088,7 +4195,429 @@ function gReports(){
   }
   return h("section",{class:"g-card"}, h("h2",{text:"📊 Relatórios"}),
     h("p",{class:"muted", style:"margin:0 0 8px;font-size:13.5px", text:"Escolha o período e o tipo de relatório. Os números de cada período são os originais, mesmo depois de uma zeragem de CRAcoins. Temporadas encerradas continuam disponíveis aqui."}),
-    bar, tabs, body);
+    bar, h("h3",{text:"Resumo do período", style:"margin:4px 0 8px"}), summaryEl(per, ids), tabs, body);
+}
+
+/* =====================================================================
+   LOTE 2: formatação de texto, enquetes, gestão, stories, alertas,
+   lembretes, rascunho e resumo da gestão
+   ===================================================================== */
+/* ---------- formatação: barra e atalhos ---------- */
+function wrapSel(el, mk){
+  if (!el) return;
+  const v = el.value; let a = el.selectionStart ?? v.length, b = el.selectionEnd ?? v.length;
+  while (a < b && /\s/.test(v[a])) a++;
+  while (b > a && /\s/.test(v[b - 1])) b--;
+  const L = mk.length;
+  if (a === b){
+    el.value = v.slice(0, a) + mk + mk + v.slice(a);
+    el.setSelectionRange(a + L, a + L);
+  } else if (v.slice(a - L, a) === mk && v.slice(b, b + L) === mk){
+    el.value = v.slice(0, a - L) + v.slice(a, b) + v.slice(b + L);
+    el.setSelectionRange(a - L, b - L);
+  } else {
+    const max = +el.getAttribute("maxlength") || 1e9;
+    if (v.length + 2 * L > max){ toast("Limite de caracteres atingido."); return; }
+    el.value = v.slice(0, a) + mk + v.slice(a, b) + mk + v.slice(b);
+    el.setSelectionRange(a + L, b + L);
+  }
+  el.focus(); el.dispatchEvent(new Event("input", {bubbles:true}));
+}
+function fmtBar(getTarget){
+  const b = (label, mk, title, style) => h("button",{type:"button", title, "aria-label":title, style:style || null,
+    onmousedown:e => e.preventDefault(), onclick:() => wrapSel(getTarget(), mk), text:label});
+  return h("div",{class:"fmt-bar", role:"toolbar", "aria-label":"Formatação"},
+    b("B", "*", "Negrito (Ctrl+B)", "font-weight:800"), b("I", "_", "Itálico (Ctrl+I)", "font-style:italic;font-family:Georgia,serif"), b("🖍️ Destacar", "==", "Destacar com marca-texto"));
+}
+(() => {
+  const comp = $("composer");
+  S.fmtEl = pt;
+  comp.addEventListener("focusin", e => { const t = e.target; if (t.matches("textarea, input.field:not([type]), input.field[type=text], #comTitle") && !t.closest(".kudos-box")) S.fmtEl = t; });
+  const bar = fmtBar(() => (S.fmtEl && document.body.contains(S.fmtEl) && !S.fmtEl.closest("[hidden]")) ? S.fmtEl : pt);
+  bar.append(h("span",{class:"hint", text:"Selecione a palavra e escolha o estilo"}));
+  $("fmtBar").replaceWith(bar); bar.id = "fmtBar";
+  document.addEventListener("keydown", e => {
+    if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey) return;
+    const k = e.key.toLowerCase(); if (k !== "b" && k !== "i") return;
+    const t = e.target;
+    if (!t.matches || !t.matches("textarea, input[type=text], input.field:not([type]), #comTitle")) return;
+    if (t.type === "search" || t.type === "email" || t.type === "password") return;
+    e.preventDefault(); wrapSel(t, k === "b" ? "*" : "_");
+  });
+})();
+
+/* ---------- enquetes: total de votos, encerrar e resultado ---------- */
+let pollTotalsBusy = false;
+async function refreshPollTotals(){
+  if (pollTotalsBusy || !sb || !S.meId) return; pollTotalsBusy = true;
+  try { const {data, error} = await sb.rpc("purple_poll_totals"); if (!error && data && typeof data === "object"){ const k = JSON.stringify(data); if (k !== S._ptKey){ S._ptKey = k; S.pollTotals = data; renderAll(); } } }
+  catch(e){} finally { pollTotalsBusy = false; }
+}
+S.closedFetched = new Set();
+function checkClosedPoll(p){
+  if (S.closedFetched.has(p.id)) return; S.closedFetched.add(p.id);
+  setTimeout(() => S.db.collection("votes").get().then(sn => {
+    const m = new Map(); for (const d of sn.docs){ const r = {id:d.id, ...d.data()}; if (!m.has(r.postId)) m.set(r.postId, []); m.get(r.postId).push(r); }
+    S.votes = m; renderAll();
+  }).catch(() => {}), 50);
+}
+async function closePoll(p){
+  if (!(await askConfirm("Encerrar esta enquete agora? Ninguém mais poderá votar e o resultado fica visível para todos.", "Encerrar enquete"))) return;
+  try { await S.db.doc("posts/" + p.id).update({poll:{...p.poll, closesAt:Date.now()}}); toast("Enquete encerrada. O resultado já está visível para todos."); }
+  catch(e){ toast(authMsg(e)); }
+}
+
+/* ---------- lembrete de comunicado ---------- */
+async function sendNudge(p, users){
+  if (!users.length) return;
+  if (!(await askConfirm("Enviar um lembrete para " + plural(users.length, "pessoa que ainda não leu", "pessoas que ainda não leram") + " este comunicado?", "Enviar lembrete"))) return;
+  try {
+    await S.db.doc("nudges/" + gid()).set({postId:p.id, users, by:S.meId, at:Date.now()});
+    closeModal(); toast("Lembrete enviado para " + plural(users.length, "pessoa", "pessoas") + ".");
+  } catch(e){ toast(authMsg(e)); }
+}
+const pendingReaders = p => approvedIds().filter(i => i !== p.author && (!pollTargets(p).length || pollTargets(p).includes(prof(i).setor)) && !ackedBy(p.id, i));
+
+/* ---------- rascunho automático do campo de publicação ---------- */
+const draftKey = () => "purple-draft-" + (S.meId || "x");
+let draftT = null, draftRestored = false;
+function saveDraftNow(){
+  clearTimeout(draftT);
+  if (!S.meId || !draftRestored) return;
+  try {
+    const d = {mode:S.mode, text:pt.value, title:$("comTitle").value, at:Date.now()};
+    if (!d.text.trim() && !d.title.trim()) localStorage.removeItem(draftKey()); else localStorage.setItem(draftKey(), JSON.stringify(d));
+  } catch(e){}
+}
+function saveDraft(){ clearTimeout(draftT); draftT = setTimeout(saveDraftNow, 400); }
+window.addEventListener("pagehide", saveDraftNow);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveDraftNow(); });
+function clearDraft(){ clearTimeout(draftT); try { localStorage.removeItem(draftKey()); } catch(e){} }
+function restoreDraft(){
+  if (draftRestored || !S.meId || !S.canWrite || !S.ready.posts) return;
+  draftRestored = true;
+  let d = null; try { d = JSON.parse(localStorage.getItem(draftKey()) || "null"); } catch(e){}
+  if (!d || pt.value.trim()) return;
+  if (Date.now() - (d.at || 0) > 7 * 86400000){ clearDraft(); return; }
+  if ((d.mode === "com" || d.mode === "poll") && !canManage()) d.mode = "post";
+  if (d.mode && d.mode !== "post") setMode(d.mode);
+  pt.value = d.text || ""; $("comTitle").value = d.title || "";
+  if (pt.value.trim()) pt.classList.add("tall");
+  setStatus("📝 Rascunho recuperado. Ele fica salvo neste aparelho até você publicar.");
+  setTimeout(() => setStatus(""), 6000);
+}
+pt.addEventListener("input", saveDraft); $("comTitle").addEventListener("input", saveDraft);
+
+/* ---------- stories ---------- */
+const STORY_MS = 86400000, STORY_SECS = 6;
+const STORY_BGS = ["#1D1934", "#5B2A86", "#C2185B", "#00796B", "#E65100", "#FFC629"];
+const liveStories = () => (S.stories || []).filter(x => x.expiresAt > Date.now() && x.createdAt <= Date.now() + 60000);
+const viewOf = (sid, uid) => (S.storyviews || []).find(v => v.storyId === sid && v.user === uid);
+const seenStory = x => x.author === S.meId || !!viewOf(x.id, S.meId);
+function renderStories(){
+  const live = liveStories();
+  const by = new Map();
+  for (const x of live.sort((a, b) => a.createdAt - b.createdAt)){ if (!by.has(x.author)) by.set(x.author, []); by.get(x.author).push(x); }
+  const items = [];
+  if (S.canWrite && S.meId){
+    const mine = by.get(S.meId) || [];
+    const img = S.avatars && S.avatars.get(S.meId) ? h("img",{src:S.avatars.get(S.meId), alt:""}) : h("span",{class:"plus", text:mine.length ? (prof(S.meId).name[0] || "?").toUpperCase() : "+"});
+    items.push(h("button",{class:"story", title: mine.length ? "Ver seu story" : "Criar story", onclick:() => mine.length ? openStoryViewer(mine, 0) : openStoryComposer()},
+      h("span",{class:"ring add" + (mine.length ? "" : " seen")}, img, mine.length ? h("span",{class:"badge-plus", role:"button", "aria-label":"Adicionar story", onclick:e => { e.stopPropagation(); openStoryComposer(); }, text:"+"}) : null),
+      h("span",{class:"nm", text:"Seu story"})));
+  }
+  const others = [...by.entries()].filter(([a]) => a !== S.meId && (apr(a) || {}).status === "aprovado")
+    .map(([a, list]) => ({a, list, unseen:list.some(x => !seenStory(x)), last:list[list.length - 1].createdAt}))
+    .sort((x, y) => (y.unseen - x.unseen) || (y.last - x.last));
+  others.forEach((o, idx) => {
+    const p = prof(o.a);
+    const img = p.avatar ? h("img",{src:p.avatar, alt:""}) : h("span",{class:"plus", "aria-hidden":"true", text:(p.name[0] || "?").toUpperCase()});
+    items.push(h("button",{class:"story", title:"Ver story de " + p.name, onclick:() => {
+        const queue = others.slice(idx).map(x => x.list);
+        const first = o.list.findIndex(x => !seenStory(x));
+        openStoryViewer(o.list, first < 0 ? 0 : first, queue.slice(1));
+      }},
+      h("span",{class:"ring" + (o.unseen ? "" : " seen")}, img), h("span",{class:"nm", text:firstName(o.a)})));
+  });
+  $("stories").replaceChildren(...items);
+  $("stories").hidden = !items.length;
+}
+function storyMediaSrc(x){
+  if (S.media.has("st_" + x.id)) return Promise.resolve(S.media.get("st_" + x.id));
+  return S.db.doc("media/st_" + x.id).get().then(sn => { const d = sn.exists && sn.data(); if (d && d.dataUrl){ S.media.set("st_" + x.id, d.dataUrl); return d.dataUrl; } throw new Error("missing"); });
+}
+function openStoryComposer(){
+  closeModal(); closeMenus();
+  let file = null, kind = "text", bg = STORY_BGS[0], objUrl = null;
+  const txt = h("textarea",{class:"field", rows:"3", maxlength:"220", placeholder:"Escreva algo (opcional na foto ou vídeo)"});
+  const prev = h("div",{class:"st-prev"});
+  const err = h("div",{class:"err", role:"alert"});
+  const fi = h("input",{type:"file", accept:"image/*,video/mp4,video/webm,video/quicktime", hidden:true});
+  const bgs = h("div",{class:"bgs"}, STORY_BGS.map(c => { const b = h("button",{type:"button", "aria-label":"Cor de fundo", style:"background:" + c, "aria-pressed":String(c === bg)}); b.onclick = () => { bg = c; bgs.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); paint(); }; return b; }));
+  const paint = () => {
+    if (kind === "text"){ prev.style.background = bg; prev.replaceChildren(h("div",{class:"sv-text", style:"font-size:22px;color:" + (bg === "#FFC629" ? "#1D1934" : "#fff")}, h("span",{}, ...fmtNodes(txt.value.trim() || "Seu texto aparece aqui")))); }
+    else { prev.style.background = "#111"; prev.replaceChildren(kind === "image" ? h("img",{src:objUrl, alt:""}) : h("video",{src:objUrl, muted:true, autoplay:true, loop:true, playsinline:true})); }
+    bgs.hidden = kind !== "text";
+  };
+  txt.addEventListener("input", paint);
+  fi.onchange = async () => {
+    const f = fi.files[0]; fi.value = ""; if (!f) return;
+    const isVid = (f.type || "").startsWith("video/") || /\.(mp4|m4v|mov|webm)$/i.test(f.name);
+    if (isVid && f.size > 8 * 1024 * 1024){ err.textContent = "Vídeo grande demais para story (máximo 8 MB). Grave um vídeo mais curto."; return; }
+    file = f; kind = isVid ? "video" : "image"; err.textContent = "";
+    try { objUrl = isVid ? URL.createObjectURL(f) : await fileToDataUrl(f); } catch(e){ objUrl = null; }
+    paint();
+  };
+  const go = h("button",{class:"btn full", text:"Publicar story"});
+  go.onclick = async () => {
+    const text = txt.value.trim();
+    if (kind === "text" && !text){ err.textContent = "Escreva um texto ou escolha uma foto ou vídeo."; return; }
+    go.disabled = true; go.textContent = "Publicando…";
+    try {
+      const id = gid(), now = Date.now(), doc = {author:S.meId, createdAt:now, expiresAt:now + STORY_MS, kind, text};
+      if (kind === "text") doc.bg = bg;
+      else if (kind === "image"){
+        const dataUrl = await compress(file, 1280, 185000);
+        await S.db.doc("media/st_" + id).set({postId:"st_" + id, dataUrl}); S.media.set("st_" + id, dataUrl);
+        doc.media = {kind:"image", inline:true};
+      } else {
+        const t = videoType(file), b64 = (await fileToDataUrl(file)).split(",")[1], size = 190000, n = Math.ceil(b64.length / size);
+        for (let i = 0; i < n; i++){ go.textContent = "Enviando vídeo… " + Math.round(i * 100 / n) + "%"; await S.db.doc("vchunks/st_" + id + "/c/" + String(i).padStart(4, "0")).set({i, data:b64.slice(i * size, (i + 1) * size)}); }
+        doc.media = {kind:"video", db:true, chunks:n, mime:t};
+      }
+      doc.createdAt = Date.now(); doc.expiresAt = doc.createdAt + STORY_MS;
+      await S.db.doc("stories/" + id).set(doc);
+      S.stories = (S.stories || []).filter(x => x.id !== id).concat([{id, ...doc}]);
+      closeModal(); toast("Story publicado! Fica visível por 24 horas."); renderAll();
+    } catch(e){ err.textContent = e && e.message === "too_big" ? "Arquivo grande demais. Tente outro." : "Não foi possível publicar (" + authMsg(e).replace(/\.$/, "") + ")."; }
+    finally { go.disabled = false; go.textContent = "Publicar story"; }
+  };
+  openModal([h("h2",{text:"Novo story", style:"font-size:24px"}),
+    h("p",{class:"muted", style:"margin:0 0 8px", text:"Fica visível para a equipe por 24 horas. Depois vai para o seu Arquivo de stories, que só você vê."}),
+    h("div",{class:"st-new"},
+      h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},
+        h("button",{class:"btn ghost sm", type:"button", onclick:() => fi.click(), text:"📷 Foto ou vídeo"}),
+        h("button",{class:"btn ghost sm", type:"button", onclick:() => { kind = "text"; file = null; paint(); }, text:"Aa Só texto"})),
+      prev, bgs, fmtBar(() => txt), txt, fi, err, go)], "Novo story");
+  paint();
+}
+async function deleteStory(x){
+  if (!(await askConfirm("Excluir este story?", "Excluir"))) return false;
+  try {
+    await S.db.doc("stories/" + x.id).delete();
+    S.stories = (S.stories || []).filter(y => y.id !== x.id);
+    const quiet = async path => { try { await S.db.doc(path).delete(); } catch(e){} };
+    if (x.media && x.media.inline) quiet("media/st_" + x.id);
+    if (x.media && x.media.db) for (let i = 0; i < (x.media.chunks || 0); i++) quiet("vchunks/st_" + x.id + "/c/" + String(i).padStart(4, "0"));
+    for (const v of (S.storyviews || []).filter(v => v.storyId === x.id && (v.user === S.meId || canManage()))) quiet("storyviews/" + v.id);
+    toast("Story excluído."); renderAll(); return true;
+  } catch(e){ toast(authMsg(e)); return false; }
+}
+const STORY_REACTS = ["❤️", "👏", "😂", "😮", "🔥"];
+function openStoryViewer(list, start, queue){
+  closeModal(); closeMenus();
+  document.querySelectorAll(".sv-wrap").forEach(n => n.remove());
+  queue = queue || [];
+  let i = start || 0, timer = null, t0 = 0, dur = STORY_SECS * 1000, paused = false, elapsed = 0, vid = null;
+  const bars = h("div",{class:"sv-bars"}), head = h("div",{class:"sv-head"}), body = h("div",{class:"sv-body"}), cap = h("div",{class:"sv-cap"}), foot = h("div",{class:"sv-foot"});
+  const box = h("div",{class:"sv", role:"dialog", "aria-modal":"true", "aria-label":"Story"}, bars, head, body, cap,
+    h("button",{class:"sv-nav prev", "aria-label":"Anterior", onclick:() => step(-1)}), h("button",{class:"sv-nav next", "aria-label":"Próximo", onclick:() => step(1)}), foot);
+  const wrap = h("div",{class:"sv-wrap"}, box);
+  const close = () => { clearInterval(timer); wrap.remove(); document.removeEventListener("keydown", onKey, true); renderAll(); };
+  const onKey = e => { if (e.key === "Escape"){ e.stopPropagation(); close(); } else if (e.key === "ArrowRight") step(1); else if (e.key === "ArrowLeft") step(-1); };
+  const tick = () => {
+    if (paused) return;
+    const now = Date.now(); elapsed += now - t0; t0 = now;
+    const d = vid && vid.duration && isFinite(vid.duration) ? Math.min(60000, vid.duration * 1000) : dur;
+    const pct = Math.min(100, elapsed * 100 / d);
+    const fill = bars.children[i] && bars.children[i].firstChild; if (fill) fill.style.width = pct + "%";
+    if (pct >= 100) step(1);
+  };
+  function step(d){
+    const n = i + d;
+    if (n < 0){ show(0); return; }
+    if (n >= list.length){ if (queue.length){ list = queue.shift(); const f = list.findIndex(x => !seenStory(x)); show(f < 0 ? 0 : f); } else close(); return; }
+    show(n);
+  }
+  function show(n){
+    i = n; clearInterval(timer); elapsed = 0; t0 = Date.now(); paused = false; vid = null;
+    const x = list[i], p = prof(x.author), mine = x.author === S.meId;
+    bars.replaceChildren(...list.map((_, k) => h("span",{}, h("i",{style:"width:" + (k < i ? 100 : 0) + "%"}))));
+    const menu = [];
+    if (mine || canManage()) menu.push(h("button",{onclick: async () => { paused = true; if (await deleteStory(x)){ list = list.filter(y => y.id !== x.id); if (!list.length){ close(); return; } show(Math.min(i, list.length - 1)); } else paused = false; }, text:"🗑️ Excluir story"}));
+    const more = menu.length ? h("button",{"aria-label":"Opções", onclick:e => { e.stopPropagation(); const had = box.querySelector(".sv-menu"); if (had){ had.remove(); paused = false; return; } paused = true; box.append(h("div",{class:"sv-menu"}, menu)); }, text:"⋯"}) : null;
+    head.replaceChildren(avatarEl(x.author), h("div",{style:"flex:1;min-width:0"}, h("b",{text:mine ? "Seu story" : p.name}), h("small",{text:" · " + when(x.createdAt) + (x.expiresAt <= Date.now() ? " · arquivado" : "")})),
+      more, h("button",{"aria-label":"Fechar", onclick:close, text:"✕"}));
+    box.querySelectorAll(".sv-menu").forEach(m => m.remove());
+    cap.hidden = true;
+    if (x.kind === "text"){
+      body.replaceChildren(h("div",{class:"sv-text", style:"background:" + (x.bg || STORY_BGS[0]) + ";color:" + (x.bg === "#FFC629" ? "#1D1934" : "#fff")}, h("span",{}, ...fmtNodes(x.text || ""))));
+    } else {
+      body.replaceChildren(h("div",{style:"opacity:.7", text:"Carregando…"}));
+      if (x.text){ cap.hidden = false; cap.replaceChildren(...fmtNodes(x.text)); }
+      paused = true;
+      const ready = () => { if (list[i] !== x) return; paused = false; t0 = Date.now(); };
+      if (x.media && x.media.kind === "video"){
+        loadDbVideo({id:"st_" + x.id, media:x.media}).then(src => {
+          if (list[i] !== x) return;
+          vid = h("video",{src:src.blobUrl || src.dataUrl, autoplay:true, playsinline:true});
+          vid.onloadedmetadata = ready; vid.onerror = () => { vid = null; ready(); };
+          body.replaceChildren(vid); vid.play().catch(() => {});
+        }).catch(() => { body.replaceChildren(h("div",{text:"Não foi possível carregar o vídeo."})); ready(); });
+      } else {
+        storyMediaSrc(x).then(src => { if (list[i] !== x) return; const im = h("img",{src, alt:"Story de " + p.name}); im.onload = ready; im.onerror = ready; body.replaceChildren(im); })
+          .catch(() => { body.replaceChildren(h("div",{text:"Foto indisponível."})); ready(); });
+      }
+    }
+    // rodapé: reações (quem vê) ou visualizações (autor)
+    if (mine){
+      const vs = (S.storyviews || []).filter(v => v.storyId === x.id && v.user !== S.meId);
+      foot.replaceChildren(h("button",{class:"views", onclick:() => {
+        paused = true;
+        const old = box.querySelector(".sv-menu"); if (old){ old.remove(); paused = false; return; }
+        box.append(h("div",{class:"sv-menu", style:"top:auto;bottom:64px;left:10px;right:10px;max-height:50%;overflow:auto"},
+          vs.length ? vs.sort((a, b) => b.at - a.at).map(v => h("div",{style:"display:flex;gap:8px;align-items:center;padding:8px 12px"}, avatarEl(v.user, "xs"), h("span",{style:"flex:1", text:prof(v.user).name}), h("span",{text:v.react || ""}))) : h("div",{style:"padding:12px", text:"Ninguém viu ainda."})));
+      }, text:"👁 Visto por " + vs.length + (vs.some(v => v.react) ? " · " + vs.filter(v => v.react).map(v => v.react).join("") : "")}));
+    } else {
+      const myv = viewOf(x.id, S.meId);
+      foot.replaceChildren(...STORY_REACTS.map(r => h("button",{class: myv && myv.react === r ? "on" : "", "aria-label":"Reagir " + r, onclick: async e => {
+        e.stopPropagation();
+        const cur = viewOf(x.id, S.meId) || {};
+        const doc = {storyId:x.id, user:S.meId, at:cur.at || Date.now(), react: cur.react === r ? "" : r, reactAt:Date.now()};
+        try { await S.db.doc("storyviews/" + x.id + "__" + S.meId).set(doc); S.storyviews = (S.storyviews || []).filter(v => !(v.storyId === x.id && v.user === S.meId)).concat([{id:x.id + "__" + S.meId, ...doc}]); foot.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.textContent === doc.react)); if (doc.react) toast("Reação enviada " + r); } catch(err){ toast(authMsg(err)); }
+      }, text:r})));
+      if (!myv && x.expiresAt > Date.now()){
+        const doc = {storyId:x.id, user:S.meId, at:Date.now()};
+        S.storyviews = (S.storyviews || []).concat([{id:x.id + "__" + S.meId, ...doc}]);
+        S.db.doc("storyviews/" + x.id + "__" + S.meId).set(doc).catch(() => {});
+      }
+    }
+    timer = setInterval(tick, 50);
+  }
+  let pressT = null;
+  body.addEventListener("pointerdown", () => { pressT = setTimeout(() => { paused = true; if (vid) vid.pause(); }, 200); });
+  ["pointerup","pointerleave","pointercancel"].forEach(ev => body.addEventListener(ev, () => { clearTimeout(pressT); if (paused && !box.querySelector(".sv-menu")){ paused = false; t0 = Date.now(); if (vid) vid.play().catch(() => {}); } }));
+  wrap.addEventListener("click", e => { if (e.target === wrap) close(); });
+  document.addEventListener("keydown", onKey, true);
+  document.body.append(wrap);
+  show(i);
+}
+function openStoryArchive(){
+  const mine = (S.stories || []).filter(x => x.author === S.meId).sort((a, b) => b.createdAt - a.createdAt);
+  const tile = (x, k) => {
+    const b = h("button",{onclick:() => openStoryViewer(mine, k)});
+    if (x.kind === "text"){ b.style.background = x.bg || STORY_BGS[0]; b.style.color = x.bg === "#FFC629" ? "#1D1934" : "#fff"; b.append(plainTxt(x.text || "").slice(0, 60)); }
+    else if (x.media && x.media.kind === "image"){ storyMediaSrc(x).then(src => b.prepend(h("img",{src, alt:""}))).catch(() => {}); }
+    else b.append("▶ vídeo");
+    if (x.expiresAt > Date.now()) b.append(h("span",{class:"live", text:"No ar"}));
+    b.append(h("small",{text:new Intl.DateTimeFormat("pt-BR", {day:"2-digit", month:"2-digit", year:"2-digit"}).format(x.createdAt)}));
+    return b;
+  };
+  openModal([h("h2",{text:"🗂️ Arquivo de stories", style:"font-size:24px"}),
+    h("p",{class:"muted", style:"margin:0 0 10px", text:"Seus stories ficam guardados aqui depois das 24 horas. Só você vê este arquivo."}),
+    mine.length ? h("div",{class:"st-grid"}, mine.map(tile)) : h("p",{class:"muted", text:"Você ainda não publicou stories."}),
+    h("button",{class:"btn sm", style:"margin-top:12px", onclick:openStoryComposer, text:"+ Novo story"})], "Arquivo de stories");
+}
+
+/* ---------- relatórios: resumo, gráficos e alertas ---------- */
+function prevWindow(per){
+  if (!(per.s > "2000-01-01" && per.e < "2999-12-31")) return null;
+  const end = per.e < spToday() ? per.e : spToday();
+  if (end < per.s) return null;
+  const len = daysBetween(per.s, end) + 1;
+  return {cur:{s:per.s, e:end}, prev:{s:addDays(per.s, -len), e:addDays(per.s, -1)}};
+}
+function periodSummary(win, ids){
+  const ctx = repCtx(win), L = ids.map(id => activityOf(id, ctx));
+  const sum = f => L.reduce((n, x) => n + f(x), 0);
+  const S2 = L.map(sumAct);
+  const tot = k => S2.reduce((n, s) => n + s[k], 0);
+  const active = L.filter((x, i) => { const s = S2[i]; return s.posts + s.comments + s.rGiven + s.kSent + s.polls + s.presence + s.coms > 0; }).length;
+  return {L, people:L.length, active, posts:tot("posts"), inter:tot("comments") + tot("rGiven"), coms:tot("coms"), comsReq:tot("comsReq"), polls:tot("polls"), pollsEl:tot("pollsEl"),
+    presence:tot("presence"), wd:tot("wd"), earned:tot("earned"), redemptions:tot("redemptions"), kudos:tot("kSent")};
+}
+const pct0 = (a, b) => b ? Math.round(a * 100 / b) : null;
+function deltaTxt(cur, prev, isPct){
+  if (prev == null || cur == null) return "";
+  if (isPct){ const d = cur - prev; return d === 0 ? "= igual ao período anterior" : (d > 0 ? "▲ " : "▼ ") + Math.abs(d) + " p.p. vs. período anterior"; }
+  if (!prev) return cur ? "▲ novo vs. período anterior" : "";
+  const d = Math.round((cur - prev) * 100 / prev);
+  return d === 0 ? "= igual ao período anterior" : (d > 0 ? "▲ " : "▼ ") + Math.abs(d) + "% vs. período anterior";
+}
+function summaryEl(per, ids){
+  const pw = prevWindow(per);
+  const cur = periodSummary(pw ? pw.cur : {s:per.s, e:per.e}, ids), prv = pw ? periodSummary(pw.prev, ids) : null;
+  const k = (v, label, d) => h("div",{}, h("b",{text:v}), h("small",{text:label}), d ? h("em",{text:d}) : null);
+  const pc = (a, b) => pct0(a, b) == null ? "—" : pct0(a, b) + "%";
+  return h("div",{},
+    h("div",{class:"rep-sum"},
+      k(cur.active + "/" + cur.people, "Pessoas ativas", prv ? deltaTxt(cur.active, prv.active) : ""),
+      k(String(cur.posts), "Publicações", prv ? deltaTxt(cur.posts, prv.posts) : ""),
+      k(String(cur.inter), "Comentários e reações", prv ? deltaTxt(cur.inter, prv.inter) : ""),
+      k(pc(cur.coms, cur.comsReq), "Leitura de comunicados", prv ? deltaTxt(pct0(cur.coms, cur.comsReq), pct0(prv.coms, prv.comsReq), true) : ""),
+      k(pc(cur.polls, cur.pollsEl), "Participação em enquetes", prv ? deltaTxt(pct0(cur.polls, cur.pollsEl), pct0(prv.polls, prv.pollsEl), true) : ""),
+      k(pc(cur.presence, cur.wd), "Presença", prv ? deltaTxt(pct0(cur.presence, cur.wd), pct0(prv.presence, prv.wd), true) : ""),
+      k(coins(cur.earned), "CRAcoins distribuídos", prv ? deltaTxt(cur.earned, prv.earned) : ""),
+      k(String(cur.redemptions), "Resgates na loja", prv ? deltaTxt(cur.redemptions, prv.redemptions) : "")),
+    pw ? h("div",{class:"muted", style:"font-size:12.5px;margin:-6px 0 12px", text:"Comparação: " + fmtD(pw.cur.s) + " a " + fmtD(pw.cur.e) + " contra os mesmos " + (daysBetween(pw.cur.s, pw.cur.e) + 1) + " dias anteriores (" + fmtD(pw.prev.s) + " a " + fmtD(pw.prev.e) + ")."}) : null,
+    chartsEl(per, cur.L));
+}
+function chartsEl(per, L){
+  // interações por semana (últimas 10 semanas do período)
+  const end = per.e < spToday() ? per.e : spToday();
+  let wk = mondayOf(end); const weeks = [];
+  for (let n = 0; n < 10 && wk >= (per.s > "2000-01-01" ? mondayOf(per.s) : "0000"); n++){ weeks.unshift(wk); wk = addDays(wk, -7); }
+  const allC = [].concat(...[...S.comments.values()]), allR = [].concat(...[...S.reactions.values()]);
+  const wOf = ms => mondayOf(new Intl.DateTimeFormat("en-CA", {timeZone:"America/Sao_Paulo"}).format(ms));
+  const cnt = {}; weeks.forEach(w => cnt[w] = 0);
+  const add = ms => { if (!ms) return; const w = wOf(ms); if (w in cnt && inWinMs(ms, {s:per.s, e:per.e})) cnt[w]++; };
+  S.posts.forEach(p => { if (pubAt(p) <= Date.now()) add(pubAt(p)); }); allC.forEach(c => add(c.createdAt)); allR.forEach(r => add(r.at));
+  const mx = Math.max(1, ...weeks.map(w => cnt[w]));
+  const vb = h("div",{class:"chart"}, h("h4",{text:"Interações por semana (publicações, comentários e reações)"}),
+    weeks.length ? h("div",{class:"vbars", role:"img", "aria-label":"Interações por semana: " + weeks.map(w => fmtD(w).slice(0, 5) + " " + cnt[w]).join(", ")},
+      weeks.map(w => h("div",{class:"c", title:"Semana de " + fmtD(w) + ": " + cnt[w] + " interações"}, h("b",{text:String(cnt[w])}), h("i",{style:"height:" + Math.max(2, Math.round(cnt[w] * 100 / mx)) + "%"}), h("small",{text:fmtD(w).slice(0, 5)})))) : h("p",{class:"muted", text:"Sem semanas no período."}));
+  // engajamento por time: três gráficos pequenos
+  const agg = teamAgg(L);
+  const hb = (title, f) => h("div",{class:"chart"}, h("h4",{text:title}), h("div",{class:"hbars"}, agg.map(([k, o]) => { const v = f(o); return h("div",{class:"r", title:k + ": " + (v == null ? "sem dados" : v + "%")},
+    h("span",{text:k.replace(/^CSC - /, "")}), h("div",{class:"tr"}, h("i",{style:"width:" + (v || 0) + "%"})), h("b",{text: v == null ? "—" : v + "%"})); })));
+  return h("div",{class:"rep-charts"}, vb,
+    hb("Leitura de comunicados por time", o => pct0(o.coms, o.comsReq)),
+    hb("Participação em enquetes por time", o => pct0(o.polls, o.pollsEl)),
+    hb("Presença por time", o => pct0(o.presence, o.wd)));
+}
+function alertsData(ids){
+  const now = Date.now(), today = spToday();
+  const coms = S.posts.filter(p => typeOf(p) === "comunicado" && p.requireAck && !isScheduled(p) && !isExpired(p)).sort((a, b) => pubAt(b) - pubAt(a))
+    .map(p => ({p, users:pendingReaders(p)})).filter(x => x.users.length);
+  const polls = S.posts.filter(p => typeOf(p) === "poll" && p.poll && !(p.poll.closesAt && p.poll.closesAt <= now) && pubAt(p) <= now)
+    .map(p => ({p, users:ids.filter(i => i !== p.author && (!pollTargets(p).length || pollTargets(p).includes(prof(i).setor)) && !(S.votes.get(p.id) || []).some(v => v.user === i))})).filter(x => x.users.length);
+  const pres = [];
+  if (W().active) ids.forEach(id => {
+    const last = S.presence.filter(x => x.user === id).reduce((m, x) => x.date > m ? x.date : m, "");
+    let n = 0; if (last){ for (let d = addDays(last, 1); d < today; d = addDays(d, 1)) if (isWeekday(d)) n++; }
+    if (!last || n >= 3) pres.push({id, last, n});
+  });
+  return {coms, polls, pres};
+}
+function alertsEl(ids){
+  const a = alertsData(ids);
+  const who = id => prof(id).name + (prof(id).setor ? " (" + prof(id).setor.replace(/^CSC - /, "") + ")" : "");
+  const dl = () => downloadSheets("purple-alertas-" + spToday(), [
+    {name:"Comunicados pendentes", rows:[["Comunicado","Publicado em","Nome","E-mail","Setor"], ...[].concat(...a.coms.map(x => x.users.map(u => [plainTxt(x.p.title || x.p.text || ""), fmtMs(pubAt(x.p)), prof(u).name, prof(u).email, prof(u).setor || ""])))]},
+    {name:"Enquetes sem voto", rows:[["Enquete","Encerra em","Nome","E-mail","Setor"], ...[].concat(...a.polls.map(x => x.users.map(u => [plainTxt(x.p.text || ""), x.p.poll.closesAt ? fmtMs(x.p.poll.closesAt) : "Sem prazo", prof(u).name, prof(u).email, prof(u).setor || ""])))]},
+    {name:"Sem presença", rows:[["Nome","E-mail","Setor","Última presença","Dias úteis sem presença"], ...a.pres.map(x => [prof(x.id).name, prof(x.id).email, prof(x.id).setor || "", x.last ? fmtD(x.last) : "Nunca marcou", x.last ? x.n : ""])]}]);
+  return h("div",{},
+    h("div",{class:"rep-bar"}, h("button",{class:"btn sm", onclick:dl, text:"Baixar alertas (Excel)"})),
+    h("p",{class:"muted", style:"margin:0 0 8px;font-size:13.5px", text:"Situação de agora, independente do período escolhido."}),
+    h("h3",{text:"📣 Comunicados com leitura pendente", style:"margin:8px 0 6px"}),
+    a.coms.length ? a.coms.map(x => h("div",{class:"ext-row"}, h("span",{class:"t"}, h("b",{}, ...fmtNodes(x.p.title || "Comunicado")), h("small",{text:plural(x.users.length, "pessoa pendente", "pessoas pendentes") + ": " + x.users.map(who).join(", ")})),
+      h("button",{class:"btn ghost sm", onclick:() => openDetail(x.p.id), text:"Ver"}), h("button",{class:"btn sm", onclick:() => sendNudge(x.p, x.users), text:"🔔 Lembrar (" + x.users.length + ")"}))) : h("p",{class:"muted", text:"Todos leram os comunicados obrigatórios. ✓"}),
+    h("h3",{text:"📊 Enquetes abertas sem voto", style:"margin:14px 0 6px"}),
+    a.polls.length ? a.polls.map(x => h("div",{class:"ext-row"}, h("span",{class:"t"}, h("b",{}, ...fmtNodes(x.p.text || "Enquete")), h("small",{text:plural(x.users.length, "pessoa ainda não votou", "pessoas ainda não votaram") + ": " + x.users.map(who).join(", ")})),
+      h("button",{class:"btn ghost sm", onclick:() => openDetail(x.p.id), text:"Ver"}))) : h("p",{class:"muted", text:"Nenhuma enquete aberta com votos pendentes."}),
+    h("h3",{text:"🗓️ Sem presença há 3 dias úteis ou mais", style:"margin:14px 0 6px"}),
+    !W().active ? h("p",{class:"muted", text:"A temporada não está ativa."}) :
+    a.pres.length ? a.pres.sort((x, y) => (y.last ? y.n : 999) - (x.last ? x.n : 999)).map(x => h("div",{class:"ext-row"}, avatarEl(x.id, "xs"), h("span",{class:"t"}, h("b",{text:prof(x.id).name}), h("small",{text:(prof(x.id).setor || "Sem setor") + " · " + (x.last ? "última presença em " + fmtD(x.last) + " (" + plural(x.n, "dia útil", "dias úteis") + " sem marcar)" : "nunca marcou presença")})))) : h("p",{class:"muted", text:"Todos marcaram presença recentemente. ✓"}));
 }
 
 function renderAll(){
@@ -4099,7 +4628,7 @@ function renderAll(){
   if (!$("admin").hidden && !(act && $("adminCard").contains(act) && act.matches("input,select"))) renderAdmin();
   checkLock();
   renderSetorBar();
-  renderGameBits(); renderBell(); renderCelebCard(); renderChallengeCard();
+  renderGameBits(); renderBell(); renderCelebCard(); renderChallengeCard(); restoreDraft();
   if (S.detailId && !$("modal").hidden){
     const dp = S.posts.find(x => x.id === S.detailId);
     if (!dp) closeModal();
