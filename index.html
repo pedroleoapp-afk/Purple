@@ -141,6 +141,9 @@ button{cursor:pointer}
 .c-top textarea{flex:1;border:0;background:var(--sunk);border-radius:22px;padding:10px 16px;min-height:44px;resize:none;outline:none;font-size:17px}
 .c-top textarea:focus{background:var(--hover)}
 .c-top textarea.tall{border-radius:14px;min-height:100px}
+.c-top textarea{max-height:70vh;overflow-y:auto;line-height:1.45}
+.c-top textarea.tall{resize:vertical}
+.cform textarea{max-height:200px;overflow-y:auto;line-height:1.4}
 .com-title{margin-bottom:10px;font-family:var(--display);font-weight:700;font-size:19px}
 .pollbox{margin-top:10px;display:flex;flex-direction:column;gap:8px}
 .pollbox .opt-row{display:flex;gap:6px}
@@ -1908,7 +1911,18 @@ $("saveArea").onclick = async () => {
 /* ---------- composer ---------- */
 const pt = $("postText");
 pt.addEventListener("focus", () => pt.classList.add("tall"));
-pt.addEventListener("blur", () => { if (!pt.value.trim() && S.mode === "post") pt.classList.remove("tall"); });
+pt.addEventListener("blur", () => { if (!pt.value.trim() && S.mode === "post"){ pt.classList.remove("tall"); autoGrow(pt); } });
+/* o campo de texto cresce junto com o que foi escrito, para ver o texto inteiro */
+function autoGrow(ta){
+  if (!ta || !ta.isConnected) return;
+  const max = ta.closest(".cform") ? 200 : Math.round(window.innerHeight * 0.7);
+  ta.style.height = "auto";
+  const min = ta.classList.contains("tall") ? 100 : (ta.closest(".cform") ? 38 : 44);
+  ta.style.height = Math.max(min, Math.min(ta.scrollHeight + 2, max)) + "px";
+}
+document.addEventListener("input", e => { if (e.target.matches && e.target.matches("#postText, .cform textarea")) autoGrow(e.target); });
+pt.addEventListener("focus", () => setTimeout(() => autoGrow(pt), 0));
+window.addEventListener("resize", () => autoGrow(pt));
 function addOptInput(val){
   const box = $("pollOpts");
   if (box.children.length >= 6) return;
@@ -1953,6 +1967,7 @@ function setMode(mode){
   if (mode === "kudos" && typeof kudosCheck === "function") kudosCheck();
   pt.placeholder = mode === "poll" ? "Qual é a pergunta da enquete?" : mode === "com" ? "Escreva o comunicado" : mode === "kudos" ? "Conte o que essa pessoa fez de especial (você pode usar @ para marcar)" : placeholderFor();
   pt.classList.toggle("tall", mode !== "post" || !!pt.value.trim());
+  autoGrow(pt);
   setStatus("");
 }
 const placeholderFor = () => S.meId && prof(S.meId).name !== "Você" ? "No que você está pensando, " + firstName(S.meId) + "?" : "No que você está pensando?";
@@ -2113,7 +2128,7 @@ $("publish").onclick = async () => {
     await S.db.doc("posts/" + id).set(post);
     pt.value = ""; $("comTitle").value = ""; $("comAck").checked = false; $("comPin").checked = true; clearDraft();
     $("postLink").value = ""; $("linkWrap").hidden = true; $("toggleLink").setAttribute("aria-pressed","false");
-    clearFile(); resetPoll(); $("comPub").value = ""; $("comExp").value = ""; setMode("post"); pt.classList.remove("tall");
+    clearFile(); resetPoll(); $("comPub").value = ""; $("comExp").value = ""; setMode("post"); pt.classList.remove("tall"); autoGrow(pt);
     setStatus(mode === "com" ? "Comunicado publicado." : mode === "poll" ? "Enquete publicada." : "Publicado.");
     setTimeout(() => setStatus(""), 2500);
   } catch(e){
@@ -2151,7 +2166,7 @@ async function togglePin(p){ try { await S.db.doc("posts/" + p.id).update({pinne
 async function addComment(postId, ta, btn){
   const text = ta.value.trim(); if (!text) return;
   btn.disabled = true;
-  try { await S.db.doc("comments/" + uid()).set({postId, author:S.meId, text, createdAt:Date.now(), mentions:computeMentions(text)}); ta.value = ""; S.expanded.add(postId); }
+  try { await S.db.doc("comments/" + uid()).set({postId, author:S.meId, text, createdAt:Date.now(), mentions:computeMentions(text)}); ta.value = ""; autoGrow(ta); S.expanded.add(postId); }
   catch(e){ if (isDenied(e)) readOnly(); else toast("Não foi possível enviar o comentário."); }
   finally { btn.disabled = !ta.value.trim(); }
 }
@@ -4303,6 +4318,7 @@ function restoreDraft(){
   if (d.mode && d.mode !== "post") setMode(d.mode);
   pt.value = d.text || ""; $("comTitle").value = d.title || "";
   if (pt.value.trim()) pt.classList.add("tall");
+  setTimeout(() => autoGrow(pt), 0);
   setStatus("📝 Rascunho recuperado. Ele fica salvo neste aparelho até você publicar.");
   setTimeout(() => setStatus(""), 6000);
 }
