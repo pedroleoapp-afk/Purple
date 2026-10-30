@@ -652,7 +652,6 @@ details.rep-sec .g-table td{white-space:normal}
     <button class="nav-item" data-f="com"><span class="nav-ico">📣</span>Comunicados</button>
     <button class="nav-item" data-f="poll"><span class="nav-ico">📊</span>Enquetes</button>
     <button class="nav-item" data-f="image"><span class="nav-ico">🖼️</span>Fotos</button>
-    <button class="nav-item" data-f="video"><span class="nav-ico">🎬</span>Vídeos</button>
     <button class="nav-item" data-f="link"><span class="nav-ico">🔗</span>Links</button>
     <div class="nav-sep"></div>
     <button class="nav-item" id="navGame"><span class="nav-ico">🏆</span>CRAcoins</button>
@@ -713,7 +712,6 @@ details.rep-sec .g-table td{white-space:normal}
       <div class="c-actions">
         <span id="mediaTools" style="display:contents">
           <button class="tool" id="pickPhoto"><span class="i">🖼️</span>Foto</button>
-          <button class="tool" id="pickVideo"><span class="i">🎬</span>Vídeo</button>
           <button class="tool" id="toggleLink" aria-pressed="false"><span class="i">🔗</span>Link</button>
         </span>
         <span class="spacer"></span>
@@ -1973,7 +1971,6 @@ function setMode(mode){
 const placeholderFor = () => S.meId && prof(S.meId).name !== "Você" ? "No que você está pensando, " + firstName(S.meId) + "?" : "No que você está pensando?";
 document.querySelectorAll(".modes button").forEach(b => b.onclick = () => setMode(b.dataset.mode));
 $("pickPhoto").onclick = () => $("photoIn").click();
-$("pickVideo").onclick = () => $("videoIn").click();
 $("toggleLink").onclick = () => {
   const open = $("linkWrap").hidden; $("linkWrap").hidden = !open;
   $("toggleLink").setAttribute("aria-pressed", String(open)); if (open) $("postLink").focus();
@@ -1985,6 +1982,7 @@ function videoType(f){ if (f.type && f.type.startsWith("video/")) return f.type;
 function pickFile(f, kind){
   if (!f) return;
   setStatus("");
+  if (kind === "video" || (f.type || "").startsWith("video/")){ setStatus("Vídeos não são aceitos no Purple, para economizar espaço. Cole o link do vídeo (YouTube, SharePoint etc.).", true); clearFile(); return; }
   if (kind === "video"){
     const t = videoType(f), assetOk = S.assets && /^video\/(mp4|webm)$/.test(t);
     const max = assetOk ? VIDEO_ASSET_MAX : VIDEO_DB_MAX;
@@ -3198,6 +3196,7 @@ function gConfig(){
         {key:"ac", label:"CRAcoins por ano de casa (0 = desligado)", type:"number", min:"0", step:"1", value:numOr(g.anniversaryCoins, 50)}
       ], onSubmit: async v => { await saveGame({kudosPerWeek:Math.max(1, Math.round(+v.kw)), kudosCoins:Math.max(0, Math.round(+v.kc)), birthdayCoins:Math.max(0, Math.round(+v.bc)), anniversaryCoins:Math.max(0, Math.round(+v.ac))}); }}), text:"Editar"})),
     resetSection(),
+    canSetAccess() ? cleanupSection() : null,
     h("section",{class:"g-card"}, h("h2",{text:"💾 Backup dos dados"}),
       h("p",{class:"muted", style:"margin:0 0 10px;font-size:14px", text:"Baixe uma cópia de todos os dados do Purple (cadastros, publicações, pontos, resgates etc.). Fotos e vídeos não entram no arquivo. Senhas nunca são incluídas."}),
       h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"}, h("button",{class:"btn sm", onclick:downloadBackup, text:"Baixar backup completo (JSON)"}), h("button",{class:"btn ghost sm", onclick:downloadPeople, text:"Baixar cadastros (Excel)"}))));
@@ -4365,10 +4364,10 @@ function storyMediaSrc(x){
 function openStoryComposer(){
   closeModal(); closeMenus();
   let file = null, kind = "text", bg = STORY_BGS[0], objUrl = null;
-  const txt = h("textarea",{class:"field", rows:"3", maxlength:"220", placeholder:"Escreva algo (opcional na foto ou vídeo)"});
+  const txt = h("textarea",{class:"field", rows:"3", maxlength:"220", placeholder:"Escreva algo (opcional na foto)"});
   const prev = h("div",{class:"st-prev"});
   const err = h("div",{class:"err", role:"alert"});
-  const fi = h("input",{type:"file", accept:"image/*,video/mp4,video/webm,video/quicktime", hidden:true});
+  const fi = h("input",{type:"file", accept:"image/*", hidden:true});
   const bgs = h("div",{class:"bgs"}, STORY_BGS.map(c => { const b = h("button",{type:"button", "aria-label":"Cor de fundo", style:"background:" + c, "aria-pressed":String(c === bg)}); b.onclick = () => { bg = c; bgs.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); paint(); }; return b; }));
   const paint = () => {
     if (kind === "text"){ prev.style.background = bg; prev.replaceChildren(h("div",{class:"sv-text", style:"font-size:22px;color:" + (bg === "#FFC629" ? "#1D1934" : "#fff")}, h("span",{}, ...fmtNodes(txt.value.trim() || "Seu texto aparece aqui")))); }
@@ -4378,8 +4377,8 @@ function openStoryComposer(){
   txt.addEventListener("input", paint);
   fi.onchange = async () => {
     const f = fi.files[0]; fi.value = ""; if (!f) return;
-    const isVid = (f.type || "").startsWith("video/") || /\.(mp4|m4v|mov|webm)$/i.test(f.name);
-    if (isVid && f.size > 8 * 1024 * 1024){ err.textContent = "Vídeo grande demais para story (máximo 8 MB). Grave um vídeo mais curto."; return; }
+    const isVid = (f.type || "").startsWith("video/") || /\.(mp4|m4v|mov|webm|avi|mkv|3gp)$/i.test(f.name);
+    if (isVid){ err.textContent = "Vídeos não são aceitos, para economizar espaço. Escolha uma foto ou faça um story de texto."; return; }
     file = f; kind = isVid ? "video" : "image"; err.textContent = "";
     try { objUrl = isVid ? URL.createObjectURL(f) : await fileToDataUrl(f); } catch(e){ objUrl = null; }
     paint();
@@ -4387,7 +4386,7 @@ function openStoryComposer(){
   const go = h("button",{class:"btn full", text:"Publicar story"});
   go.onclick = async () => {
     const text = txt.value.trim();
-    if (kind === "text" && !text){ err.textContent = "Escreva um texto ou escolha uma foto ou vídeo."; return; }
+    if (kind === "text" && !text){ err.textContent = "Escreva um texto ou escolha uma foto."; return; }
     go.disabled = true; go.textContent = "Publicando…";
     try {
       const id = gid(), now = Date.now(), doc = {author:S.meId, createdAt:now, expiresAt:now + STORY_MS, kind, text};
@@ -4409,10 +4408,10 @@ function openStoryComposer(){
     finally { go.disabled = false; go.textContent = "Publicar story"; }
   };
   openModal([h("h2",{text:"Novo story", style:"font-size:24px"}),
-    h("p",{class:"muted", style:"margin:0 0 8px", text:"Fica visível para a equipe por 24 horas. Depois vai para o seu Arquivo de stories, que só você vê."}),
+    h("p",{class:"muted", style:"margin:0 0 8px", text:"Foto ou texto, visível para a equipe por 24 horas. Depois vai para o seu Arquivo de stories, que só você vê."}),
     h("div",{class:"st-new"},
       h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},
-        h("button",{class:"btn ghost sm", type:"button", onclick:() => fi.click(), text:"📷 Foto ou vídeo"}),
+        h("button",{class:"btn ghost sm", type:"button", onclick:() => fi.click(), text:"📷 Foto"}),
         h("button",{class:"btn ghost sm", type:"button", onclick:() => { kind = "text"; file = null; paint(); }, text:"Aa Só texto"})),
       prev, bgs, fmtBar(() => txt), txt, fi, err, go)], "Novo story");
   paint();
@@ -4634,6 +4633,61 @@ function alertsEl(ids){
     h("h3",{text:"🗓️ Sem presença há 3 dias úteis ou mais", style:"margin:14px 0 6px"}),
     !W().active ? h("p",{class:"muted", text:"A temporada não está ativa."}) :
     a.pres.length ? a.pres.sort((x, y) => (y.last ? y.n : 999) - (x.last ? x.n : 999)).map(x => h("div",{class:"ext-row"}, avatarEl(x.id, "xs"), h("span",{class:"t"}, h("b",{text:prof(x.id).name}), h("small",{text:(prof(x.id).setor || "Sem setor") + " · " + (x.last ? "última presença em " + fmtD(x.last) + " (" + plural(x.n, "dia útil", "dias úteis") + " sem marcar)" : "nunca marcou presença")})))) : h("p",{class:"muted", text:"Todos marcaram presença recentemente. ✓"}));
+}
+
+
+/* ---------- limpeza da base de publicações (administrador e Gerente) ---------- */
+const fmtMB = b => (b / 1048576).toLocaleString("pt-BR", {maximumFractionDigits:1}) + " MB";
+async function loadDbSize(el){
+  try {
+    const {data, error} = await sb.rpc("purple_db_size");
+    if (error || !data) throw error || new Error("x");
+    const pct = Math.min(100, Math.round(data.total * 100 / (500 * 1048576)));
+    el.replaceChildren(h("b",{text:"Espaço usado: " + fmtMB(data.total) + " de 500 MB (" + pct + "%)"}), h("div",{class:"bar", style:"margin:6px 0 2px"}, h("span",{style:"width:" + pct + "%"})),
+      h("small",{class:"muted", text:"Fotos e vídeos: " + fmtMB(data.blobs) + " · Demais dados: " + fmtMB(data.docs)}));
+  } catch(e){ el.replaceChildren(h("small",{class:"muted", text:"Não foi possível consultar o espaço usado agora."})); }
+}
+const CLEAN_KINDS = [["post","Publicações comuns (textos, fotos, links e vídeos antigos)", true],["comunicado","Comunicados", false],["poll","Enquetes", false],["kudos","Elogios", false]];
+function cleanupForm(){
+  openForm({title:"Limpar base de publicações", intro:"Apaga as publicações antigas escolhidas, com os comentários, reações, votos, leituras, fotos e vídeos delas. Publicações fixadas no topo nunca são apagadas. Antes de limpar, baixe o backup completo.", submit:"Ver quanto será apagado",
+    fields:[{key:"before", label:"Apagar o que foi publicado antes de", type:"date", value:addDays(spToday(), -90)},
+      ...CLEAN_KINDS.map(([k, l, on]) => ({key:"k_" + k, label:l, type:"checkbox", value:on})),
+      {key:"stories", label:"Stories arquivados (já vencidos) até essa data", type:"checkbox", value:true}],
+    onSubmit: async v => {
+      if (!v.before) return "Escolha a data.";
+      if (v.before > spToday()) return "A data não pode ser no futuro.";
+      const kinds = CLEAN_KINDS.filter(([k]) => v["k_" + k]).map(([k]) => k);
+      if (!kinds.length && !v.stories) return "Escolha pelo menos um tipo para apagar.";
+      const before_ms = msOfDate(v.before);
+      const dry = await sb.rpc("purple_cleanup", {before_ms, kinds, with_stories:!!v.stories, dry_run:true});
+      if (dry.error) return /permission/i.test(dry.error.message) ? "Só o administrador e a Gerente podem limpar a base." : "Não foi possível calcular (" + authMsg(dry.error).replace(/\.$/, "") + ").";
+      const d = dry.data || {};
+      if (!d.posts && !d.stories) return "Não há nada para apagar com essas escolhas.";
+      const msg = "Antes de " + fmtD(v.before) + " serão apagados: " + plural(d.posts || 0, "publicação", "publicações") + ", " + plural(d.related || 0, "comentário, reação, voto ou leitura", "comentários, reações, votos e leituras") + ", " + plural(d.files || 0, "arquivo de foto ou vídeo", "arquivos de fotos e vídeos") + (v.stories ? " e " + plural(d.stories || 0, "story arquivado", "stories arquivados") : "") + ". Essa ação não pode ser desfeita.";
+      if (!(await askConfirm(msg, "Apagar definitivamente"))) return "";
+      const res = await sb.rpc("purple_cleanup", {before_ms, kinds, with_stories:!!v.stories, dry_run:false});
+      if (res.error) return "Não foi possível limpar (" + authMsg(res.error).replace(/\.$/, "") + ").";
+      const r = res.data || {};
+      toast("Limpeza concluída: " + plural(r.posts || 0, "publicação apagada", "publicações apagadas") + (r.stories ? " e " + plural(r.stories, "story", "stories") : "") + ".");
+      try {
+        const [ps, cs, rs, vs, as, ss] = await Promise.all(["posts","comments","reactions","votes","acks","stories"].map(c => S.db.collection(c).get()));
+        S.posts = ps.docs.map(x => ({id:x.id, ...x.data()}));
+        const grp = sn => { const m = new Map(); for (const x of sn.docs){ const o = {id:x.id, ...x.data()}; if (!m.has(o.postId)) m.set(o.postId, []); m.get(o.postId).push(o); } return m; };
+        S.comments = grp(cs); S.reactions = grp(rs); S.votes = grp(vs); S.acks = grp(as); S.stories = ss.docs.map(x => ({id:x.id, ...x.data()}));
+      } catch(e){}
+      renderAll();
+      return "";
+    }});
+}
+function cleanupSection(){
+  const size = h("div",{style:"margin:4px 0 12px"}, h("small",{class:"muted", text:"Consultando o espaço usado…"}));
+  loadDbSize(size);
+  return h("section",{class:"g-card"}, h("h2",{text:"🗑️ Limpar base de publicações"}),
+    h("p",{class:"muted", style:"margin:0 0 6px;font-size:13.5px", text:"Libera espaço no banco de dados apagando publicações antigas. Só você e a Gerente veem esta opção. CRAcoins, tarefas, resgates e cadastros não são afetados."}),
+    size,
+    h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},
+      h("button",{class:"btn ghost sm", onclick:downloadBackup, text:"1. Baixar backup"}),
+      h("button",{class:"btn sm", style:"background:var(--danger);color:#fff", onclick:cleanupForm, text:"2. Limpar base de publicações"})));
 }
 
 function renderAll(){
